@@ -17,7 +17,11 @@ public class GroupShape implements IShape {
 		this.listShapes.add(s);
 	}
 	
-
+	public IShape removeShape(IShape s){
+		this.listShapes.remove(s);
+		return s;
+	}
+	
 	public void setPosition(double x, double y) {
 		/*
 		 * On cherche l'écart entre ce point et la coordonnée souhaitée et on l'applique sur toutes les shapes
