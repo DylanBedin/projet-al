@@ -8,6 +8,7 @@ import java.awt.geom.Point2D;
 
 public class GroupShape implements Shape {
 	private ArrayList<Shape> listShapes;
+	private double rotat, rotatCenter;
 	
 	public GroupShape(){
 		this.listShapes = new ArrayList<Shape>();
@@ -69,33 +70,32 @@ public class GroupShape implements Shape {
 	}
 
 	public void setRotation(double rotat) {
-		// TODO Auto-generated method stub
-
+		this.rotat = rotat;
+		for(Shape s:this.listShapes){
+			s.setRotation(s.getRotation() + this.rotat);
+		}
 	}
 
 	public double getRotation() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.rotat;
 	}
 
 	public void setRotationCenter(double rotatCenter) {
-		// TODO Auto-generated method stub
-
+		this.rotatCenter = rotatCenter;
 	}
 
 	public double getRotationCenter() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.rotatCenter;
 	}
 
 	public void setTranslation(double translate) {
-		// TODO Auto-generated method stub
-
+		for(Shape s:this.listShapes){
+			s.setTranslation(translate);
+		}
 	}
 
 	public double getTranslation() {
-		// TODO Auto-generated method stub
-		return 0;
+		throw new UnsupportedOperationException();
 	}
 
 }
