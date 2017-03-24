@@ -1,20 +1,19 @@
 package model;
 
 import java.awt.Color;
-import java.awt.Point;
 import java.util.ArrayList;
 
 import java.awt.geom.Point2D;
 
-public class GroupShape implements Shape {
-	private ArrayList<Shape> listShapes;
+public class GroupShape implements IShape {
+	private ArrayList<IShape> listShapes;
 	private double rotat, rotatCenter;
 	
-	public GroupShape(){
-		this.listShapes = new ArrayList<Shape>();
+	public GroupShape(ArrayList<IShape> listShapes){
+		this.listShapes = new ArrayList<IShape>(listShapes);
 	}
 	
-	public void addShape(Shape s){
+	public void addShape(IShape s){
 		this.listShapes.add(s);
 	}
 	
@@ -25,7 +24,7 @@ public class GroupShape implements Shape {
 		 */
 		double gapX = this.getPosition().getX() - x;
 		double gapY = this.getPosition().getY() - y;
-		for(Shape s:this.listShapes){
+		for(IShape s:this.listShapes){
 			s.setPosition(s.getPosition().getX() - gapX, s.getPosition().getY() - gapY);
 		}
 	}
@@ -39,7 +38,7 @@ public class GroupShape implements Shape {
 		 */
 		double minX = this.listShapes.get(0).getPosition().getX();
 		double minY = this.listShapes.get(0).getPosition().getY();
-		for(Shape s:this.listShapes){
+		for(IShape s:this.listShapes){
 			if(s.getPosition().getX() < minX){
 				minX = s.getPosition().getX();
 			}
@@ -51,7 +50,7 @@ public class GroupShape implements Shape {
 	}
 
 	public void setColor(Color c) {
-		for(Shape s:this.listShapes){
+		for(IShape s:this.listShapes){
 			s.setColor(c);
 		}
 	}
@@ -61,7 +60,7 @@ public class GroupShape implements Shape {
 			throw new IllegalStateException();
 		}
 		Color c = this.listShapes.get(0).getColor();
-		for(Shape s:this.listShapes){
+		for(IShape s:this.listShapes){
 			if(s.getColor() != c){
 				throw new IllegalStateException();
 			}
@@ -71,7 +70,7 @@ public class GroupShape implements Shape {
 
 	public void setRotation(double rotat) {
 		this.rotat = rotat;
-		for(Shape s:this.listShapes){
+		for(IShape s:this.listShapes){
 			s.setRotation(s.getRotation() + this.rotat);
 		}
 	}
@@ -89,13 +88,17 @@ public class GroupShape implements Shape {
 	}
 
 	public void setTranslation(double translate) {
-		for(Shape s:this.listShapes){
+		for(IShape s:this.listShapes){
 			s.setTranslation(translate);
 		}
 	}
 
 	public double getTranslation() {
 		throw new UnsupportedOperationException();
+	}
+
+	public Object clone() throws CloneNotSupportedException{
+		return super.clone();
 	}
 
 }
