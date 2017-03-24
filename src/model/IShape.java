@@ -3,7 +3,7 @@ package model;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
-public interface Shape {
+public interface IShape extends Cloneable{
 	
 	public void setPosition(double x, double y);
 	public Point2D getPosition();
@@ -19,4 +19,6 @@ public interface Shape {
 	
 	public void setTranslation(double translate);
 	public double getTranslation();
+	
+	public Object clone() throws CloneNotSupportedException;
 }

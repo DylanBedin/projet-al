@@ -3,7 +3,7 @@ package model;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
-public abstract class AbstractShape implements Shape {
+public abstract class AbstractShape implements IShape {
 	protected double rotat;
 	protected double rotatCenter;
 	protected double translate;
@@ -11,6 +11,15 @@ public abstract class AbstractShape implements Shape {
 	protected double size;
 	protected Point2D position;
 
+	public AbstractShape(double rotat, double rotatCenter, double translate, Color color, double size, Point2D position){
+		this.rotat = rotat;
+		this.rotatCenter = rotatCenter;
+		this.translate = translate;
+		this.color = color;
+		this.size = size;
+		this.position = (Point2D) position.clone();
+	}
+	
 	public void setPosition(double x, double y) {
 		this.position = new Point2D.Double(x, y);
 	}
@@ -48,5 +57,9 @@ public abstract class AbstractShape implements Shape {
 	
 	public double getTranslation(){
 		return this.translate;
+	}
+	
+	public Object clone() throws CloneNotSupportedException{
+		return super.clone();
 	}
 }
