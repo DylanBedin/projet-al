@@ -1,7 +1,5 @@
 package view;
 
-
-import controller.Controller;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
@@ -18,7 +16,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import model.*;
 
 public class View extends Application{
 
@@ -116,49 +113,30 @@ public class View extends Application{
          * de données.
          */
         
-        Group gr1 = new Group();
-        gr1.setLayoutX(5);
-        gr1.setLayoutY(5);
+        Group gr1 = createGroup(5,5);
         
-        Rectangle rect1 = new Rectangle();
-        rect1.setX(5);
-        rect1.setY(5);
-        rect1.setWidth(480);
-        rect1.setHeight(50);
-        rect1.setArcWidth(30);
-        rect1.setArcHeight(30);
-        rect1.setFill(Color.WHITE);
-        rect1.setStroke(Color.BLACK);
-        rect1.setMouseTransparent(true);
+        Rectangle rect1 = createRectangle(5,5,480,50,30,30,Color.WHITE,Color.BLACK,null,null,true);
         
+        /**
+         *  TODO img SaveAs
+         */
         Button btnSave = new Button();
         btnSave.setLayoutX(15);
         btnSave.setLayoutY(15);
         btnSave.setText("Save As");
                 
+        /**
+         * TODO img Load
+         */
         Button btnLoad = new Button();
         btnLoad.setLayoutX(85);
         btnLoad.setLayoutY(15);
         btnLoad.setText("Load");
                 
-        Button btnUndo = new Button();
-        btnUndo.setLayoutX(145);
-        btnUndo.setLayoutY(15);
-        Image UndoImg = new Image(getClass().getResourceAsStream("../img/Undo.png"));
-        ImageView uI = new ImageView(UndoImg);
-        uI.setFitHeight(20);
-        uI.setFitWidth(20);
-        btnUndo.setGraphic(uI);
+        Button btnUndo = createButton(145,15,"../img/Redo.png");
                         
-        Button btnRedo = new Button();
-        btnRedo.setLayoutX(200);
-        btnRedo.setLayoutY(15);
-        Image RedoImg = new Image(getClass().getResourceAsStream("../img/Redo.png"));
-        ImageView rI = new ImageView(RedoImg);
-        rI.setFitHeight(20);
-        rI.setFitWidth(20);
-        btnRedo.setGraphic(rI);
-                
+        Button btnRedo = createButton(200,15,"../img/Redo.png");
+       
         
         gr1.getChildren().add(rect1);
         gr1.getChildren().add(btnRedo);
@@ -167,64 +145,56 @@ public class View extends Application{
         gr1.getChildren().add(btnLoad);
         root.getChildren().add(gr1);
         
-/***********************************************************************************************/
+        
+        /***********************************************************************************************/
         /*
-         * DEUXIEME GROUPE: Barre contenant les formes stockées ainsi que les groupes de formes.
+         * DEUXIEME GROUPE: Fenetre contenant les formes à afficher.
          */
         
-        Group gr2 = new Group();
-        gr2.setLayoutX(5);
-        gr2.setLayoutY(50);
+        Group gr3 = createGroup(80,50);
         
-        Rectangle rect2 = new Rectangle();
-        rect2.setX(5);
-        rect2.setY(20);
-        rect2.setWidth(70);
-        rect2.setHeight(515);
-        rect2.setArcWidth(30);
-        rect2.setArcHeight(30);
-        rect2.setFill(Color.WHITE);
-        rect2.setStroke(Color.BLACK);
-        rect2.setMouseTransparent(true);
+        //Rectangle pour l'instant mais à changer.
         
-        
-        //Liste des formes 
-        Rectangle rectTest = new Rectangle();
-        rectTest.setX(rect2.getX() + 10);
-        rectTest.setY(rect2.getY() + 10);
-        rectTest.setWidth(50);
-        rectTest.setHeight(50);
-        rectTest.setFill(Color.BLUE);
-        rectTest.setStroke(Color.BLACK);
-        rectTest.setOnMousePressed(rectOnMousePressedEventHandler);
-        rectTest.setOnMouseDragged(rectOnMouseDraggedEventHandler);
+        Rectangle rect3 = createRectangle(5,20,400,510,0,0,Color.WHITE,Color.BLACK, null, null, true);
 
-        Polygon polyTest = new Polygon();
-        polyTest.getPoints().addAll(new Double[]{
+
+        gr3.getChildren().add(rect3);
+        root.getChildren().add(gr3);
+        
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        
+        /***********************************************************************************************/
+        /*
+         * TROISIEME: Barre contenant les formes stockées ainsi que les groupes de formes.
+         */
+        
+        Group gr2 = createGroup(5,50);
+        
+        Rectangle rect2 = createRectangle(5, 20, 70, 515, 20, 20, 
+        		Color.WHITE, Color.BLACK, null, null, true);
+        
+        Rectangle rectTest = createRectangle(rect2.getX() + 10, rect2.getY() + 10, 50, 50, 0, 0,
+        		Color.BLUE, Color.BLACK, rectOnMousePressedEventHandler, 
+        		rectOnMouseDraggedEventHandler, false);
+
+
+        Double[] tab = new Double[]{
         		30.0, 0.0,
         		60.0, 30.0,
         		45.0, 60.0,
         		15.0, 60.0,
         		00.0, 30.0
-        });
-        polyTest.setLayoutX(rect2.getX() + 5);
-        polyTest.setLayoutY(rectTest.getY() + rectTest.getHeight() + 10);     
+        };
         
-        Text polygonText = new Text("polygon");
-        polygonText.setFont(new Font(14));
-        polygonText.setLayoutX(polyTest.getLayoutX());
-        polygonText.setLayoutY(polyTest.getLayoutY() + 80);
+        Polygon polyTest = createPolygon(tab, rect2.getX() + 5, rectTest.getY() + rectTest.getHeight() + 10, Color.BLACK, Color.BLACK);
+             
         
-        //Bouton TrashCan
-        Button TrashCan = new Button();
-        TrashCan.setLayoutX(20);
-        TrashCan.setLayoutY(490);
-        Image TrashCanImg = new Image(getClass().getResourceAsStream("../img/TrashCan.png"));
-        ImageView iV = new ImageView(TrashCanImg);
-        iV.setFitHeight(20);
-        iV.setFitWidth(20);
-        TrashCan.setGraphic(iV);
+        Text polygonText = createText("polygon", 14,
+        				  			  polyTest.getLayoutX(),polyTest.getLayoutY() + 80);
+
         
+        Button TrashCan = createButton(20,490,"../img/TrashCan.png");
 
         gr2.getChildren().add(rect2);
         gr2.getChildren().add(rectTest);
@@ -232,57 +202,68 @@ public class View extends Application{
         gr2.getChildren().add(polygonText);
         gr2.getChildren().add(TrashCan);
         root.getChildren().add(gr2);
-        
-/***********************************************************************************************/
-        /*
-         * TROISIEME GROUPE: Fenetre contenant les formes à afficher.
-         */
-        
-        Group gr3 = new Group();
-        gr3.setLayoutX(80);
-        gr3.setLayoutY(50);
-        
-        //Rectangle pour l'instant mais à changer.
-        
-        Rectangle rect3 = new Rectangle();
-        rect3.setX(5);
-        rect3.setY(20);
-        rect3.setWidth(400);
-        rect3.setHeight(510);
-        rect3.setFill(Color.WHITE);
-        rect3.setStroke(Color.BLACK);
-        
-        //Obsolete
-        ScrollBar sc1 = new ScrollBar();
-        sc1.setLayoutX(rect3.getX()+20);
-        sc1.setLayoutY(rect3.getY()+5);
-        sc1.setMin(0);
-        sc1.setOrientation(Orientation.HORIZONTAL);
-        sc1.setPrefWidth(370);
-        sc1.setMax(370);
-        
-        //Obsolete
-        ScrollBar sc2 = new ScrollBar();
-        sc2.setLayoutX(rect3.getX()+5);
-        sc2.setLayoutY(rect3.getY()+20);
-        sc2.setMin(0);
-        sc2.setOrientation(Orientation.VERTICAL);
-        sc2.setPrefHeight(470);
-        sc2.setMax(370);
-        
-        gr3.getChildren().add(rect3);
-        //gr3.getChildren().add(sc1);
-        //gr3.getChildren().add(sc2);
-        root.getChildren().add(gr3);
-        
 
-        
-        
-        
-        
-        primaryStage.setScene(scene);
-        primaryStage.show();
     }
-
+	
+	//********************CREATION GRAPHICAL OBJECTS*******************************//
+	
+	//BOUTON
+	Button createButton(int layoutX, int layoutY, String cheminImage){
+		Button button = new Button();
+		button.setLayoutX(layoutX);
+		button.setLayoutY(layoutY);
+		Image buttonImg = new Image(getClass().getResourceAsStream(cheminImage));
+        ImageView iV = new ImageView(buttonImg);
+        iV.setFitHeight(20);
+        iV.setFitWidth(20);
+        button.setGraphic(iV);
+		return button;
+	}
+	
+	//TEXT
+	Text createText(String text, int font, double layoutX, double layoutY){
+		Text t = new Text(text);
+		t.setFont(new Font(font));
+		t.setLayoutX(layoutX);
+		t.setLayoutY(layoutY);
+		return t;
+	}
+	
+	//POLYGON
+	Polygon createPolygon(Double[] tabDouble, double layoutX, double layoutY,  Color fill, Color stroke){
+		Polygon poly = new Polygon();
+		poly.getPoints().addAll(tabDouble);
+        poly.setLayoutX(layoutX);
+        poly.setLayoutY(layoutY); 
+        poly.setFill(fill);
+        poly.setStroke(stroke);
+        return poly;
+	}
+	
+	//RECTANGLE
+	Rectangle createRectangle(double x, double y, double width, double height, double arcWidth,
+			double arcHeight , Color fill, Color stroke, EventHandler<MouseEvent> pressed,
+			EventHandler<MouseEvent> dragged, boolean transp){
+		Rectangle rectTest = new Rectangle();
+		rectTest.setX(x);
+        rectTest.setY(y);
+        rectTest.setWidth(width);
+        rectTest.setHeight(height);
+        rectTest.setArcWidth(arcWidth);
+        rectTest.setArcHeight(arcHeight);
+        rectTest.setFill(fill);
+        rectTest.setStroke(stroke);
+        rectTest.setMouseTransparent(transp);
+        rectTest.setOnMousePressed(pressed);
+        rectTest.setOnMouseDragged(dragged);
+		return rectTest;
+	}
+	
+	//GROUP
+	Group createGroup(double x, double y){
+		Group gr = new Group();
+		gr.setLayoutX(x);
+		gr.setLayoutY(y);
+		return gr;
+	}
 }
-
