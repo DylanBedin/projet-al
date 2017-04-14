@@ -1,31 +1,37 @@
 package view;
 
+import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
+
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class View extends Application{
 
+
+public class View extends Application{
+	private static final double LAYOUT_X_RECTANGLE = 15;
+	private static final double LAYOUT_Y_RECTANGLE = 30;
 	public static void main(String[] args) {
 		Application.launch(View.class, args);
 	}
 
 	
 /********************************************************************************************/
-	/*************************Deplacement simple d'une forme****************************/
+	/*************************Deplacement simple d'un rectangle*************************/
 	/***********************************************************************************/
 	double orgSceneX, orgSceneY;
 	double orgTranslateX, orgTranslateY;
@@ -60,19 +66,30 @@ public class View extends Application{
 	
 /********************************************************************************************/
 /********************************************************************************************/
-	/*********************Copie et Deplacement simple d'une forme***********************/
+	
 	/***********************************************************************************/
-	//double orgSceneX, orgSceneY;
-	//double orgTranslateX, orgTranslateY;
+	/*********************Copie et Deplacement simple d'un rectangle********************/
 	/***********************************************************************************/
 	
+	
 	EventHandler<MouseEvent> rectOnMousePressedEventHandlerv2 =
-			new EventHandler<MouseEvent>() {
+			new EventHandler<MouseEvent>(){
 
-		@Override
 		public void handle(MouseEvent t) {
-			Rectangle rectTest = new Rectangle( t.getSceneX(),
-												t.getSceneY());
+			Rectangle rect = createRectangle( 
+					LAYOUT_X_RECTANGLE,
+					LAYOUT_Y_RECTANGLE,
+					((Rectangle) (t.getSource())).getWidth(),
+					((Rectangle) (t.getSource())).getHeight(),
+					((Rectangle) (t.getSource())).getArcWidth(),
+					((Rectangle) (t.getSource())).getArcHeight(),
+					(Color) ((Rectangle) (t.getSource())).getFill(),
+					(Color) ((Rectangle) (t.getSource())).getStroke(),
+					rectOnMousePressedEventHandlerv2,
+	        		rectOnMouseDraggedEventHandler,
+	        		false);
+			Group n = (Group) ((Rectangle) t.getSource()).getParent();
+			n.getChildren().add(rect);
 			orgSceneX = t.getSceneX();
 			orgSceneY = t.getSceneY();
 			orgTranslateX = ((Rectangle)(t.getSource())).getTranslateX();
@@ -133,7 +150,7 @@ public class View extends Application{
         btnLoad.setLayoutY(15);
         btnLoad.setText("Load");
                 
-        Button btnUndo = createButton(145,15,"../img/Redo.png");
+        Button btnUndo = createButton(145,15,"../img/Undo.png");
                         
         Button btnRedo = createButton(200,15,"../img/Redo.png");
        
@@ -175,7 +192,7 @@ public class View extends Application{
         		Color.WHITE, Color.BLACK, null, null, true);
         
         Rectangle rectTest = createRectangle(rect2.getX() + 10, rect2.getY() + 10, 50, 50, 0, 0,
-        		Color.BLUE, Color.BLACK, rectOnMousePressedEventHandler, 
+        		Color.BLUE, Color.BLACK, rectOnMousePressedEventHandlerv2, 
         		rectOnMouseDraggedEventHandler, false);
 
 
@@ -207,7 +224,7 @@ public class View extends Application{
 	
 	//********************CREATION GRAPHICAL OBJECTS*******************************//
 	
-	//BOUTON
+	//BUTTON
 	Button createButton(int layoutX, int layoutY, String cheminImage){
 		Button button = new Button();
 		button.setLayoutX(layoutX);
