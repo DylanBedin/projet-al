@@ -1,6 +1,7 @@
 package view;
 
 
+import controller.Controller;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -33,8 +34,12 @@ public class View extends Application{
 	private static final double LAYOUT_Y_POLYGON = 90;
 	private static final double LAYOUT_X_WHITEBOARD = 85;
 	private static final double LAYOUT_Y_WHITEBOARD = 70;
+	
+	private Controller c;
+	
 	private Stage stage;
 	private Rectangle whiteboard;
+	
 
 	
 	public static void main(String[] args) {
@@ -326,6 +331,10 @@ public class View extends Application{
 			
 			if (t.getSceneX() < LAYOUT_X_WHITEBOARD || t.getSceneY() < LAYOUT_Y_WHITEBOARD){
 				((Shape) t.getSource()).setVisible(false);
+			}
+			else{
+				//Appel au controleur
+				c.addShapeToWhiteboard((Shape) t.getSource());
 			}
 		}
 	};
