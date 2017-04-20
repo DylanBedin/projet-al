@@ -31,14 +31,26 @@ public class View extends Application{
 	private static final double LAYOUT_Y_RECTANGLE = 30;
 	private static final double LAYOUT_X_POLYGON = 10;
 	private static final double LAYOUT_Y_POLYGON = 90;
+	private static final double LAYOUT_X_WHITEBOARD = 85;
+	private static final double LAYOUT_Y_WHITEBOARD = 70;
 	private Stage stage;
-	
+	private Rectangle whiteboard;
+
 	
 	public static void main(String[] args) {
 		Application.launch(View.class, args);
 	}
 
+	
+	public void begin(){
+		Application.launch(View.class);
+	}
 	/****************************************************************************************************************************/
+	
+	
+	public Rectangle getWhiteboard(){
+		return this.whiteboard;
+	}
 	
 	//*****************************************************************************//
 	//********************CREATION GRAPHICAL OBJECTS*******************************//
@@ -136,8 +148,8 @@ public class View extends Application{
 						((Rectangle) s).getArcHeight(),
 						(Color) ((Rectangle) s).getFill(),
 						(Color) ((Rectangle) s).getStroke(),
-						rectOnMousePressedEventHandlerv2,
-						rectOnMouseDraggedEventHandler,
+						OnMousePressedEventHandlerv2,
+						OnMouseDraggedEventHandler,
 						false);
 				return (Shape) rect;
 			}
@@ -149,8 +161,8 @@ public class View extends Application{
 						LAYOUT_Y_POLYGON,
 						(Color) ((Polygon) s).getFill(),
 						(Color) ((Polygon) s).getStroke(),
-						rectOnMousePressedEventHandlerv2,
-						rectOnMouseDraggedEventHandler,
+						OnMousePressedEventHandlerv2,
+						OnMouseDraggedEventHandler,
 						false
 						);
 				poly.getPoints().addAll( ((Polygon) s).getPoints());
@@ -167,13 +179,13 @@ public class View extends Application{
 	
 	
 	/***********************************************************************************/
-	/*************************Deplacement simple d'un rectangle*************************/
+	/*************************Deplacement et changement de couleur d'un shape*************************/
 	/***********************************************************************************/
-	double orgSceneX, orgSceneY;
-	double orgTranslateX, orgTranslateY;
+	private double orgSceneX, orgSceneY;
+	private double orgTranslateX, orgTranslateY;
 	/***********************************************************************************/
 	
-	EventHandler<MouseEvent> rectOnMousePressedEventHandler =
+	EventHandler<MouseEvent> OnMousePressedEventHandler =
 			new EventHandler<MouseEvent>() {
 
 		@Override
@@ -192,9 +204,9 @@ public class View extends Application{
 				}
 			}
 			else if(t.getButton() == MouseButton.SECONDARY){
-				Stage dialog = new Stage();
-                dialog.initModality(Modality.APPLICATION_MODAL);
-                dialog.initOwner(stage);
+				Stage stagePopUp = new Stage();
+                stagePopUp.initModality(Modality.APPLICATION_MODAL);
+                stagePopUp.initOwner(stage);
                 Group root = new Group();
                 Scene theScene = new Scene(root, 300, 30);
                 
@@ -245,13 +257,13 @@ public class View extends Application{
                 root.getChildren().add(turquoise);
                 root.getChildren().add(white);
                 
-                dialog.setScene(theScene);
-                dialog.show();
+                stagePopUp.setScene(theScene);
+                stagePopUp.show();
 			}
 		}
 	};
 	
-	EventHandler<MouseEvent> rectOnMouseDraggedEventHandler =
+	EventHandler<MouseEvent> OnMouseDraggedEventHandler =
 			new EventHandler<MouseEvent>() {
 
 		@Override
@@ -277,7 +289,7 @@ public class View extends Application{
 	/***********************************************************************************/
 	
 	
-	EventHandler<MouseEvent> rectOnMousePressedEventHandlerv2 =
+	EventHandler<MouseEvent> OnMousePressedEventHandlerv2 =
 			new EventHandler<MouseEvent>(){
 
 		public void handle(MouseEvent t) {
@@ -289,7 +301,8 @@ public class View extends Application{
 				orgSceneY = t.getSceneY();
 				orgTranslateX = ((Rectangle)(t.getSource())).getTranslateX();
 				orgTranslateY = ((Rectangle)(t.getSource())).getTranslateY();
-				((Rectangle)(t.getSource())).setOnMousePressed(rectOnMousePressedEventHandler);
+				((Rectangle)(t.getSource())).setOnMousePressed(OnMousePressedEventHandler);
+				((Rectangle)(t.getSource())).setOnMouseReleased(mouseReleasedOnWhiteboardEventHandler);
 			}
 			if (t.getSource() instanceof Polygon) {
 				Shape poly = cloneShape((Shape) t.getSource());
@@ -299,7 +312,20 @@ public class View extends Application{
 				orgSceneY = t.getSceneY();
 				orgTranslateX = ((Polygon)(t.getSource())).getTranslateX();
 				orgTranslateY = ((Polygon)(t.getSource())).getTranslateY();
-				((Polygon)(t.getSource())).setOnMousePressed(rectOnMousePressedEventHandler);
+				((Polygon)(t.getSource())).setOnMousePressed(OnMousePressedEventHandler);				
+				((Polygon)(t.getSource())).setOnMouseReleased(mouseReleasedOnWhiteboardEventHandler);
+
+			}
+		}
+	};
+	
+	EventHandler<MouseEvent> mouseReleasedOnWhiteboardEventHandler =
+			new EventHandler<MouseEvent>(){
+		
+		public void handle(MouseEvent t){
+			
+			if (t.getSceneX() < LAYOUT_X_WHITEBOARD || t.getSceneY() < LAYOUT_Y_WHITEBOARD){
+				((Shape) t.getSource()).setVisible(false);
 			}
 		}
 	};
@@ -367,14 +393,11 @@ public class View extends Application{
          * DEUXIEME GROUPE: Fenetre contenant les formes à afficher.
          */
         
-        Group gr3 = createGroup(80,50);
-        
-        //Rectangle pour l'instant mais à changer.
-        
-        Rectangle rect3 = createRectangle(5,20,400,510,0,0,Color.WHITE,Color.BLACK, null, null, true);
+        Group gr3 = createGroup(LAYOUT_X_WHITEBOARD,LAYOUT_Y_WHITEBOARD);
+                
+        whiteboard = createRectangle(0,0,400,510,0,0,Color.WHITE,Color.BLACK, null, null, true);
 
-
-        gr3.getChildren().add(rect3);
+        gr3.getChildren().add(whiteboard);
         root.getChildren().add(gr3);
         
         primaryStage.setScene(scene);
@@ -391,9 +414,10 @@ public class View extends Application{
         		Color.WHITE, Color.BLACK, null, null, true);
         
         Rectangle rect = createRectangle(rect2.getX() + 10, rect2.getY() + 10, 50, 50, 0, 0,
-        		Color.BLUE, Color.BLACK, rectOnMousePressedEventHandlerv2, 
-        		rectOnMouseDraggedEventHandler, false);
-
+        		Color.BLUE, Color.BLACK, OnMousePressedEventHandlerv2, 
+        		OnMouseDraggedEventHandler, false);
+        
+        rect.setOnMouseReleased(mouseReleasedOnWhiteboardEventHandler);
 
         Double[] tab = new Double[]{
         		30.0, 0.0,
@@ -404,7 +428,7 @@ public class View extends Application{
         };
         
         Polygon poly = createPolygon(tab, rect2.getX() + 5, rect.getY() + rect.getHeight() + 10, Color.BLACK, 
-        		Color.BLACK, rectOnMousePressedEventHandlerv2, rectOnMouseDraggedEventHandler, false);
+        		Color.BLACK, OnMousePressedEventHandlerv2, OnMouseDraggedEventHandler, false);
         
 
         
