@@ -1,9 +1,9 @@
 package controller;
 
-import java.awt.*;
 import java.awt.geom.Point2D;
 
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
 import model.*;
 import view.*;
 
@@ -18,7 +18,7 @@ public class Controller {
 	
 	public void addRectangleToWhiteboard(Rectangle r){
 		IShape is;
-		is = new ShapeRectangle(r.getSize(), new Point2D.Double(r.getX(), r.getY()));
+		is = new ShapeRectangle(r.getHeight(), r.getWidth(), new Point2D.Double(r.getX(), r.getY()));
 		this.wb.add(is, new Point2D.Double(is.getPosition().getX(), is.getPosition().getY()));
 	}
 	

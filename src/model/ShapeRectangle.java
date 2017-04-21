@@ -1,48 +1,49 @@
 package model;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.geom.Point2D;
 
 public class ShapeRectangle extends AbstractShape {
 	private double round;
 	private double roundedEdges;
-	private Dimension size;
+	private double width, height;
 	private final static double ROUND = 0, ROUNDEDEDGES = 0;
 
 
-	public ShapeRectangle(Dimension size, double round,
+	public ShapeRectangle(double width, double height, double round,
 			double roundedEdges, double rotat, 
 			double rotatCenterX, double rotatCenterY, 
 			double translateX, double translateY, 
 			Color color, Point2D.Double position){
 		super(rotat, rotatCenterX, rotatCenterY, translateX, translateY, color, position);
-		this.size = size;
+		this.width = width;
+		this.height = height;
 		this.round = round;
 		this.roundedEdges = roundedEdges;
 	}
 	
-	public ShapeRectangle(Dimension size, Point2D.Double position){
+	public ShapeRectangle(double width, double height, Point2D.Double position){
 		super(position);
-		this.size = size;
+		this.width = width;
+		this.height = height;
 		this.round = ROUND;
 		this.roundedEdges = ROUNDEDEDGES;
 	}
 	
 	public void setWidth(double width){
-		this.size.setSize(width, this.getHeight());
+		this.width = width;
 	}
 	
 	public double getWidth(){
-		return this.size.getWidth();
+		return this.width;
 	}
 	
 	public void setHeight(double height){
-		this.size.setSize(this.getWidth(), height);
+		this.height = height;
 	}
 	
 	public double getHeight(){
-		return this.size.getHeight();
+		return this.height;
 	}
 	
 	public void setRound(double round){
