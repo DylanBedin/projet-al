@@ -1,6 +1,7 @@
 package controller;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
@@ -11,15 +12,20 @@ public class Controller {
 	private View v;
 	private Whiteboard wb;
 	
-	public Controller(){
-		v = new View();
-		v.begin();
+	public Controller(View v){
+		this.v = v;
+		this.wb = new Whiteboard();
 	}
 	
 	public void addRectangleToWhiteboard(Rectangle r){
 		IShape is;
 		is = new ShapeRectangle(r.getHeight(), r.getWidth(), new Point2D.Double(r.getX(), r.getY()));
 		this.wb.add(is, new Point2D.Double(is.getPosition().getX(), is.getPosition().getY()));
+		ArrayList<IShape> listShapes = wb.getListShapes();
+		for(IShape s:listShapes){
+			System.out.println(s.getPosition());
+		}
+
 	}
 	
 	public void addPolygonToWhiteboard(Polygon polygon){
@@ -32,6 +38,7 @@ public class Controller {
 				firstPoint);
 		
 		this.wb.add(is, firstPoint);
+		System.out.println("kek");
 	}
 	
 }
