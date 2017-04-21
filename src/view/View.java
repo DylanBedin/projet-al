@@ -55,7 +55,11 @@ public class View extends Application{
 		Application.launch(View.class);
 	}
 /***************************************************************************************************************************/
-	
+/**
+ * TODO : Faire une liste répertoriant toutes les formes présentes DANS LE WHITEBOARD 
+ * 		  (ignorer ceux qui sont passé en invisible)
+ * 
+ */
 	
 	public Rectangle getWhiteboard(){
 		return this.whiteboard;
@@ -196,6 +200,7 @@ public class View extends Application{
 	/***********************************************************************************/
 	private double orgSceneX, orgSceneY;
 	private double orgTranslateX, orgTranslateY;
+	private double newTranslateX, newTranslateY;
 	/***********************************************************************************/
 	
 	EventHandler<MouseEvent> OnMousePressedEventHandler =
@@ -206,6 +211,7 @@ public class View extends Application{
 			if (t.getButton() == MouseButton.PRIMARY){
 				orgSceneX = t.getSceneX();
 				orgSceneY = t.getSceneY();
+				System.out.println(orgSceneX + " <=X et Y=> " +orgSceneY);
 				
 				if(t.getSource() instanceof Rectangle){
 					orgTranslateX = ((Rectangle)(t.getSource())).getTranslateX();
@@ -309,9 +315,7 @@ public class View extends Application{
                 				double resY = Double.parseDouble(textFieldCentreY.getText());
                 				((Rectangle) t.getSource()).getTransforms().add(new Rotate(resR, resX, resY));
                 			}
-                			System.out.println(((Rectangle) t.getSource()).getX());
-                			System.out.println(((Rectangle) t.getSource()).getY());
-                			//ok.getParent().getScene().getWindow().hide();
+                			ok.getParent().getScene().getWindow().hide();
                 			
                 		}
                 	});
@@ -381,22 +385,19 @@ public class View extends Application{
 			
 			double offsetX = t.getSceneX() - orgSceneX;
 			double offsetY = t.getSceneY() - orgSceneY;
-			double newTranslateX = orgTranslateX + offsetX;
-			double newTranslateY = orgTranslateY + offsetY;
+			newTranslateX = orgTranslateX + offsetX;
+			newTranslateY = orgTranslateY + offsetY;
+			
 			
 			if(t.getSource() instanceof Rectangle){
-				//((Rectangle)(t.getSource())).setX(((Rectangle)(t.getSource())).getTranslateX());
 				((Rectangle)(t.getSource())).setTranslateX(newTranslateX);
 				((Rectangle)(t.getSource())).setTranslateY(newTranslateY);
-				//((Rectangle)(t.getSource())).setX(t.getSceneX());
 				
-				System.out.println(((Rectangle)(t.getSource())).getX());
 			}
 			else if (t.getSource() instanceof Polygon){
 				((Polygon)(t.getSource())).setTranslateX(newTranslateX);
 				((Polygon)(t.getSource())).setTranslateY(newTranslateY);
 			}
-			((Rectangle)(t.getSource())).setX(t.getSceneX());
 		}
 	};
 	
@@ -430,6 +431,7 @@ public class View extends Application{
 				orgTranslateY = ((Polygon)(t.getSource())).getTranslateY();
 				((Polygon)(t.getSource())).setOnMousePressed(OnMousePressedEventHandler);				
 				((Polygon)(t.getSource())).setOnMouseReleased(mouseReleasedOnWhiteboardEventHandler);
+				
 
 			}
 		}
@@ -440,15 +442,29 @@ public class View extends Application{
 		
 		public void handle(MouseEvent t){
 			
-			if (t.getSceneX() < LAYOUT_X_WHITEBOARD || t.getSceneY() < LAYOUT_Y_WHITEBOARD){
+			/**
+			 * TODO : Prendre en compte le dépassage des limites du rectangle ainsi que le fait de ne PAS SUPPRIMER une forme
+			 * 		  quand elle a été instancié une premiere fois.
+			 * 		  Faire aussi pour les Polygon
+			 */
+			
+			if (t.getSceneX() < LAYOUT_X_WHITEBOARD || t.getSceneY() < LAYOUT_Y_WHITEBOARD && 
+					t.getSceneX() > LAYOUT_X_WHITEBOARD + 0){
 				((Shape) t.getSource()).setVisible(false);
 			}
 			else{
 				//Appel au controleur
 				if (t.getSource() instanceof Rectangle)
-					c.addRectangleToWhiteboard((Rectangle) t.getSource());
-					
+					//c.addRectangleToWhiteboard((Rectangle) t.getSource());
+					;
 			}
+			if (t.getSource() instanceof Rectangle){
+				((Rectangle)(t.getSource())).setX(((Rectangle)(t.getSource())).getTranslateX() + ((Rectangle)(t.getSource())).getX());
+				((Rectangle)(t.getSource())).setTranslateX(0);
+				((Rectangle)(t.getSource())).setY(((Rectangle)(t.getSource())).getTranslateY() + ((Rectangle)(t.getSource())).getY());
+				((Rectangle)(t.getSource())).setTranslateY(0);
+			}
+			//FAIRE POLYGONE
 		}
 	};
 	
