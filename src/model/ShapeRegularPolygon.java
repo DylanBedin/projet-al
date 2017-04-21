@@ -1,15 +1,25 @@
 package model;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.geom.Point2D;
 
 public class ShapeRegularPolygon extends AbstractShape {
-	private int edgeLength;
+	private double edgeLength;
 	private int nbEdges;
 	
 	public ShapeRegularPolygon(int edgeLength, int nbEdges, 
-						  double rotat, double rotatCenter, double translate, Color color, double size, Point2D position){
-		super(rotat, rotatCenter, translate, color, size, position);
+						  double rotat, double rotatCenterX,
+						  double rotatCenterY, double translateX, 
+						  double translateY, Color color, 
+						  Dimension size, Point2D.Double position){
+		super(rotat, rotatCenterX, rotatCenterY, translateX, translateY, color, position);
+		this.edgeLength = edgeLength;
+		this.nbEdges = nbEdges;
+	}
+	
+	public ShapeRegularPolygon(double edgeLength, int nbEdges, Point2D.Double position){
+		super(position);
 		this.edgeLength = edgeLength;
 		this.nbEdges = nbEdges;
 	}
@@ -18,7 +28,7 @@ public class ShapeRegularPolygon extends AbstractShape {
 		this.edgeLength = edgeLength;
 	}
 	
-	public int getEdgeLength(){
+	public double getEdgeLength(){
 		return this.edgeLength;
 	}
 	

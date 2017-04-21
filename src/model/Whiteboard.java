@@ -1,9 +1,7 @@
 package model;
 
 import java.util.ArrayList;
-
-import javafx.geometry.Point2D;
-
+import java.awt.geom.Point2D;
 
 public class Whiteboard{
 	private ArrayList<Point2D> listPositionShapes;
@@ -16,7 +14,8 @@ public class Whiteboard{
 		this.width = width;
 		this.upLeftCorner = p;
 	}
-	public void add(IShape shape, Point2D position){
+	
+	public void add(IShape shape, Point2D.Double position){
 		this.listShapes.add(shape);
 		this.listPositionShapes.add(position);
 	}

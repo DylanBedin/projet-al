@@ -14,9 +14,4 @@ public class ShapeFactory implements IShapeFactory {
 			double translate, Color color, double size, Point2D position) {
 		return new ShapeRegularPolygon(edgeLength, nbEdges, rotat, rotatCenter, translate, color, size, position);
 	}
-
-	
-
-
-
 }

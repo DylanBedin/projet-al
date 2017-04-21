@@ -14,11 +14,13 @@ public interface IShape extends Cloneable{
 	public void setRotation(double rotat);
 	public double getRotation();
 	
-	public void setRotationCenter(double rotatCenter);
-	public double getRotationCenter();
+	public void setRotationCenter(double rotatCenterX, double rotatCenterY);
+	public double getRotationCenterX();
+	public double getRotationCenterY();
 	
-	public void setTranslation(double translate);
-	public double getTranslation();
+	public void setTranslation(double translateX, double translateY);
+	public double getTranslationX();
+	public double getTranslationY();
 	
 	public Object clone() throws CloneNotSupportedException;
 }
