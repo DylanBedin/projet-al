@@ -9,6 +9,8 @@ import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -16,6 +18,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
@@ -23,6 +26,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -50,7 +54,7 @@ public class View extends Application{
 	public void begin(){
 		Application.launch(View.class);
 	}
-	/****************************************************************************************************************************/
+/***************************************************************************************************************************/
 	
 	
 	public Rectangle getWhiteboard(){
@@ -79,7 +83,7 @@ public class View extends Application{
                 	@Override
                 	public void handle(ActionEvent e){
                 		source.setFill(color);
-                		button.getParent().getScene().getWindow().hide();
+                		//button.getParent().getScene().getWindow().hide();
                 	}
                 });
 			}
@@ -156,6 +160,8 @@ public class View extends Application{
 						OnMousePressedEventHandlerv2,
 						OnMouseDraggedEventHandler,
 						false);
+				Group parent = (Group) whiteboard.getParent();
+				parent.getChildren().add(rect);
 				return (Shape) rect;
 			}
 			
@@ -171,6 +177,8 @@ public class View extends Application{
 						false
 						);
 				poly.getPoints().addAll( ((Polygon) s).getPoints());
+				Group parent = (Group) whiteboard.getParent();
+				parent.getChildren().add(poly);
 				return (Shape) poly;
 			}
 			return null;
@@ -179,7 +187,7 @@ public class View extends Application{
 
 
 	
-/****************************************************************************************************************************/
+/***************************************************************************************************************************/
 	
 	
 	
@@ -213,7 +221,7 @@ public class View extends Application{
                 stagePopUp.initModality(Modality.APPLICATION_MODAL);
                 stagePopUp.initOwner(stage);
                 Group root = new Group();
-                Scene theScene = new Scene(root, 300, 30);
+                Scene theScene = new Scene(root, 300, 160);
                 
                 //Buttons
                 Button red = createButton(2, 5, null, Color.RED, ((Shape)(t.getSource())));
@@ -246,6 +254,102 @@ public class View extends Application{
                 
                 Button white = createButton(282, 5, null, Color.WHITE, ((Shape)(t.getSource())));
                 
+                if (t.getSource() instanceof Rectangle){
+                	
+                	/**/
+                	
+                	Label hauteur = new Label("Hauteur :");
+                	TextField textFieldHauteur = new TextField ();
+                	textFieldHauteur.setMaxWidth(60);
+                	textFieldHauteur.setText("");
+                	Label largeur = new Label("Largeur :");
+                	TextField textFieldLargeur = new TextField ();
+                	textFieldLargeur.setMaxWidth(60);
+                	textFieldLargeur.setText("");
+                	
+                	/**/
+                	
+                	Label centre = new Label("Centre de rotation:");
+                	TextField textFieldCentreX = new TextField();
+                	textFieldCentreX.setMaxWidth(60);
+                	textFieldCentreX.setText("");
+                	textFieldCentreX.setPromptText("x");
+                	TextField textFieldCentreY = new TextField();
+                	textFieldCentreY.setMaxWidth(60);
+                	textFieldCentreY.setText("");
+                	textFieldCentreY.setPromptText("y");
+                	
+                	/**/
+                	
+                	Label rotation = new Label("Rotation :");
+                	TextField textFieldRotation = new TextField ();
+                	textFieldRotation.setMaxWidth(60);
+                	textFieldRotation.setText("");
+                	Button ok = createButton(0,0,null,null, null);
+                	ok.setText("Ok!");
+                	ok.setOnAction(new EventHandler<ActionEvent>() {
+
+                		@Override
+                		public void handle(ActionEvent e) {
+                			if ( textFieldHauteur.getText().trim().isEmpty() == false){
+                				double res = Double.parseDouble(textFieldHauteur.getText());
+                				((Rectangle) t.getSource()).setHeight(res);
+                			}
+                			
+                			if ( textFieldLargeur.getText().trim().isEmpty() == false){
+                				double res = Double.parseDouble(textFieldLargeur.getText());
+                				((Rectangle) t.getSource()).setWidth(res);
+                			}
+                			
+                			if ( textFieldRotation.getText().trim().isEmpty() == false && 
+                					textFieldCentreX.getText().trim().isEmpty() == false &&
+                					textFieldCentreY.getText().trim().isEmpty() == false){
+                				double resR = Double.parseDouble(textFieldRotation.getText());
+                				double resX = Double.parseDouble(textFieldCentreX.getText());
+                				double resY = Double.parseDouble(textFieldCentreY.getText());
+                				((Rectangle) t.getSource()).getTransforms().add(new Rotate(resR, resX, resY));
+                			}
+                			System.out.println(((Rectangle) t.getSource()).getX());
+                			System.out.println(((Rectangle) t.getSource()).getY());
+                			//ok.getParent().getScene().getWindow().hide();
+                			
+                		}
+                	});
+                	
+                	/**/
+                	
+                	HBox hbHauteurLargeur = new HBox();
+                	hbHauteurLargeur.setLayoutX(2);
+                	hbHauteurLargeur.setLayoutY(42);
+                	hbHauteurLargeur.getChildren().add(hauteur);
+                	hbHauteurLargeur.getChildren().add(textFieldHauteur);
+                	hbHauteurLargeur.getChildren().add(largeur);
+                	hbHauteurLargeur.getChildren().add(textFieldLargeur);
+                	
+                	/**/
+                	
+                	HBox hbCentreRotation = new HBox();
+                	hbCentreRotation.setLayoutX(2);
+                	hbCentreRotation.setLayoutY(82);
+                	hbCentreRotation.getChildren().add(centre);
+                	hbCentreRotation.getChildren().add(textFieldCentreX);
+                	hbCentreRotation.getChildren().add(textFieldCentreY);
+                	
+                	/**/
+                	
+                	HBox hbRotation = new HBox();
+                	hbRotation.setLayoutX(2);
+                	hbRotation.setLayoutY(122);
+                	hbRotation.getChildren().add(rotation);
+                	hbRotation.getChildren().add(textFieldRotation);
+                	hbRotation.getChildren().add(ok);
+                	
+                	root.getChildren().add(hbHauteurLargeur);
+                	root.getChildren().add(hbCentreRotation);
+                	root.getChildren().add(hbRotation);
+
+                }
+
                 root.getChildren().add(red);
                 root.getChildren().add(blue);
                 root.getChildren().add(green);
@@ -262,6 +366,7 @@ public class View extends Application{
                 root.getChildren().add(turquoise);
                 root.getChildren().add(white);
                 
+                
                 stagePopUp.setScene(theScene);
                 stagePopUp.show();
 			}
@@ -273,19 +378,25 @@ public class View extends Application{
 
 		@Override
 		public void handle(MouseEvent t) {
+			
 			double offsetX = t.getSceneX() - orgSceneX;
 			double offsetY = t.getSceneY() - orgSceneY;
 			double newTranslateX = orgTranslateX + offsetX;
 			double newTranslateY = orgTranslateY + offsetY;
 			
 			if(t.getSource() instanceof Rectangle){
+				//((Rectangle)(t.getSource())).setX(((Rectangle)(t.getSource())).getTranslateX());
 				((Rectangle)(t.getSource())).setTranslateX(newTranslateX);
 				((Rectangle)(t.getSource())).setTranslateY(newTranslateY);
+				//((Rectangle)(t.getSource())).setX(t.getSceneX());
+				
+				System.out.println(((Rectangle)(t.getSource())).getX());
 			}
 			else if (t.getSource() instanceof Polygon){
 				((Polygon)(t.getSource())).setTranslateX(newTranslateX);
 				((Polygon)(t.getSource())).setTranslateY(newTranslateY);
 			}
+			((Rectangle)(t.getSource())).setX(t.getSceneX());
 		}
 	};
 	
@@ -334,7 +445,9 @@ public class View extends Application{
 			}
 			else{
 				//Appel au controleur
-				c.addShapeToWhiteboard((Shape) t.getSource());
+				if (t.getSource() instanceof Rectangle)
+					c.addRectangleToWhiteboard((Rectangle) t.getSource());
+					
 			}
 		}
 	};
@@ -342,7 +455,7 @@ public class View extends Application{
 	
 
 	
-/****************************************************************************************************************************/
+/***************************************************************************************************************************/
 
 	
 	/********************************************************************************************/
@@ -405,7 +518,9 @@ public class View extends Application{
         Group gr3 = createGroup(LAYOUT_X_WHITEBOARD,LAYOUT_Y_WHITEBOARD);
                 
         whiteboard = createRectangle(0,0,400,510,0,0,Color.WHITE,Color.BLACK, null, null, true);
-
+        
+        
+        
         gr3.getChildren().add(whiteboard);
         root.getChildren().add(gr3);
         
