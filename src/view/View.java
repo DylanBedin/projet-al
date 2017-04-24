@@ -56,7 +56,7 @@ public class View extends Application{
 	@Override
     public void start(Stage primaryStage) {
 		this.stage = primaryStage;
-        primaryStage.setTitle("ProjetArchitectureParallele");
+        primaryStage.setTitle("ProjetArchitectureLogicielle");
         Group root = new Group();
         Scene scene = new Scene(root, 500, 600, Color.WHITE);
 
@@ -173,6 +173,7 @@ public class View extends Application{
 
         
         Button TrashCan = GraphicalObjects.createButton(20,490, null, null);
+        /*
         Image buttonImg3 = new Image(getClass().getResourceAsStream("../img/TrashCan.png"));
 		ImageView iV3 = new ImageView(buttonImg3);
 		iV3.setFitHeight(20);
@@ -180,13 +181,12 @@ public class View extends Application{
 		TrashCan.setGraphic(iV3);
 		TrashCan.setPrefWidth(30);
 		TrashCan.setPrefHeight(30);
-		
+		*/
 		
 		
 		gr2.getChildren().add(TrashCan);
         gr2.getChildren().add(rect);
         gr2.getChildren().add(poly);
-        
         
         primaryStage.setScene(scene);
         primaryStage.show();

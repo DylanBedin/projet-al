@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -36,6 +37,8 @@ public class EventMouse {
 	static public void checkPosition(Shape s){
 		if(s instanceof Rectangle){
 			Rectangle rect = (Rectangle) s;
+			
+
 			
 			
 			if (rect.getX() < GLOBAL_LAYOUT_Xmin_WHITEBOARD)
@@ -147,6 +150,7 @@ public class EventMouse {
 					((Polygon)(t.getSource())).toFront();
 				}
 			}
+
 			else if(t.getButton() == MouseButton.SECONDARY){
 				Stage stagePopUp = new Stage();
                 stagePopUp.initModality(Modality.APPLICATION_MODAL);
@@ -204,11 +208,11 @@ public class EventMouse {
                 	TextField textFieldCentreX = new TextField();
                 	textFieldCentreX.setMaxWidth(60);
                 	textFieldCentreX.setText("");
-                	textFieldCentreX.setPromptText("x");
+                	textFieldCentreX.setPromptText( String.valueOf( ((Rectangle) t.getSource()).getX() + ((Rectangle) t.getSource()).getWidth()/2 - GLOBAL_LAYOUT_Xmin_WHITEBOARD));
                 	TextField textFieldCentreY = new TextField();
                 	textFieldCentreY.setMaxWidth(60);
                 	textFieldCentreY.setText("");
-                	textFieldCentreY.setPromptText("y");
+                	textFieldCentreY.setPromptText(String.valueOf( ((Rectangle) t.getSource()).getY() + ((Rectangle) t.getSource()).getHeight()/2 - GLOBAL_LAYOUT_Ymin_WHITEBOARD));
                 	
                 	/**/
                 	
@@ -216,6 +220,7 @@ public class EventMouse {
                 	TextField textFieldRotation = new TextField ();
                 	textFieldRotation.setMaxWidth(60);
                 	textFieldRotation.setText("");
+                	textFieldRotation.setPromptText("degrès");
                 	Button ok = GraphicalObjects.createButton(0,0,null, null);
                 	ok.setText("Ok!");
                 	ok.setOnAction(new EventHandler<ActionEvent>() {
@@ -225,6 +230,7 @@ public class EventMouse {
                 			if ( textFieldHauteur.getText().trim().isEmpty() == false){
                 				double res = Double.parseDouble(textFieldHauteur.getText());
                 				((Rectangle) t.getSource()).setHeight(res);
+                				
                 			}
                 			
                 			if ( textFieldLargeur.getText().trim().isEmpty() == false){
@@ -235,19 +241,45 @@ public class EventMouse {
                 			if ( textFieldRotation.getText().trim().isEmpty() == false && 
                 					textFieldCentreX.getText().trim().isEmpty() == false &&
                 					textFieldCentreY.getText().trim().isEmpty() == false){
-                				double resR = Double.parseDouble(textFieldRotation.getText());
-                				double resX = Double.parseDouble(textFieldCentreX.getText());
-                				double resY = Double.parseDouble(textFieldCentreY.getText());
-                				((Rectangle) t.getSource()).getTransforms().add(new Rotate(resR, resX, resY));
+                				double rotation = Double.parseDouble(textFieldRotation.getText());
+                				double pointCentreX = Double.parseDouble( textFieldCentreX.getText()) ;
+                				double pointCentreY = Double.parseDouble(textFieldCentreY.getText());
+                				
+                				double rotaRadian = rotation * (Math.PI / 180);
+                				double cosRotation = Math.cos(rotaRadian);
+                				double sinRotation = Math.sin(rotaRadian);
+                				double coorX = ((Rectangle) t.getSource()).getX() ;
+                				double coorY = ((Rectangle) t.getSource()).getY() ;
+                				
+                				
+                				
+                				if( ( coorX - pointCentreX ) * cosRotation - ( coorY - pointCentreY ) * sinRotation + pointCentreX < 0 ||
+                					( coorX - pointCentreX ) * cosRotation - ( coorY - pointCentreY ) * sinRotation + pointCentreX > GLOBAL_LAYOUT_Xmax_WHITEBOARD - GLOBAL_LAYOUT_Xmin_WHITEBOARD ||
+                					( coorX - pointCentreX ) * sinRotation + ( coorY - pointCentreY ) * cosRotation + pointCentreY < 0 ||
+                					( coorX - pointCentreX ) * sinRotation + ( coorY - pointCentreY ) * cosRotation + pointCentreY > GLOBAL_LAYOUT_Ymax_WHITEBOARD - GLOBAL_LAYOUT_Ymin_WHITEBOARD) {
+                					Stage stageError = new Stage();
+                					stageError.initModality(Modality.APPLICATION_MODAL);
+                					stageError.initOwner(View.stage);
+                					Group textRoot = new Group();
+                					Scene sceneError = new Scene(textRoot, 325, 20);
+                					Text t = new Text("\nErreur, rotation dépassant la taille du whiteboard!");
+                					textRoot.getChildren().add(t);
+                					stageError.setScene(sceneError);
+                					stageError.show();
+                				}
+                				else{
+                					((Rectangle) t.getSource()).getTransforms().add(new Rotate(rotation, coorX + GLOBAL_LAYOUT_Xmin_WHITEBOARD, coorY + GLOBAL_LAYOUT_Ymin_WHITEBOARD));
+                					checkPosition(((Rectangle) t.getSource()));
+                					ok.getParent().getScene().getWindow().hide();
+                				}
                 			}
                 			checkPosition(((Rectangle) t.getSource()));
                 			ok.getParent().getScene().getWindow().hide();
-                			
                 		}
                 	});
-                	
+
                 	/**/
-                	
+
                 	HBox hbHauteurLargeur = new HBox();
                 	hbHauteurLargeur.setLayoutX(2);
                 	hbHauteurLargeur.setLayoutY(42);
@@ -296,7 +328,7 @@ public class EventMouse {
                 root.getChildren().add(turquoise);
                 root.getChildren().add(white);
                 
-                
+
                 stagePopUp.setScene(theScene);
                 stagePopUp.show();
 			}
@@ -376,13 +408,14 @@ public class EventMouse {
 				((Rectangle)(t.getSource())).setY(((Rectangle)(t.getSource())).getTranslateY() + 
 												  ((Rectangle)(t.getSource())).getY());
 				((Rectangle)(t.getSource())).setTranslateY(0);
-				
+				if(!((Rectangle) t.getSource()).getTransforms().isEmpty())
+					((Rectangle) t.getSource()).getTransforms().remove(0);
 
 			}
 			
 			
 			if (t.getSource() instanceof Polygon){
-				((Polygon)(t.getSource())).setLayoutX((((Polygon)(t.getSource())).getTranslateX() + ((Polygon)(t.getSource())).getLayoutX()));
+				((Polygon)(t.getSource())).setLayoutX(((Polygon)(t.getSource())).getTranslateX() + ((Polygon)(t.getSource())).getLayoutX());
 				((Polygon)(t.getSource())).setTranslateX(0);
 				((Polygon)(t.getSource())).setLayoutY(((Polygon)(t.getSource())).getTranslateY() + ((Polygon)(t.getSource())).getLayoutY());
 				((Polygon)(t.getSource())).setTranslateY(0);
@@ -395,17 +428,6 @@ public class EventMouse {
 					//c.addRectangleToWhiteboard((Rectangle) t.getSource());
 					;
 			
-			
-		}
-	};
-	
-	static EventHandler<MouseEvent> buttonTrashReleased =
-			new EventHandler<MouseEvent>(){
-		
-		public void handle(MouseEvent t){
-			if ( t.getSource() instanceof Shape){
-				((Shape) t.getSource()).setVisible(false);
-			}
 			
 		}
 	};
