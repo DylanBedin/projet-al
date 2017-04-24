@@ -20,7 +20,7 @@ public class View extends Application{
 	protected static final double LAYOUT_X_WHITEBOARD = 85;
 	protected static final double LAYOUT_Y_WHITEBOARD = 20;
 	
-	private Controller c;
+	public static Controller controller;
 	
 	static Stage stage;
 	static Rectangle whiteboard;
@@ -59,6 +59,7 @@ public class View extends Application{
         primaryStage.setTitle("ProjetArchitectureParallele");
         Group root = new Group();
         Scene scene = new Scene(root, 500, 600, Color.WHITE);
+        this.controller = new Controller(this);
 
         /***************************************************************************************/
         /**
@@ -87,18 +88,18 @@ public class View extends Application{
         btnLoad.setText("Load");
                 
         Button btnUndo = GraphicalObjects.createButton(145,15, null, null);
-        Image buttonImg = new Image(getClass().getResourceAsStream("../img/Undo.png"));
-		ImageView iV = new ImageView(buttonImg);
-		iV.setFitHeight(20);
-		iV.setFitWidth(20);
-		btnUndo.setGraphic(iV);
+//        Image buttonImg = new Image(getClass().getResourceAsStream("../img/Undo.png"));
+//		ImageView iV = new ImageView(buttonImg);
+//		iV.setFitHeight(20);
+//		iV.setFitWidth(20);
+//		btnUndo.setGraphic(iV);
                         
         Button btnRedo = GraphicalObjects.createButton(200,15, null, null);
-        Image buttonImg2 = new Image(getClass().getResourceAsStream("../img/Redo.png"));
-		ImageView iV2 = new ImageView(buttonImg2);
-		iV2.setFitHeight(20);
-		iV2.setFitWidth(20);
-		btnRedo.setGraphic(iV2);
+//        Image buttonImg2 = new Image(getClass().getResourceAsStream("../img/Redo.png"));
+//		ImageView iV2 = new ImageView(buttonImg2);
+//		iV2.setFitHeight(20);
+//		iV2.setFitWidth(20);
+//		btnRedo.setGraphic(iV2);
         
         gr1.getChildren().add(rect1);
         gr1.getChildren().add(btnRedo);
@@ -173,11 +174,11 @@ public class View extends Application{
 
         
         Button TrashCan = GraphicalObjects.createButton(20,490, null, null);
-        Image buttonImg3 = new Image(getClass().getResourceAsStream("../img/TrashCan.png"));
-		ImageView iV3 = new ImageView(buttonImg3);
-		iV3.setFitHeight(20);
-		iV3.setFitWidth(20);
-		TrashCan.setGraphic(iV3);
+  //      Image buttonImg3 = new Image(getClass().getResourceAsStream("../img/TrashCan.png"));
+//		ImageView iV3 = new ImageView(buttonImg3);
+//		iV3.setFitHeight(20);
+//		iV3.setFitWidth(20);
+//		TrashCan.setGraphic(iV3);
 		TrashCan.setPrefWidth(30);
 		TrashCan.setPrefHeight(30);
 		

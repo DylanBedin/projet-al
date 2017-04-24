@@ -29,7 +29,7 @@ public class GraphicalObjects {
 
 	
 	//BUTTON
-	public static Button createButton(int layoutX, int layoutY, Paint color, Shape source){
+	public static Button createButton(int layoutX, int layoutY, final Paint color, final Shape source){
 		Button button = new Button();
 		button.setLayoutX(layoutX);
 		button.setLayoutY(layoutY);
