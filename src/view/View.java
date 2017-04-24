@@ -41,8 +41,8 @@ public class View extends Application{
 	
 	private Controller c;
 	
-	private Stage stage;
-	private Rectangle whiteboard;
+	static Stage stage;
+	static Rectangle whiteboard;
 	
 
 	
@@ -61,419 +61,7 @@ public class View extends Application{
  * 
  */
 	
-	public Rectangle getWhiteboard(){
-		return this.whiteboard;
-	}
-	
-	//*****************************************************************************//
-	//********************CREATION GRAPHICAL OBJECTS*******************************//
-	//*****************************************************************************//
-	
-		//BUTTON
-		Button createButton(int layoutX, int layoutY, String cheminImage, Paint color, Shape source){
-			Button button = new Button();
-			button.setLayoutX(layoutX);
-			button.setLayoutY(layoutY);
-			if (cheminImage != null){
-				Image buttonImg = new Image(getClass().getResourceAsStream(cheminImage));
-				ImageView iV = new ImageView(buttonImg);
-				iV.setFitHeight(20);
-				iV.setFitWidth(20);
-				button.setGraphic(iV);
-			}
-			if (color != null && source != null){
-				button.setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
-                button.setOnAction(new EventHandler<ActionEvent>() {
-                	@Override
-                	public void handle(ActionEvent e){
-                		source.setFill(color);
-                		//button.getParent().getScene().getWindow().hide();
-                	}
-                });
-			}
-			return button;
-		}
-		
-		//TEXT
-		Text createText(String text, int font, double layoutX, double layoutY){
-			Text t = new Text(text);
-			t.setFont(new Font(font));
-			t.setLayoutX(layoutX);
-			t.setLayoutY(layoutY);
-			return t;
-		}
-		
-		//POLYGON
-		Polygon createPolygon(Double[] tabDouble, double layoutX, double layoutY,  Color fill, Color stroke,
-				EventHandler<MouseEvent> pressed, EventHandler<MouseEvent> dragged, boolean transp){
-			Polygon poly = new Polygon();
-			poly.getPoints().addAll(tabDouble);
-	        poly.setLayoutX(layoutX);
-	        poly.setLayoutY(layoutY); 
-	        poly.setFill(fill);
-	        poly.setStroke(stroke);
-	        poly.setMouseTransparent(transp);
-	        poly.setOnMousePressed(pressed);
-	        poly.setOnMouseDragged(dragged);
-	        return poly;
-		}
-		
-		//RECTANGLE
-		Rectangle createRectangle(double x, double y, double width, double height, double arcWidth,
-				double arcHeight , Color fill, Color stroke, EventHandler<MouseEvent> pressed,
-				EventHandler<MouseEvent> dragged, boolean transp){
-			Rectangle rectTest = new Rectangle();
-			rectTest.setX(x);
-	        rectTest.setY(y);
-	        rectTest.setWidth(width);
-	        rectTest.setHeight(height);
-	        rectTest.setArcWidth(arcWidth);
-	        rectTest.setArcHeight(arcHeight);
-	        rectTest.setFill(fill);
-	        rectTest.setStroke(stroke);
-	        rectTest.setMouseTransparent(transp);
-	        rectTest.setOnMousePressed(pressed);
-	        rectTest.setOnMouseDragged(dragged);
-			return rectTest;
-		}
-		
-		//GROUP
-		Group createGroup(double x, double y){
-			Group gr = new Group();
-			gr.setLayoutX(x);
-			gr.setLayoutY(y);
-			return gr;
-		}
-		
-		
-		/***********************************************************************************/
-		/**********************************Clone of a shape*********************************/
-		/***********************************************************************************/
-		
-		public Shape cloneShape(Shape s){
-			if (s instanceof Rectangle){
-				Rectangle rect = createRectangle( 
-						LAYOUT_X_RECTANGLE,
-						LAYOUT_Y_RECTANGLE,
-						((Rectangle) s).getWidth(),
-						((Rectangle) s).getHeight(),
-						((Rectangle) s).getArcWidth(),
-						((Rectangle) s).getArcHeight(),
-						(Color) ((Rectangle) s).getFill(),
-						(Color) ((Rectangle) s).getStroke(),
-						OnMousePressedEventHandlerv2,
-						OnMouseDraggedEventHandler,
-						false);
-				Group parent = (Group) whiteboard.getParent();
-				parent.getChildren().add(rect);
-				return (Shape) rect;
-			}
-			
-			if (s instanceof Polygon){
-				Polygon poly = createPolygon(
-						new Double[]{},
-						LAYOUT_X_POLYGON,
-						LAYOUT_Y_POLYGON,
-						(Color) ((Polygon) s).getFill(),
-						(Color) ((Polygon) s).getStroke(),
-						OnMousePressedEventHandlerv2,
-						OnMouseDraggedEventHandler,
-						false
-						);
-				poly.getPoints().addAll( ((Polygon) s).getPoints());
-				Group parent = (Group) whiteboard.getParent();
-				parent.getChildren().add(poly);
-				return (Shape) poly;
-			}
-			return null;
-		}
 
-
-
-	
-/***************************************************************************************************************************/
-	
-	
-	
-	/***********************************************************************************/
-	/*************************Deplacement et changement de couleur d'un shape*************************/
-	/***********************************************************************************/
-	private double orgSceneX, orgSceneY;
-	private double orgTranslateX, orgTranslateY;
-	private double newTranslateX, newTranslateY;
-	/***********************************************************************************/
-	
-	EventHandler<MouseEvent> OnMousePressedEventHandler =
-			new EventHandler<MouseEvent>() {
-
-		@Override
-		public void handle(MouseEvent t) {
-			if (t.getButton() == MouseButton.PRIMARY){
-				orgSceneX = t.getSceneX();
-				orgSceneY = t.getSceneY();
-				System.out.println(orgSceneX + " <=X et Y=> " +orgSceneY);
-				
-				if(t.getSource() instanceof Rectangle){
-					orgTranslateX = ((Rectangle)(t.getSource())).getTranslateX();
-					orgTranslateY = ((Rectangle)(t.getSource())).getTranslateY();
-				}
-				else if (t.getSource() instanceof Polygon){
-					orgTranslateX = ((Polygon)(t.getSource())).getTranslateX();
-					orgTranslateY = ((Polygon)(t.getSource())).getTranslateY();
-				}
-			}
-			else if(t.getButton() == MouseButton.SECONDARY){
-				Stage stagePopUp = new Stage();
-                stagePopUp.initModality(Modality.APPLICATION_MODAL);
-                stagePopUp.initOwner(stage);
-                Group root = new Group();
-                Scene theScene = new Scene(root, 300, 160);
-                
-                //Buttons
-                Button red = createButton(2, 5, null, Color.RED, ((Shape)(t.getSource())));
-                
-                Button blue = createButton(22, 5, null, Color.BLUE, ((Shape)(t.getSource())));
-
-                Button green = createButton(42, 5, null, Color.GREEN, ((Shape)(t.getSource())));
-
-                Button aqua = createButton(62, 5, null, Color.AQUA, ((Shape)(t.getSource())));
-                
-                Button beige = createButton(82, 5, null, Color.BEIGE, ((Shape)(t.getSource())));
-                
-                Button turquoise = createButton(102, 5, null, Color.TURQUOISE, ((Shape)(t.getSource())));
-                
-                Button brown = createButton(122, 5, null, Color.BROWN, ((Shape)(t.getSource())));
-                
-                Button cyan = createButton(142, 5, null, Color.CYAN, ((Shape)(t.getSource())));
-                
-                Button grey = createButton(162, 5, null, Color.GRAY, ((Shape)(t.getSource())));
-                
-                Button pink = createButton(182, 5, null, Color.PINK, ((Shape)(t.getSource())));
-                
-                Button orange = createButton(202, 5, null, Color.ORANGE, ((Shape)(t.getSource())));
-                
-                Button lGreen = createButton(222, 5, null, Color.LIGHTGREEN, ((Shape)(t.getSource())));
-                
-                Button purple = createButton(242, 5, null, Color.PURPLE, ((Shape)(t.getSource())));
-                               
-                Button black = createButton(262, 5, null, Color.BLACK, ((Shape)(t.getSource())));
-                
-                Button white = createButton(282, 5, null, Color.WHITE, ((Shape)(t.getSource())));
-                
-                if (t.getSource() instanceof Rectangle){
-                	
-                	/**/
-                	
-                	Label hauteur = new Label("Hauteur :");
-                	TextField textFieldHauteur = new TextField ();
-                	textFieldHauteur.setMaxWidth(60);
-                	textFieldHauteur.setText("");
-                	Label largeur = new Label("Largeur :");
-                	TextField textFieldLargeur = new TextField ();
-                	textFieldLargeur.setMaxWidth(60);
-                	textFieldLargeur.setText("");
-                	
-                	/**/
-                	
-                	Label centre = new Label("Centre de rotation:");
-                	TextField textFieldCentreX = new TextField();
-                	textFieldCentreX.setMaxWidth(60);
-                	textFieldCentreX.setText("");
-                	textFieldCentreX.setPromptText("x");
-                	TextField textFieldCentreY = new TextField();
-                	textFieldCentreY.setMaxWidth(60);
-                	textFieldCentreY.setText("");
-                	textFieldCentreY.setPromptText("y");
-                	
-                	/**/
-                	
-                	Label rotation = new Label("Rotation :");
-                	TextField textFieldRotation = new TextField ();
-                	textFieldRotation.setMaxWidth(60);
-                	textFieldRotation.setText("");
-                	Button ok = createButton(0,0,null,null, null);
-                	ok.setText("Ok!");
-                	ok.setOnAction(new EventHandler<ActionEvent>() {
-
-                		@Override
-                		public void handle(ActionEvent e) {
-                			if ( textFieldHauteur.getText().trim().isEmpty() == false){
-                				double res = Double.parseDouble(textFieldHauteur.getText());
-                				((Rectangle) t.getSource()).setHeight(res);
-                			}
-                			
-                			if ( textFieldLargeur.getText().trim().isEmpty() == false){
-                				double res = Double.parseDouble(textFieldLargeur.getText());
-                				((Rectangle) t.getSource()).setWidth(res);
-                			}
-                			
-                			if ( textFieldRotation.getText().trim().isEmpty() == false && 
-                					textFieldCentreX.getText().trim().isEmpty() == false &&
-                					textFieldCentreY.getText().trim().isEmpty() == false){
-                				double resR = Double.parseDouble(textFieldRotation.getText());
-                				double resX = Double.parseDouble(textFieldCentreX.getText());
-                				double resY = Double.parseDouble(textFieldCentreY.getText());
-                				((Rectangle) t.getSource()).getTransforms().add(new Rotate(resR, resX, resY));
-                			}
-                			ok.getParent().getScene().getWindow().hide();
-                			
-                		}
-                	});
-                	
-                	/**/
-                	
-                	HBox hbHauteurLargeur = new HBox();
-                	hbHauteurLargeur.setLayoutX(2);
-                	hbHauteurLargeur.setLayoutY(42);
-                	hbHauteurLargeur.getChildren().add(hauteur);
-                	hbHauteurLargeur.getChildren().add(textFieldHauteur);
-                	hbHauteurLargeur.getChildren().add(largeur);
-                	hbHauteurLargeur.getChildren().add(textFieldLargeur);
-                	
-                	/**/
-                	
-                	HBox hbCentreRotation = new HBox();
-                	hbCentreRotation.setLayoutX(2);
-                	hbCentreRotation.setLayoutY(82);
-                	hbCentreRotation.getChildren().add(centre);
-                	hbCentreRotation.getChildren().add(textFieldCentreX);
-                	hbCentreRotation.getChildren().add(textFieldCentreY);
-                	
-                	/**/
-                	
-                	HBox hbRotation = new HBox();
-                	hbRotation.setLayoutX(2);
-                	hbRotation.setLayoutY(122);
-                	hbRotation.getChildren().add(rotation);
-                	hbRotation.getChildren().add(textFieldRotation);
-                	hbRotation.getChildren().add(ok);
-                	
-                	root.getChildren().add(hbHauteurLargeur);
-                	root.getChildren().add(hbCentreRotation);
-                	root.getChildren().add(hbRotation);
-
-                }
-
-                root.getChildren().add(red);
-                root.getChildren().add(blue);
-                root.getChildren().add(green);
-                root.getChildren().add(aqua);
-                root.getChildren().add(beige);
-                root.getChildren().add(black);
-                root.getChildren().add(brown);
-                root.getChildren().add(cyan);
-                root.getChildren().add(grey);
-                root.getChildren().add(pink);
-                root.getChildren().add(orange);
-                root.getChildren().add(lGreen);
-                root.getChildren().add(purple);
-                root.getChildren().add(turquoise);
-                root.getChildren().add(white);
-                
-                
-                stagePopUp.setScene(theScene);
-                stagePopUp.show();
-			}
-		}
-	};
-	
-	EventHandler<MouseEvent> OnMouseDraggedEventHandler =
-			new EventHandler<MouseEvent>() {
-
-		@Override
-		public void handle(MouseEvent t) {
-			
-			double offsetX = t.getSceneX() - orgSceneX;
-			double offsetY = t.getSceneY() - orgSceneY;
-			newTranslateX = orgTranslateX + offsetX;
-			newTranslateY = orgTranslateY + offsetY;
-			
-			
-			if(t.getSource() instanceof Rectangle){
-				((Rectangle)(t.getSource())).setTranslateX(newTranslateX);
-				((Rectangle)(t.getSource())).setTranslateY(newTranslateY);
-				
-			}
-			else if (t.getSource() instanceof Polygon){
-				((Polygon)(t.getSource())).setTranslateX(newTranslateX);
-				((Polygon)(t.getSource())).setTranslateY(newTranslateY);
-			}
-		}
-	};
-	
-	/***********************************************************************************/
-	/*********************Copie et Deplacement simple d'un rectangle********************/
-	/***********************************************************************************/
-	
-	
-	EventHandler<MouseEvent> OnMousePressedEventHandlerv2 =
-			new EventHandler<MouseEvent>(){
-
-		public void handle(MouseEvent t) {
-			if (t.getSource() instanceof Rectangle) {
-				Shape rect = cloneShape((Shape) t.getSource());
-				Group n = (Group) ((Rectangle) t.getSource()).getParent();
-				n.getChildren().add(rect);
-				orgSceneX = t.getSceneX();
-				orgSceneY = t.getSceneY();
-				orgTranslateX = ((Rectangle)(t.getSource())).getTranslateX();
-				orgTranslateY = ((Rectangle)(t.getSource())).getTranslateY();
-				((Rectangle)(t.getSource())).setOnMousePressed(OnMousePressedEventHandler);
-				((Rectangle)(t.getSource())).setOnMouseReleased(mouseReleasedOnWhiteboardEventHandler);
-			}
-			if (t.getSource() instanceof Polygon) {
-				Shape poly = cloneShape((Shape) t.getSource());
-				Group n = (Group) ((Polygon) t.getSource()).getParent();
-				n.getChildren().add(poly);
-				orgSceneX = t.getSceneX();
-				orgSceneY = t.getSceneY();
-				orgTranslateX = ((Polygon)(t.getSource())).getTranslateX();
-				orgTranslateY = ((Polygon)(t.getSource())).getTranslateY();
-				((Polygon)(t.getSource())).setOnMousePressed(OnMousePressedEventHandler);				
-				((Polygon)(t.getSource())).setOnMouseReleased(mouseReleasedOnWhiteboardEventHandler);
-				
-
-			}
-		}
-	};
-	
-	EventHandler<MouseEvent> mouseReleasedOnWhiteboardEventHandler =
-			new EventHandler<MouseEvent>(){
-		
-		public void handle(MouseEvent t){
-			
-			/**
-			 * TODO : Prendre en compte le dépassage des limites du rectangle ainsi que le fait de ne PAS SUPPRIMER une forme
-			 * 		  quand elle a été instancié une premiere fois.
-			 * 		  Faire aussi pour les Polygon
-			 */
-			
-			if (t.getSceneX() < LAYOUT_X_WHITEBOARD || t.getSceneY() < LAYOUT_Y_WHITEBOARD && 
-					t.getSceneX() > LAYOUT_X_WHITEBOARD + 0){
-				((Shape) t.getSource()).setVisible(false);
-			}
-			else{
-				//Appel au controleur
-				if (t.getSource() instanceof Rectangle)
-					//c.addRectangleToWhiteboard((Rectangle) t.getSource());
-					;
-			}
-			if (t.getSource() instanceof Rectangle){
-				((Rectangle)(t.getSource())).setX(((Rectangle)(t.getSource())).getTranslateX() + ((Rectangle)(t.getSource())).getX());
-				((Rectangle)(t.getSource())).setTranslateX(0);
-				((Rectangle)(t.getSource())).setY(((Rectangle)(t.getSource())).getTranslateY() + ((Rectangle)(t.getSource())).getY());
-				((Rectangle)(t.getSource())).setTranslateY(0);
-			}
-			//FAIRE POLYGONE
-		}
-	};
-	
-	
-
-	
-/***************************************************************************************************************************/
-
-	
 	/********************************************************************************************/
 	/***************************CREATION GRAPHIC INTERFACE***************************************/
 	/********************************************************************************************/
@@ -493,9 +81,9 @@ public class View extends Application{
          * de données.
          */
         
-        Group gr1 = createGroup(5,5);
+        Group gr1 = GraphicalObjects.createGroup(5,5);
         
-        Rectangle rect1 = createRectangle(5,5,480,50,30,30,Color.WHITE,Color.BLACK,null,null,true);
+        Rectangle rect1 = GraphicalObjects.createRectangle(5,5,480,50,30,30,Color.WHITE,Color.BLACK,null,null,true);
         
         /**
          *  TODO img SaveAs
@@ -513,10 +101,19 @@ public class View extends Application{
         btnLoad.setLayoutY(15);
         btnLoad.setText("Load");
                 
-        Button btnUndo = createButton(145,15,"../img/Undo.png", null, null);
+        Button btnUndo = GraphicalObjects.createButton(145,15, null, null);
+        Image buttonImg = new Image(getClass().getResourceAsStream("../img/Undo.png"));
+		ImageView iV = new ImageView(buttonImg);
+		iV.setFitHeight(20);
+		iV.setFitWidth(20);
+		btnUndo.setGraphic(iV);
                         
-        Button btnRedo = createButton(200,15,"../img/Redo.png", null, null);
-       
+        Button btnRedo = GraphicalObjects.createButton(200,15, null, null);
+        Image buttonImg2 = new Image(getClass().getResourceAsStream("../img/Redo.png"));
+		ImageView iV2 = new ImageView(buttonImg2);
+		iV2.setFitHeight(20);
+		iV2.setFitWidth(20);
+		btnRedo.setGraphic(iV2);
         
         gr1.getChildren().add(rect1);
         gr1.getChildren().add(btnRedo);
@@ -531,9 +128,9 @@ public class View extends Application{
          * DEUXIEME GROUPE: Fenetre contenant les formes à afficher.
          */
         
-        Group gr3 = createGroup(LAYOUT_X_WHITEBOARD,LAYOUT_Y_WHITEBOARD);
+        Group gr3 = GraphicalObjects.createGroup(LAYOUT_X_WHITEBOARD,LAYOUT_Y_WHITEBOARD);
                 
-        whiteboard = createRectangle(0,0,400,510,0,0,Color.WHITE,Color.BLACK, null, null, true);
+        whiteboard = GraphicalObjects.createRectangle(0,0,400,510,0,0,Color.WHITE,Color.BLACK, null, null, true);
         
         
         
@@ -548,16 +145,16 @@ public class View extends Application{
          * TROISIEME: Barre contenant les formes stockées ainsi que les groupes de formes.
          */
         
-        Group gr2 = createGroup(5,50);
+        Group gr2 = GraphicalObjects.createGroup(5,50);
         
-        Rectangle rect2 = createRectangle(5, 20, 70, 515, 20, 20, 
+        Rectangle rect2 = GraphicalObjects.createRectangle(5, 20, 70, 515, 20, 20, 
         		Color.WHITE, Color.BLACK, null, null, true);
         
-        Rectangle rect = createRectangle(rect2.getX() + 10, rect2.getY() + 10, 50, 50, 0, 0,
-        		Color.BLUE, Color.BLACK, OnMousePressedEventHandlerv2, 
-        		OnMouseDraggedEventHandler, false);
+        Rectangle rect = GraphicalObjects.createRectangle(rect2.getX() + 10, rect2.getY() + 10, 50, 50, 0, 0,
+        		Color.BLUE, Color.BLACK, EventMouse.OnMousePressedEventHandlerv2, 
+        		EventMouse.OnMouseDraggedEventHandler, false);
         
-        rect.setOnMouseReleased(mouseReleasedOnWhiteboardEventHandler);
+        rect.setOnMouseReleased(EventMouse.mouseReleasedOnWhiteboardEventHandler);
 
         Double[] tab = new Double[]{
         		30.0, 0.0,
@@ -567,17 +164,22 @@ public class View extends Application{
         		00.0, 30.0
         };
         
-        Polygon poly = createPolygon(tab, rect2.getX() + 5, rect.getY() + rect.getHeight() + 10, Color.BLACK, 
-        		Color.BLACK, OnMousePressedEventHandlerv2, OnMouseDraggedEventHandler, false);
+        Polygon poly = GraphicalObjects.createPolygon(tab, rect2.getX() + 5, rect.getY() + rect.getHeight() + 10, Color.BLACK, 
+        		Color.BLACK, EventMouse.OnMousePressedEventHandlerv2, EventMouse.OnMouseDraggedEventHandler, false);
         
 
         
-        Button TrashCan = createButton(20,490,"../img/TrashCan.png", null, null);
+        Button TrashCan = GraphicalObjects.createButton(20,490, null, null);
+        Image buttonImg3 = new Image(getClass().getResourceAsStream("../img/TrashCan.png"));
+		ImageView iV3 = new ImageView(buttonImg3);
+		iV3.setFitHeight(20);
+		iV3.setFitWidth(20);
+		TrashCan.setGraphic(iV3);
 
         gr2.getChildren().add(rect2);
+		gr2.getChildren().add(TrashCan);
         gr2.getChildren().add(rect);
         gr2.getChildren().add(poly);
-        gr2.getChildren().add(TrashCan);
         root.getChildren().add(gr2);
 
     }
