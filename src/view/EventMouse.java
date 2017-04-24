@@ -1,5 +1,8 @@
 package view;
 
+import java.util.Iterator;
+
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -20,9 +23,99 @@ import javafx.stage.Stage;
 
 public class EventMouse {
 	
+	static final double GLOBAL_LAYOUT_Xmin_WHITEBOARD = 85;
+	static final double GLOBAL_LAYOUT_Ymin_WHITEBOARD = 20;
+	static final double GLOBAL_LAYOUT_Xmax_WHITEBOARD = GLOBAL_LAYOUT_Xmin_WHITEBOARD + 400;
+	static final double GLOBAL_LAYOUT_Ymax_WHITEBOARD = GLOBAL_LAYOUT_Ymin_WHITEBOARD + 510;
+	static final double GLOBAL_LAYOUT_Xmin_BUTTONTRASH = View.LAYOUT_X_GROUP2 + 20;
+	static final double GLOBAL_LAYOUT_Ymin_BUTTONTRASH = View.LAYOUT_Y_GROUP2 + 490;
+	static final double GLOBAL_LAYOUT_Xmax_BUTTONTRASH = GLOBAL_LAYOUT_Xmin_BUTTONTRASH + 40;
+	static final double GLOBAL_LAYOUT_Ymax_BUTTONTRASH = GLOBAL_LAYOUT_Ymin_BUTTONTRASH + 30;
 	
-	static final double LAYOUT_X_WHITEBOARD = 85;
-	static final double LAYOUT_Y_WHITEBOARD = 70;
+	
+	static public void checkPosition(Shape s){
+		if(s instanceof Rectangle){
+			Rectangle rect = (Rectangle) s;
+			
+			
+			if (rect.getX() < GLOBAL_LAYOUT_Xmin_WHITEBOARD)
+				rect.setX(GLOBAL_LAYOUT_Xmin_WHITEBOARD);
+			
+			if (rect.getY() < GLOBAL_LAYOUT_Ymin_WHITEBOARD)
+				rect.setY(GLOBAL_LAYOUT_Ymin_WHITEBOARD);
+			
+			if (rect.getX() +  rect.getWidth() > GLOBAL_LAYOUT_Xmax_WHITEBOARD)
+				rect.setX(GLOBAL_LAYOUT_Xmax_WHITEBOARD - rect.getWidth());
+			
+			if (rect.getY() +  rect.getHeight() > GLOBAL_LAYOUT_Ymax_WHITEBOARD)
+				rect.setY(GLOBAL_LAYOUT_Ymax_WHITEBOARD - rect.getHeight());
+			
+			if ( rect.getX() < GLOBAL_LAYOUT_Xmin_WHITEBOARD || 
+				 rect.getY() < GLOBAL_LAYOUT_Ymin_WHITEBOARD ||
+				 rect.getX() +  rect.getWidth() > GLOBAL_LAYOUT_Xmax_WHITEBOARD ||
+				 rect.getY() +  rect.getHeight() > GLOBAL_LAYOUT_Ymax_WHITEBOARD){
+
+				rect.setVisible(false);
+			}
+		}
+
+		if(s instanceof Polygon){
+			Polygon poly = (Polygon) s;
+			
+			if ( poly.getLayoutX() < GLOBAL_LAYOUT_Xmin_WHITEBOARD)
+				poly.setLayoutX(GLOBAL_LAYOUT_Xmin_WHITEBOARD);
+			
+			if ( poly.getLayoutY() < GLOBAL_LAYOUT_Ymin_WHITEBOARD)
+				poly.setLayoutY(GLOBAL_LAYOUT_Ymin_WHITEBOARD);
+			
+			if (poly.getLayoutX() + getMaxX(poly.getPoints()) > GLOBAL_LAYOUT_Xmax_WHITEBOARD)
+				poly.setLayoutX(GLOBAL_LAYOUT_Xmax_WHITEBOARD - getMaxX(poly.getPoints()));
+			
+			if (poly.getLayoutY() + getMaxY(poly.getPoints()) > GLOBAL_LAYOUT_Ymax_WHITEBOARD)
+				poly.setLayoutY(GLOBAL_LAYOUT_Ymax_WHITEBOARD - getMaxY(poly.getPoints()));
+				
+			if ( poly.getLayoutX() < GLOBAL_LAYOUT_Xmin_WHITEBOARD || 
+				 poly.getLayoutY() < GLOBAL_LAYOUT_Ymin_WHITEBOARD ||
+				 poly.getLayoutX() + getMaxX(poly.getPoints()) > GLOBAL_LAYOUT_Xmax_WHITEBOARD ||
+				 poly.getLayoutY() + getMaxY(poly.getPoints()) > GLOBAL_LAYOUT_Ymax_WHITEBOARD){
+
+				poly.setVisible(false);
+			}
+		}
+	}
+
+	
+	
+	
+	
+	static private double getMaxX(ObservableList<Double> tab ) {
+		Iterator<Double> i = tab.iterator();
+		double max = 0;
+		while(i.hasNext()){
+			double a = i.next();
+			if ( a > max ){
+				max = a;
+				i.next();
+			}
+		}
+		return max;
+	}
+	
+	static private double getMaxY(ObservableList<Double> tab ) {
+		Iterator<Double> i = tab.iterator();
+		double max = 0;
+		i.next();
+		while(i.hasNext()){
+			double a = i.next();
+			if ( a > max ){
+				max = a;
+				i.next();
+			}
+		}
+		return max;
+	}
+	
+	
 	
 	
 	/***********************************************************************************/
@@ -41,16 +134,17 @@ public class EventMouse {
 		public void handle(MouseEvent t) {
 			if (t.getButton() == MouseButton.PRIMARY){
 				orgSceneX = t.getSceneX();
-				orgSceneY = t.getSceneY();
-				System.out.println(orgSceneX + " <=X et Y=> " +orgSceneY);
+				orgSceneY = t.getSceneY();				
 				
 				if(t.getSource() instanceof Rectangle){
 					orgTranslateX = ((Rectangle)(t.getSource())).getTranslateX();
 					orgTranslateY = ((Rectangle)(t.getSource())).getTranslateY();
+					((Rectangle)(t.getSource())).toFront();
 				}
 				else if (t.getSource() instanceof Polygon){
 					orgTranslateX = ((Polygon)(t.getSource())).getTranslateX();
 					orgTranslateY = ((Polygon)(t.getSource())).getTranslateY();
+					((Polygon)(t.getSource())).toFront();
 				}
 			}
 			else if(t.getButton() == MouseButton.SECONDARY){
@@ -125,7 +219,7 @@ public class EventMouse {
                 	Button ok = GraphicalObjects.createButton(0,0,null, null);
                 	ok.setText("Ok!");
                 	ok.setOnAction(new EventHandler<ActionEvent>() {
-
+                		
                 		@Override
                 		public void handle(ActionEvent e) {
                 			if ( textFieldHauteur.getText().trim().isEmpty() == false){
@@ -146,6 +240,7 @@ public class EventMouse {
                 				double resY = Double.parseDouble(textFieldCentreY.getText());
                 				((Rectangle) t.getSource()).getTransforms().add(new Rotate(resR, resX, resY));
                 			}
+                			checkPosition(((Rectangle) t.getSource()));
                 			ok.getParent().getScene().getWindow().hide();
                 			
                 		}
@@ -236,11 +331,10 @@ public class EventMouse {
 	static EventHandler<MouseEvent> OnMousePressedEventHandlerv2 =
 			new EventHandler<MouseEvent>(){
 
+		@SuppressWarnings("unused")
 		public void handle(MouseEvent t) {
 			if (t.getSource() instanceof Rectangle) {
 				Shape rect = GraphicalObjects.cloneShape((Shape) t.getSource());
-				Group n = (Group) ((Rectangle) t.getSource()).getParent();
-				n.getChildren().add(rect);
 				orgSceneX = t.getSceneX();
 				orgSceneY = t.getSceneY();
 				orgTranslateX = ((Rectangle)(t.getSource())).getTranslateX();
@@ -250,8 +344,6 @@ public class EventMouse {
 			}
 			if (t.getSource() instanceof Polygon) {
 				Shape poly = GraphicalObjects.cloneShape((Shape) t.getSource());
-				Group n = (Group) ((Polygon) t.getSource()).getParent();
-				n.getChildren().add(poly);
 				orgSceneX = t.getSceneX();
 				orgSceneY = t.getSceneY();
 				orgTranslateX = ((Polygon)(t.getSource())).getTranslateX();
@@ -263,35 +355,64 @@ public class EventMouse {
 			}
 		}
 	};
-	
 	static EventHandler<MouseEvent> mouseReleasedOnWhiteboardEventHandler =
 			new EventHandler<MouseEvent>(){
 		
-		public void handle(MouseEvent t){
+		public void handle(MouseEvent t){		
 			
-			/**
-			 * TODO : Prendre en compte le dépassage des limites du rectangle ainsi que le fait de ne PAS SUPPRIMER une forme
-			 * 		  quand elle a été instancié une premiere fois.
-			 * 		  Faire aussi pour les Polygon
-			 */
-			
-			if (t.getSceneX() < LAYOUT_X_WHITEBOARD || t.getSceneY() < LAYOUT_Y_WHITEBOARD && 
-					t.getSceneX() > LAYOUT_X_WHITEBOARD + 0){
+			if(t.getSource() instanceof Shape &&
+			   t.getSceneX() > GLOBAL_LAYOUT_Xmin_BUTTONTRASH &&
+			   t.getSceneY() > GLOBAL_LAYOUT_Ymin_BUTTONTRASH &&
+			   t.getSceneX() < GLOBAL_LAYOUT_Xmax_BUTTONTRASH &&
+			   t.getSceneY() < GLOBAL_LAYOUT_Ymax_BUTTONTRASH)
 				((Shape) t.getSource()).setVisible(false);
+				
+			
+			if (t.getSource() instanceof Rectangle){
+				((Rectangle)(t.getSource())).setX(((Rectangle)(t.getSource())).getTranslateX() + 
+												  ((Rectangle)(t.getSource())).getX());
+				((Rectangle)(t.getSource())).setTranslateX(0);
+				
+				((Rectangle)(t.getSource())).setY(((Rectangle)(t.getSource())).getTranslateY() + 
+												  ((Rectangle)(t.getSource())).getY());
+				((Rectangle)(t.getSource())).setTranslateY(0);
+				
+
 			}
-			else{
-				//Appel au controleur
-				if (t.getSource() instanceof Rectangle)
+			
+			
+			if (t.getSource() instanceof Polygon){
+				((Polygon)(t.getSource())).setLayoutX((((Polygon)(t.getSource())).getTranslateX() + ((Polygon)(t.getSource())).getLayoutX()));
+				((Polygon)(t.getSource())).setTranslateX(0);
+				((Polygon)(t.getSource())).setLayoutY(((Polygon)(t.getSource())).getTranslateY() + ((Polygon)(t.getSource())).getLayoutY());
+				((Polygon)(t.getSource())).setTranslateY(0);
+
+			}
+			
+			checkPosition(((Shape) t.getSource()));
+
+			if (t.getSource() instanceof Rectangle)
 					//c.addRectangleToWhiteboard((Rectangle) t.getSource());
 					;
-			}
-			if (t.getSource() instanceof Rectangle){
-				((Rectangle)(t.getSource())).setX(((Rectangle)(t.getSource())).getTranslateX() + ((Rectangle)(t.getSource())).getX());
-				((Rectangle)(t.getSource())).setTranslateX(0);
-				((Rectangle)(t.getSource())).setY(((Rectangle)(t.getSource())).getTranslateY() + ((Rectangle)(t.getSource())).getY());
-				((Rectangle)(t.getSource())).setTranslateY(0);
-			}
-			//FAIRE POLYGONE
+			
+			
 		}
 	};
+	
+	static EventHandler<MouseEvent> buttonTrashReleased =
+			new EventHandler<MouseEvent>(){
+		
+		public void handle(MouseEvent t){
+			if ( t.getSource() instanceof Shape){
+				((Shape) t.getSource()).setVisible(false);
+			}
+			
+		}
+	};
+
 }
+
+
+
+
+

@@ -3,41 +3,22 @@ package view;
 
 import controller.Controller;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.transform.Rotate;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class View extends Application{
 	
-	private static final double LAYOUT_X_RECTANGLE = 15;
-	private static final double LAYOUT_Y_RECTANGLE = 30;
-	private static final double LAYOUT_X_POLYGON = 10;
-	private static final double LAYOUT_Y_POLYGON = 90;
-	private static final double LAYOUT_X_WHITEBOARD = 85;
-	private static final double LAYOUT_Y_WHITEBOARD = 70;
+	protected static final double LAYOUT_X_GROUP2 = 5;
+	protected static final double LAYOUT_Y_GROUP2 = 50;
+	protected static final double LAYOUT_X_WHITEBOARD = 85;
+	protected static final double LAYOUT_Y_WHITEBOARD = 20;
 	
 	private Controller c;
 	
@@ -54,6 +35,9 @@ public class View extends Application{
 	public void begin(){
 		Application.launch(View.class);
 	}
+	
+	
+	
 /***************************************************************************************************************************/
 /**
  * TODO : Faire une liste répertoriant toutes les formes présentes DANS LE WHITEBOARD 
@@ -68,10 +52,11 @@ public class View extends Application{
 
 	
 	
+	@SuppressWarnings("static-access")
 	@Override
     public void start(Stage primaryStage) {
 		this.stage = primaryStage;
-        primaryStage.setTitle("Test");
+        primaryStage.setTitle("ProjetArchitectureParallele");
         Group root = new Group();
         Scene scene = new Scene(root, 500, 600, Color.WHITE);
 
@@ -123,36 +108,51 @@ public class View extends Application{
         root.getChildren().add(gr1);
         
         
-        /***********************************************************************************************/
-        /*
-         * DEUXIEME GROUPE: Fenetre contenant les formes à afficher.
-         */
-        
-        Group gr3 = GraphicalObjects.createGroup(LAYOUT_X_WHITEBOARD,LAYOUT_Y_WHITEBOARD);
-                
-        whiteboard = GraphicalObjects.createRectangle(0,0,400,510,0,0,Color.WHITE,Color.BLACK, null, null, true);
-        
-        
-        
-        gr3.getChildren().add(whiteboard);
-        root.getChildren().add(gr3);
-        
-        primaryStage.setScene(scene);
-        primaryStage.show();
+
         
         /***********************************************************************************************/
         /*
-         * TROISIEME: Barre contenant les formes stockées ainsi que les groupes de formes.
+         * DEUXIEME GROUPE: Barre contenant les formes stockées ainsi que les groupes de formes.
          */
         
-        Group gr2 = GraphicalObjects.createGroup(5,50);
+        Group gr2 = GraphicalObjects.createGroup(LAYOUT_X_GROUP2, LAYOUT_Y_GROUP2);
         
         Rectangle rect2 = GraphicalObjects.createRectangle(5, 20, 70, 515, 20, 20, 
         		Color.WHITE, Color.BLACK, null, null, true);
+
+        gr2.getChildren().add(rect2);
         
-        Rectangle rect = GraphicalObjects.createRectangle(rect2.getX() + 10, rect2.getY() + 10, 50, 50, 0, 0,
-        		Color.BLUE, Color.BLACK, EventMouse.OnMousePressedEventHandlerv2, 
-        		EventMouse.OnMouseDraggedEventHandler, false);
+        /***********************************************************************************************/
+        /*
+         * TROISIEME GROUPE: Fenetre contenant les formes à afficher.
+         */
+        
+                
+        whiteboard = GraphicalObjects.createRectangle(LAYOUT_X_WHITEBOARD, LAYOUT_Y_WHITEBOARD, 
+        		400, 510, 0, 0, 
+        		Color.WHITE,Color.BLACK, 
+        		null, null, true);
+        
+        
+        
+        gr2.getChildren().add(whiteboard);
+        root.getChildren().add(gr2);
+
+        /***********************************************************************************************/
+        
+        /*
+         * Les formes d'origines
+         */
+        
+        
+        Rectangle rect = GraphicalObjects.createRectangle(
+        		rect2.getX() + 10, rect2.getY() + 10, 
+        		50, 50, 
+        		0, 0,
+        		Color.BLUE, Color.BLACK, 
+        		EventMouse.OnMousePressedEventHandlerv2, 
+        		EventMouse.OnMouseDraggedEventHandler, 
+        		false);
         
         rect.setOnMouseReleased(EventMouse.mouseReleasedOnWhiteboardEventHandler);
 
@@ -164,9 +164,12 @@ public class View extends Application{
         		00.0, 30.0
         };
         
-        Polygon poly = GraphicalObjects.createPolygon(tab, rect2.getX() + 5, rect.getY() + rect.getHeight() + 10, Color.BLACK, 
-        		Color.BLACK, EventMouse.OnMousePressedEventHandlerv2, EventMouse.OnMouseDraggedEventHandler, false);
-        
+        Polygon poly = GraphicalObjects.createPolygon(tab, 
+        		rect2.getX() + 5, rect.getY() + rect.getHeight() + 10, 
+        		Color.BLACK, Color.BLACK, 
+        		EventMouse.OnMousePressedEventHandlerv2, 
+        		EventMouse.OnMouseDraggedEventHandler, 
+        		false);
 
         
         Button TrashCan = GraphicalObjects.createButton(20,490, null, null);
@@ -175,13 +178,18 @@ public class View extends Application{
 		iV3.setFitHeight(20);
 		iV3.setFitWidth(20);
 		TrashCan.setGraphic(iV3);
-
-        gr2.getChildren().add(rect2);
+		TrashCan.setPrefWidth(30);
+		TrashCan.setPrefHeight(30);
+		
+		
+		
 		gr2.getChildren().add(TrashCan);
         gr2.getChildren().add(rect);
         gr2.getChildren().add(poly);
-        root.getChildren().add(gr2);
-
+        
+        
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 	
 	
