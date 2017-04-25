@@ -99,18 +99,18 @@ public class View extends Application{
         btnLoad.setText("Load");
                 
         Button btnUndo = GraphicalObjects.createButton(145,15, null, null);
-        Image buttonImg = new Image(getClass().getResourceAsStream("../img/Undo.png"));
-		ImageView iV = new ImageView(buttonImg);
-		iV.setFitHeight(20);
-		iV.setFitWidth(20);
-		btnUndo.setGraphic(iV);
+//        Image buttonImg = new Image(getClass().getResourceAsStream("../img/Undo.png"));
+//		ImageView iV = new ImageView(buttonImg);
+//		iV.setFitHeight(20);
+//		iV.setFitWidth(20);
+//		btnUndo.setGraphic(iV);
                         
         Button btnRedo = GraphicalObjects.createButton(200,15, null, null);
-        Image buttonImg2 = new Image(getClass().getResourceAsStream("../img/Redo.png"));
-		ImageView iV2 = new ImageView(buttonImg2);
-		iV2.setFitHeight(20);
-		iV2.setFitWidth(20);
-		btnRedo.setGraphic(iV2);
+//        Image buttonImg2 = new Image(getClass().getResourceAsStream("../img/Redo.png"));
+//		ImageView iV2 = new ImageView(buttonImg2);
+//		iV2.setFitHeight(20);
+//		iV2.setFitWidth(20);
+//		btnRedo.setGraphic(iV2);
         
         gr1.getChildren().add(rect1);
         gr1.getChildren().add(btnRedo);
@@ -178,14 +178,13 @@ public class View extends Application{
         		EventMouse.OnMousePressedEventHandlerv2, 
         		EventMouse.OnMouseDraggedEventHandler, 
         		false);
-        System.out.println((rect.getX() + 10) + "   " + (rect.getY() + rect.getHeight() + 20));
         
         Button TrashCan = GraphicalObjects.createButton(20,490, null, null);
-        Image buttonImg3 = new Image(getClass().getResourceAsStream("../img/TrashCan.png"));
-		ImageView iV3 = new ImageView(buttonImg3);
-		iV3.setFitHeight(20);
-		iV3.setFitWidth(20);
-		TrashCan.setGraphic(iV3);
+//        Image buttonImg3 = new Image(getClass().getResourceAsStream("../img/TrashCan.png"));
+//		ImageView iV3 = new ImageView(buttonImg3);
+//		iV3.setFitHeight(20);
+//		iV3.setFitWidth(20);
+//		TrashCan.setGraphic(iV3);
 
 
 		
