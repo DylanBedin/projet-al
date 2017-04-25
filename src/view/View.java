@@ -1,16 +1,23 @@
 package view;
 
 
+import java.util.ArrayList;
+
 import controller.Controller;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseDragEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 
 public class View extends Application{
@@ -19,6 +26,9 @@ public class View extends Application{
 	protected static final double LAYOUT_Y_GROUP2 = 50;
 	protected static final double LAYOUT_X_WHITEBOARD = 85;
 	protected static final double LAYOUT_Y_WHITEBOARD = 20;
+	
+	
+	public static ArrayList<Shape> listSelectionShapes;
 	
 	public static Controller controller;
 	
@@ -56,9 +66,10 @@ public class View extends Application{
 	@Override
     public void start(Stage primaryStage) {
 		this.stage = primaryStage;
-        primaryStage.setTitle("ProjetArchitectureParallele");
+        primaryStage.setTitle("Shapes");
         Group root = new Group();
         Scene scene = new Scene(root, 500, 600, Color.WHITE);
+        listSelectionShapes = new ArrayList<Shape>();
         this.controller = new Controller(this);
 
         /***************************************************************************************/
@@ -116,7 +127,7 @@ public class View extends Application{
          * DEUXIEME GROUPE: Barre contenant les formes stockées ainsi que les groupes de formes.
          */
         
-        Group gr2 = GraphicalObjects.createGroup(LAYOUT_X_GROUP2, LAYOUT_Y_GROUP2);
+        final Group gr2 = GraphicalObjects.createGroup(LAYOUT_X_GROUP2, LAYOUT_Y_GROUP2);
         
         Rectangle rect2 = GraphicalObjects.createRectangle(5, 20, 70, 515, 20, 20, 
         		Color.WHITE, Color.BLACK, null, null, true);
@@ -156,7 +167,7 @@ public class View extends Application{
         		false);
         
         rect.setOnMouseReleased(EventMouse.mouseReleasedOnWhiteboardEventHandler);
-
+        
         Double[] tab = new Double[]{
         		30.0, 0.0,
         		60.0, 30.0,
@@ -183,6 +194,29 @@ public class View extends Application{
 		TrashCan.setPrefHeight(30);
 		
 		
+//		
+//		//Selection shapes
+//		gr2.setOnDragDetected(new EventHandler<MouseEvent>(){
+//			@Override
+//			public void handle(MouseEvent event){
+//				if(event.DRAG_DETECTED != null){
+//					gr2.startFullDrag();
+//				}
+//			}
+//		});
+//		gr2.setOnDragDone(new EventHandler<MouseEvent>(){
+//			@Override
+//			public void handle(MouseEvent event){
+//				
+//			}
+//		});
+////		rect.setOnMouseDragOver(new EventHandler<MouseDragEvent>() {
+////			public void handle(MouseDragEvent event){
+////				if(event.getSource() instanceof Shape){
+////					listSelectionShapes.add((Shape) event.getSource());
+////				}
+////			}
+////		});
 		
 		gr2.getChildren().add(TrashCan);
         gr2.getChildren().add(rect);

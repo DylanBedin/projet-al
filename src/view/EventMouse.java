@@ -3,6 +3,8 @@ package view;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.sun.javafx.scene.input.DragboardHelper;
+
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -35,21 +38,18 @@ public class EventMouse {
 	static final double GLOBAL_LAYOUT_Ymax_BUTTONTRASH = GLOBAL_LAYOUT_Ymin_BUTTONTRASH + 30;
 
 
-	static public void checkPosition(Shape s){
+	static public void checkPosition(Shape s, MouseEvent t){
+		for(Shape shape:View.listSelectionShapes){
+			System.out.println(shape);
+		}
 		boolean existInList = false;
-		if(s instanceof Rectangle){
-			Rectangle rect = (Rectangle) s;		
-			for(Shape shape:listShapes){
-				if(shape == rect){
-					existInList = true;
-				}
-			}
-//			if(rect instanceof Shape &&
-//					rect.getX() <= GLOBAL_LAYOUT_Xmin_BUTTONTRASH &&
-//					rect.getY() <= GLOBAL_LAYOUT_Ymin_BUTTONTRASH &&
-//					rect.getX() >= GLOBAL_LAYOUT_Xmax_BUTTONTRASH &&
-//					rect.getY() >= GLOBAL_LAYOUT_Ymax_BUTTONTRASH){
-				System.out.println("papoubelle");
+		if(t.getSceneX() <= GLOBAL_LAYOUT_Xmin_BUTTONTRASH ||
+				t.getSceneY() <= GLOBAL_LAYOUT_Ymin_BUTTONTRASH ||
+				t.getSceneX() >= GLOBAL_LAYOUT_Xmax_BUTTONTRASH ||
+				t.getSceneY() >= GLOBAL_LAYOUT_Ymax_BUTTONTRASH){
+			if(s instanceof Rectangle){
+				Rectangle rect = (Rectangle) s;	
+
 				if (rect.getX() < GLOBAL_LAYOUT_Xmin_WHITEBOARD){
 					rect.setX(GLOBAL_LAYOUT_Xmin_WHITEBOARD);
 				}
@@ -69,50 +69,71 @@ public class EventMouse {
 
 					rect.setVisible(false);
 				}
+				if(rect.getX() >= GLOBAL_LAYOUT_Xmin_WHITEBOARD &&
+						rect.getX() <= GLOBAL_LAYOUT_Xmax_WHITEBOARD &&
+						rect.getY() >= GLOBAL_LAYOUT_Ymin_WHITEBOARD &&
+						rect.getY() <= GLOBAL_LAYOUT_Ymax_WHITEBOARD){
+					for(Shape shape:listShapes){
+						if(shape == rect){
+							existInList = true;
+						}
+					}
+					if(!existInList){
+						listShapes.add(rect);
+						View.controller.addRectangleToWhiteboard(rect);	
+					}
+					existInList = false;
+				}
+			}
+			if(s instanceof Polygon){
+				Polygon poly = (Polygon) s;
+
+				if ( poly.getLayoutX() < GLOBAL_LAYOUT_Xmin_WHITEBOARD)
+					poly.setLayoutX(GLOBAL_LAYOUT_Xmin_WHITEBOARD);
+
+				if ( poly.getLayoutY() < GLOBAL_LAYOUT_Ymin_WHITEBOARD)
+					poly.setLayoutY(GLOBAL_LAYOUT_Ymin_WHITEBOARD);
+
+				if (poly.getLayoutX() + getMaxX(poly.getPoints()) > GLOBAL_LAYOUT_Xmax_WHITEBOARD)
+					poly.setLayoutX(GLOBAL_LAYOUT_Xmax_WHITEBOARD - getMaxX(poly.getPoints()));
+
+				if (poly.getLayoutY() + getMaxY(poly.getPoints()) > GLOBAL_LAYOUT_Ymax_WHITEBOARD)
+					poly.setLayoutY(GLOBAL_LAYOUT_Ymax_WHITEBOARD - getMaxY(poly.getPoints()));
+
+				if ( poly.getLayoutX() < GLOBAL_LAYOUT_Xmin_WHITEBOARD || 
+						poly.getLayoutY() < GLOBAL_LAYOUT_Ymin_WHITEBOARD ||
+						poly.getLayoutX() + getMaxX(poly.getPoints()) > GLOBAL_LAYOUT_Xmax_WHITEBOARD ||
+						poly.getLayoutY() + getMaxY(poly.getPoints()) > GLOBAL_LAYOUT_Ymax_WHITEBOARD){
+
+					poly.setVisible(false);
+				}
+				for(Shape shape:listShapes){
+					if(shape == poly){
+						existInList = true;
+					}
+				}
 				if(!existInList){
-					listShapes.add(rect);
-					View.controller.addRectangleToWhiteboard(rect);	
+					listShapes.add(poly);
+					View.controller.addPolygonToWhiteboard(poly);	
 				}
-//			}
-		}
-
-		if(s instanceof Polygon){
-			Polygon poly = (Polygon) s;
-
-			if ( poly.getLayoutX() < GLOBAL_LAYOUT_Xmin_WHITEBOARD)
-				poly.setLayoutX(GLOBAL_LAYOUT_Xmin_WHITEBOARD);
-
-			if ( poly.getLayoutY() < GLOBAL_LAYOUT_Ymin_WHITEBOARD)
-				poly.setLayoutY(GLOBAL_LAYOUT_Ymin_WHITEBOARD);
-
-			if (poly.getLayoutX() + getMaxX(poly.getPoints()) > GLOBAL_LAYOUT_Xmax_WHITEBOARD)
-				poly.setLayoutX(GLOBAL_LAYOUT_Xmax_WHITEBOARD - getMaxX(poly.getPoints()));
-
-			if (poly.getLayoutY() + getMaxY(poly.getPoints()) > GLOBAL_LAYOUT_Ymax_WHITEBOARD)
-				poly.setLayoutY(GLOBAL_LAYOUT_Ymax_WHITEBOARD - getMaxY(poly.getPoints()));
-
-			if ( poly.getLayoutX() < GLOBAL_LAYOUT_Xmin_WHITEBOARD || 
-					poly.getLayoutY() < GLOBAL_LAYOUT_Ymin_WHITEBOARD ||
-					poly.getLayoutX() + getMaxX(poly.getPoints()) > GLOBAL_LAYOUT_Xmax_WHITEBOARD ||
-					poly.getLayoutY() + getMaxY(poly.getPoints()) > GLOBAL_LAYOUT_Ymax_WHITEBOARD){
-
-				poly.setVisible(false);
-			}
-			for(Shape shape:listShapes){
-				if(shape == poly){
-					existInList = true;
+				if(poly.getLayoutX() >= GLOBAL_LAYOUT_Xmin_WHITEBOARD &&
+						poly.getLayoutX() <= GLOBAL_LAYOUT_Xmax_WHITEBOARD &&
+						poly.getLayoutY() >= GLOBAL_LAYOUT_Ymin_WHITEBOARD &&
+						poly.getLayoutY() <= GLOBAL_LAYOUT_Ymax_WHITEBOARD){
+					for(Shape shape:listShapes){
+						if(shape == poly){
+							existInList = true;
+						}
+					}
+					if(!existInList){
+						listShapes.add(poly);
+						View.controller.addPolygonToWhiteboard(poly);	
+					}
+					existInList = false;
 				}
 			}
-			if(!existInList){
-				listShapes.add(poly);
-				View.controller.addPolygonToWhiteboard(poly);	
-			}
-		}
-		for(Shape shape:listShapes){
-			System.out.println(shape);
 		}
 	}
-
 
 
 
@@ -269,7 +290,7 @@ public class EventMouse {
 								double resY = Double.parseDouble(textFieldCentreY.getText());
 								((Rectangle) t.getSource()).getTransforms().add(new Rotate(resR, resX, resY));
 							}
-							checkPosition(((Rectangle) t.getSource()));
+							checkPosition(((Rectangle) t.getSource()), t);
 							ok.getParent().getScene().getWindow().hide();
 
 						}
@@ -394,7 +415,16 @@ public class EventMouse {
 					t.getSceneY() > GLOBAL_LAYOUT_Ymin_BUTTONTRASH &&
 					t.getSceneX() < GLOBAL_LAYOUT_Xmax_BUTTONTRASH &&
 					t.getSceneY() < GLOBAL_LAYOUT_Ymax_BUTTONTRASH){
-				listShapes.remove(t.getSource());
+				if(t.getTarget() instanceof Shape){
+					Shape shapeTarget = (Shape) t.getTarget();
+					Shape toRemove = null;
+					for(Shape shape:listShapes){
+						if(shape == shapeTarget){
+							toRemove = shape;
+						}
+					}
+					listShapes.remove(toRemove);
+				}
 				((Shape) t.getSource()).setVisible(false);
 			}
 
@@ -409,8 +439,6 @@ public class EventMouse {
 
 
 			}
-
-
 			if (t.getSource() instanceof Polygon){
 				((Polygon)(t.getSource())).setLayoutX((((Polygon)(t.getSource())).getTranslateX() + ((Polygon)(t.getSource())).getLayoutX()));
 				((Polygon)(t.getSource())).setTranslateX(0);
@@ -419,7 +447,7 @@ public class EventMouse {
 
 			}
 
-			checkPosition(((Shape) t.getSource()));
+			checkPosition(((Shape) t.getSource()), t);
 
 			if (t.getSource() instanceof Rectangle)
 				//c.addRectangleToWhiteboard((Rectangle) t.getSource());
@@ -431,7 +459,6 @@ public class EventMouse {
 
 	static EventHandler<MouseEvent> buttonTrashReleased =
 			new EventHandler<MouseEvent>(){
-
 		public void handle(MouseEvent t){
 			if ( t.getSource() instanceof Shape){
 				((Shape) t.getSource()).setVisible(false);
@@ -439,7 +466,7 @@ public class EventMouse {
 
 		}
 	};
-
+	
 }
 
 
