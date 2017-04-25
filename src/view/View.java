@@ -3,13 +3,20 @@ package view;
 
 import java.util.ArrayList;
 
+
 import controller.Controller;
 import javafx.application.Application;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseDragEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
@@ -22,7 +29,7 @@ public class View extends Application{
 	protected static final double LAYOUT_Y_GROUP2 = 50;
 	protected static final double LAYOUT_X_WHITEBOARD = 85;
 	protected static final double LAYOUT_Y_WHITEBOARD = 20;
-	
+		
 	public static Controller controller;
 	
 	static Stage stage;
@@ -59,9 +66,10 @@ public class View extends Application{
 	@Override
     public void start(Stage primaryStage) {
 		this.stage = primaryStage;
-        primaryStage.setTitle("ProjetArchitectureLogicielle");
+        primaryStage.setTitle("Shapes");
         Group root = new Group();
         Scene scene = new Scene(root, 500, 600, Color.WHITE);
+
         this.controller = new Controller(this);
 
         /***************************************************************************************/
@@ -119,7 +127,7 @@ public class View extends Application{
          * DEUXIEME GROUPE: Barre contenant les formes stockées ainsi que les groupes de formes.
          */
         
-        Group gr2 = GraphicalObjects.createGroup(LAYOUT_X_GROUP2, LAYOUT_Y_GROUP2);
+        final Group gr2 = GraphicalObjects.createGroup(LAYOUT_X_GROUP2, LAYOUT_Y_GROUP2);
         
         Rectangle rect2 = GraphicalObjects.createRectangle(5, 20, 70, 515, 20, 20, 
         		Color.WHITE, Color.BLACK, null, null, true);
@@ -135,7 +143,7 @@ public class View extends Application{
         whiteboard = GraphicalObjects.createRectangle(LAYOUT_X_WHITEBOARD, LAYOUT_Y_WHITEBOARD, 
         		400, 510, 0, 0, 
         		Color.WHITE,Color.BLACK, 
-        		null, null, true);
+        		null, null, false);
         
         
         
@@ -160,22 +168,7 @@ public class View extends Application{
         
         rect.setOnMouseReleased(EventMouse.mouseReleasedOnWhiteboardEventHandler);
         
-        /*
-        Double[] tab = new Double[]{
-        		30.0, 0.0,
-        		60.0, 30.0,
-        		45.0, 60.0,
-        		15.0, 60.0,
-        		00.0, 30.0
-        };
-        
-        Polygon poly = GraphicalObjects.createPolygon(tab, 
-        		rect2.getX() + 5, rect.getY() + rect.getHeight() + 10, 
-        		Color.BLACK, Color.BLACK, 
-        		EventMouse.OnMousePressedEventHandlerv2, 
-        		EventMouse.OnMouseDraggedEventHandler, 
-        		false);
-        */
+
         
         
         Polygon poly = GraphicalObjects.createPolygon(
@@ -194,7 +187,11 @@ public class View extends Application{
 		iV3.setFitWidth(20);
 		TrashCan.setGraphic(iV3);
 
+
 		
+		//Sélection de formes
+		whiteboard.addEventHandler(MouseEvent.MOUSE_PRESSED, EventMouse.buttonPressedOnWhiteboardForSelection);
+		whiteboard.addEventHandler(MouseEvent.MOUSE_RELEASED, EventMouse.buttonReleasedOnWhiteboardForSelection);
 		
 		gr2.getChildren().add(TrashCan);
         gr2.getChildren().add(rect);
@@ -203,8 +200,6 @@ public class View extends Application{
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-	
-	
 }
 
 
