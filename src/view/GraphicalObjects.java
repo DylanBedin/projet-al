@@ -5,8 +5,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -24,12 +22,12 @@ public class GraphicalObjects {
 	
 	static final double LAYOUT_X_RECTANGLE = 15;
 	static final double LAYOUT_Y_RECTANGLE = 30;
-	static final double LAYOUT_X_POLYGON = 10;
-	static final double LAYOUT_Y_POLYGON = 90;
+	static final double LAYOUT_X_POLYGON = 25;
+	static final double LAYOUT_Y_POLYGON = 100;
 
 	
 	//BUTTON
-	public static Button createButton(int layoutX, int layoutY, Paint color, Shape source){
+	public static Button createButton(int layoutX, int layoutY, final Paint color, final Shape source){
 		Button button = new Button();
 		button.setLayoutX(layoutX);
 		button.setLayoutY(layoutY);
@@ -55,7 +53,7 @@ public class GraphicalObjects {
 		return t;
 	}
 
-	//POLYGON
+	//POLYGONv1
 	public static Polygon createPolygon(Double[] tabDouble, double layoutX, double layoutY,  Color fill, Color stroke,
 			EventHandler<MouseEvent> pressed, EventHandler<MouseEvent> dragged, boolean transp){
 		Polygon poly = new Polygon();
@@ -69,6 +67,51 @@ public class GraphicalObjects {
 		poly.setOnMouseDragged(dragged);
 		return poly;
 	}
+
+	
+	//POLYGONv2
+	public static Polygon createPolygon(
+			int vertices, double R, 
+			double layoutX, double layoutY,  
+			Color fill, Color stroke,
+			EventHandler<MouseEvent> pressed, EventHandler<MouseEvent> dragged, 
+			boolean transp){
+		
+		if(vertices > 2){
+			Polygon poly = new Polygon();
+			
+			/**/
+			double centerX = R/2;
+			double centerY = R/2;
+			Double[] tab = new Double[vertices*2];
+			double verticeX = centerX;
+			double verticeY = centerY;
+			double angleToAdd = (2 * Math.PI) / vertices;
+			double angle = 0;
+			for(int i = 0; i<vertices;i++){			
+				verticeX = centerX + R*Math.sin(angle);
+				verticeY = centerY + R*Math.cos(angle);
+				tab[2*i] = verticeX;
+				tab[(2*i)+1] = verticeY;
+				angle = angle + angleToAdd;
+			}
+			/**/
+			
+			poly.getPoints().addAll(tab);
+			poly.setLayoutX(layoutX);
+			poly.setLayoutY(layoutY); 
+			poly.setFill(fill);
+			poly.setStroke(stroke);
+			poly.setMouseTransparent(transp);
+			poly.setOnMousePressed(pressed);
+			poly.setOnMouseDragged(dragged);
+			return poly;
+		}
+		System.out.println("Minimum 3 pts");
+		return null;
+	}
+
+
 
 	//RECTANGLE
 	public static Rectangle createRectangle(double x, double y, double width, double height, double arcWidth,
@@ -97,6 +140,7 @@ public class GraphicalObjects {
 		return gr;
 	}
 
+	//GROUP
 	public static Shape cloneShape(Shape s){
 		if (s instanceof Rectangle){
 			Rectangle rect = createRectangle( 

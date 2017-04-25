@@ -1,6 +1,8 @@
 package view;
 
 
+import java.util.ArrayList;
+
 import controller.Controller;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -11,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 
 public class View extends Application{
@@ -20,11 +23,11 @@ public class View extends Application{
 	protected static final double LAYOUT_X_WHITEBOARD = 85;
 	protected static final double LAYOUT_Y_WHITEBOARD = 20;
 	
-	private Controller c;
+	public static Controller controller;
 	
 	static Stage stage;
 	static Rectangle whiteboard;
-	
+	public static ArrayList<Shape> listSelectionShapes;
 
 	
 	public static void main(String[] args) {
@@ -59,6 +62,7 @@ public class View extends Application{
         primaryStage.setTitle("ProjetArchitectureLogicielle");
         Group root = new Group();
         Scene scene = new Scene(root, 500, 600, Color.WHITE);
+        this.controller = new Controller(this);
 
         /***************************************************************************************/
         /**
@@ -147,7 +151,7 @@ public class View extends Application{
         
         Rectangle rect = GraphicalObjects.createRectangle(
         		rect2.getX() + 10, rect2.getY() + 10, 
-        		50, 50, 
+        		50, 40, 
         		0, 0,
         		Color.BLUE, Color.BLACK, 
         		EventMouse.OnMousePressedEventHandlerv2, 
@@ -155,7 +159,8 @@ public class View extends Application{
         		false);
         
         rect.setOnMouseReleased(EventMouse.mouseReleasedOnWhiteboardEventHandler);
-
+        
+        /*
         Double[] tab = new Double[]{
         		30.0, 0.0,
         		60.0, 30.0,
@@ -170,18 +175,25 @@ public class View extends Application{
         		EventMouse.OnMousePressedEventHandlerv2, 
         		EventMouse.OnMouseDraggedEventHandler, 
         		false);
-
+        */
+        
+        
+        Polygon poly = GraphicalObjects.createPolygon(
+        		6, 30, 
+        		rect.getX() + 10, rect.getY() + rect.getHeight() + 30, 
+        		Color.BLACK, Color.BLACK, 
+        		EventMouse.OnMousePressedEventHandlerv2, 
+        		EventMouse.OnMouseDraggedEventHandler, 
+        		false);
+        System.out.println((rect.getX() + 10) + "   " + (rect.getY() + rect.getHeight() + 20));
         
         Button TrashCan = GraphicalObjects.createButton(20,490, null, null);
-        /*
         Image buttonImg3 = new Image(getClass().getResourceAsStream("../img/TrashCan.png"));
 		ImageView iV3 = new ImageView(buttonImg3);
 		iV3.setFitHeight(20);
 		iV3.setFitWidth(20);
 		TrashCan.setGraphic(iV3);
-		TrashCan.setPrefWidth(30);
-		TrashCan.setPrefHeight(30);
-		*/
+
 		
 		
 		gr2.getChildren().add(TrashCan);
