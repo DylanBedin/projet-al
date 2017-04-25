@@ -3,9 +3,14 @@ package view;
 
 import java.util.ArrayList;
 
+import javax.xml.stream.EventFilter;
+import javax.xml.stream.events.XMLEvent;
+
 import controller.Controller;
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -26,10 +31,7 @@ public class View extends Application{
 	protected static final double LAYOUT_Y_GROUP2 = 50;
 	protected static final double LAYOUT_X_WHITEBOARD = 85;
 	protected static final double LAYOUT_Y_WHITEBOARD = 20;
-	
-	
-	public static ArrayList<Shape> listSelectionShapes;
-	
+		
 	public static Controller controller;
 	
 	static Stage stage;
@@ -69,7 +71,7 @@ public class View extends Application{
         primaryStage.setTitle("Shapes");
         Group root = new Group();
         Scene scene = new Scene(root, 500, 600, Color.WHITE);
-        listSelectionShapes = new ArrayList<Shape>();
+
         this.controller = new Controller(this);
 
         /***************************************************************************************/
@@ -143,7 +145,7 @@ public class View extends Application{
         whiteboard = GraphicalObjects.createRectangle(LAYOUT_X_WHITEBOARD, LAYOUT_Y_WHITEBOARD, 
         		400, 510, 0, 0, 
         		Color.WHITE,Color.BLACK, 
-        		null, null, true);
+        		null, null, false);
         
         
         
@@ -218,6 +220,10 @@ public class View extends Application{
 ////			}
 ////		});
 		
+		//Sélection de formes
+		whiteboard.addEventHandler(MouseEvent.MOUSE_PRESSED, EventMouse.buttonPressedOnWhiteboardForSelection);
+		whiteboard.addEventHandler(MouseEvent.MOUSE_RELEASED, EventMouse.buttonReleasedOnWhiteboardForSelection);
+		
 		gr2.getChildren().add(TrashCan);
         gr2.getChildren().add(rect);
         gr2.getChildren().add(poly);
@@ -226,8 +232,6 @@ public class View extends Application{
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-	
-	
 }
 
 

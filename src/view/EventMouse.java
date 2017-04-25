@@ -8,6 +8,7 @@ import com.sun.javafx.scene.input.DragboardHelper;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -27,6 +28,7 @@ import javafx.stage.Stage;
 
 public class EventMouse {
 	private static ArrayList<Shape> listShapes = new ArrayList<>();
+	private static Point2D[] selectArea = new Point2D[2];
 
 	static final double GLOBAL_LAYOUT_Xmin_WHITEBOARD = 85;
 	static final double GLOBAL_LAYOUT_Ymin_WHITEBOARD = 20;
@@ -39,9 +41,6 @@ public class EventMouse {
 
 
 	static public void checkPosition(Shape s, MouseEvent t){
-		for(Shape shape:View.listSelectionShapes){
-			System.out.println(shape);
-		}
 		boolean existInList = false;
 		if(t.getSceneX() <= GLOBAL_LAYOUT_Xmin_BUTTONTRASH ||
 				t.getSceneY() <= GLOBAL_LAYOUT_Ymin_BUTTONTRASH ||
@@ -467,6 +466,67 @@ public class EventMouse {
 		}
 	};
 	
+	public static Rectangle selectionRectangle = null;
+	public static Color selectionColor = new Color(0.7, 0.7, 0.9, 0.3);
+	
+	static EventHandler<MouseEvent> buttonPressedOnWhiteboardForSelection =
+			new EventHandler<MouseEvent>(){
+		public void handle(MouseEvent event) {
+			if(selectionRectangle != null){
+				selectionRectangle.setVisible(false);
+				for(Shape shape:listShapes){
+					shape.setStroke(Color.BLACK);
+				}
+			}
+			double x = event.getX();
+			double y = event.getY();
+			selectArea[0] = new Point2D(x, y);
+		}
+	};	
+	
+
+	static EventHandler<MouseEvent> buttonReleasedOnWhiteboardForSelection =
+			new EventHandler<MouseEvent>(){
+		public void handle(MouseEvent event) {
+			double x = event.getX();
+			double y = event.getY();
+			selectArea[1] = new Point2D(x, y);
+			double leftX = Math.min(selectArea[0].getX(), selectArea[1].getX());
+			double leftY = Math.min(selectArea[0].getY(), selectArea[1].getY());
+			double width = Math.max(selectArea[0].getX(), selectArea[1].getX()) - leftX;
+			double height = Math.max(selectArea[0].getY(), selectArea[1].getY()) - leftY;
+			selectionRectangle = new Rectangle(leftX, leftY, width, height);
+			selectionRectangle.setFill(Color.TRANSPARENT);
+			selectionRectangle.setStroke(selectionColor);
+
+			Group gr = (Group) ((Rectangle) event.getSource()).getParent();
+			gr.getChildren().add(selectionRectangle);
+			//préciser aux shapes qu'elles sont sélectionnées
+			
+			for(Shape shape:listShapes){
+				if(shape instanceof Rectangle){
+					Rectangle shapeRect = (Rectangle) shape;
+					if(shapeRect.getX() >= selectionRectangle.getX() &&
+							shapeRect.getX() <= selectionRectangle.getX() + selectionRectangle.getWidth() &&
+							shapeRect.getY() >= selectionRectangle.getY() &&
+							shapeRect.getY() <= selectionRectangle.getY() + selectionRectangle.getHeight()){
+						shape.setStroke(Color.ALICEBLUE);
+					}
+				}
+				else{
+					if(shape instanceof Polygon){
+						Polygon shapePoly = (Polygon) shape;
+						if(shapePoly.getLayoutX() >= selectionRectangle.getX() &&
+								shapePoly.getLayoutX() <= selectionRectangle.getX() + selectionRectangle.getWidth() &&
+								shapePoly.getLayoutY() >= selectionRectangle.getY() &&
+								shapePoly.getLayoutY() <= selectionRectangle.getY() + selectionRectangle.getHeight()){
+							shape.setStroke(Color.ALICEBLUE);
+						}	
+					}
+				}
+			}
+		}
+	};	
 }
 
 
