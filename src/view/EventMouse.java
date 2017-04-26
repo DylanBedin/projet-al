@@ -3,9 +3,7 @@ package view;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import sun.nio.ch.SelChImpl;
 
-import com.sun.javafx.scene.input.DragboardHelper;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,7 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -52,29 +49,29 @@ public class EventMouse {
 			if(s instanceof Rectangle){
 				Rectangle rect = (Rectangle) s;	
 
-				if (rect.getX() < GLOBAL_LAYOUT_Xmin_WHITEBOARD){
-					rect.setX(GLOBAL_LAYOUT_Xmin_WHITEBOARD);
+				if (rect.getLayoutX() < GLOBAL_LAYOUT_Xmin_WHITEBOARD){
+					rect.setLayoutX(GLOBAL_LAYOUT_Xmin_WHITEBOARD);
 				}
-				if (rect.getY() < GLOBAL_LAYOUT_Ymin_WHITEBOARD){
-					rect.setY(GLOBAL_LAYOUT_Ymin_WHITEBOARD);
+				if (rect.getLayoutY() < GLOBAL_LAYOUT_Ymin_WHITEBOARD){
+					rect.setLayoutY(GLOBAL_LAYOUT_Ymin_WHITEBOARD);
 				}
-				if (rect.getX() +  rect.getWidth() > GLOBAL_LAYOUT_Xmax_WHITEBOARD){
-					rect.setX(GLOBAL_LAYOUT_Xmax_WHITEBOARD - rect.getWidth());
+				if (rect.getLayoutX() +  rect.getWidth() > GLOBAL_LAYOUT_Xmax_WHITEBOARD){
+					rect.setLayoutX(GLOBAL_LAYOUT_Xmax_WHITEBOARD - rect.getWidth());
 				}
-				if (rect.getY() +  rect.getHeight() > GLOBAL_LAYOUT_Ymax_WHITEBOARD){
-					rect.setY(GLOBAL_LAYOUT_Ymax_WHITEBOARD - rect.getHeight());
+				if (rect.getLayoutY() +  rect.getHeight() > GLOBAL_LAYOUT_Ymax_WHITEBOARD){
+					rect.setLayoutY(GLOBAL_LAYOUT_Ymax_WHITEBOARD - rect.getHeight());
 				}
-				if ( rect.getX() < GLOBAL_LAYOUT_Xmin_WHITEBOARD || 
-						rect.getY() < GLOBAL_LAYOUT_Ymin_WHITEBOARD ||
-						rect.getX() +  rect.getWidth() > GLOBAL_LAYOUT_Xmax_WHITEBOARD ||
-						rect.getY() +  rect.getHeight() > GLOBAL_LAYOUT_Ymax_WHITEBOARD){
+				if ( rect.getLayoutX() < GLOBAL_LAYOUT_Xmin_WHITEBOARD || 
+						rect.getLayoutY() < GLOBAL_LAYOUT_Ymin_WHITEBOARD ||
+						rect.getLayoutX() +  rect.getWidth() > GLOBAL_LAYOUT_Xmax_WHITEBOARD ||
+						rect.getLayoutY() +  rect.getHeight() > GLOBAL_LAYOUT_Ymax_WHITEBOARD){
 
 					rect.setVisible(false);
 				}
-				if(rect.getX() >= GLOBAL_LAYOUT_Xmin_WHITEBOARD &&
-						rect.getX() <= GLOBAL_LAYOUT_Xmax_WHITEBOARD &&
-						rect.getY() >= GLOBAL_LAYOUT_Ymin_WHITEBOARD &&
-						rect.getY() <= GLOBAL_LAYOUT_Ymax_WHITEBOARD){
+				if(rect.getLayoutX() >= GLOBAL_LAYOUT_Xmin_WHITEBOARD &&
+						rect.getLayoutX() <= GLOBAL_LAYOUT_Xmax_WHITEBOARD &&
+						rect.getLayoutY() >= GLOBAL_LAYOUT_Ymin_WHITEBOARD &&
+						rect.getLayoutY() <= GLOBAL_LAYOUT_Ymax_WHITEBOARD){
 					for(Shape shape:listShapes){
 						if(shape == rect){
 							existInList = true;
@@ -89,26 +86,27 @@ public class EventMouse {
 			}
 			if(s instanceof Polygon){
 				Polygon poly = (Polygon) s;
+				
+				if ( checkPositionPoints(GLOBAL_LAYOUT_Xmin_WHITEBOARD, "x", poly, "min") )
+					poly.setLayoutX(GLOBAL_LAYOUT_Xmin_WHITEBOARD +12);
 
-				if ( poly.getLayoutX() < GLOBAL_LAYOUT_Xmin_WHITEBOARD)
-					poly.setLayoutX(GLOBAL_LAYOUT_Xmin_WHITEBOARD);
+				if ( checkPositionPoints(GLOBAL_LAYOUT_Ymin_WHITEBOARD, "y", poly, "min"))
+					poly.setLayoutY(GLOBAL_LAYOUT_Ymin_WHITEBOARD +15);
 
-				if ( poly.getLayoutY() < GLOBAL_LAYOUT_Ymin_WHITEBOARD)
-					poly.setLayoutY(GLOBAL_LAYOUT_Ymin_WHITEBOARD);
-
-				if (poly.getLayoutX() + getMaxX(poly.getPoints()) > GLOBAL_LAYOUT_Xmax_WHITEBOARD)
+				if (checkPositionPoints(GLOBAL_LAYOUT_Xmax_WHITEBOARD, "x", poly, "max"))
 					poly.setLayoutX(GLOBAL_LAYOUT_Xmax_WHITEBOARD - getMaxX(poly.getPoints()));
 
-				if (poly.getLayoutY() + getMaxY(poly.getPoints()) > GLOBAL_LAYOUT_Ymax_WHITEBOARD)
+				if (checkPositionPoints(GLOBAL_LAYOUT_Ymax_WHITEBOARD, "y", poly, "max"))
 					poly.setLayoutY(GLOBAL_LAYOUT_Ymax_WHITEBOARD - getMaxY(poly.getPoints()));
-
-				if ( poly.getLayoutX() < GLOBAL_LAYOUT_Xmin_WHITEBOARD || 
-						poly.getLayoutY() < GLOBAL_LAYOUT_Ymin_WHITEBOARD ||
-						poly.getLayoutX() + getMaxX(poly.getPoints()) > GLOBAL_LAYOUT_Xmax_WHITEBOARD ||
-						poly.getLayoutY() + getMaxY(poly.getPoints()) > GLOBAL_LAYOUT_Ymax_WHITEBOARD){
-
+				
+				
+				if ( checkPositionPoints(GLOBAL_LAYOUT_Xmin_WHITEBOARD, "x", poly, "min") || 
+					 checkPositionPoints(GLOBAL_LAYOUT_Ymin_WHITEBOARD, "y", poly, "min") ||
+					 checkPositionPoints(GLOBAL_LAYOUT_Xmax_WHITEBOARD, "x", poly, "max") ||
+					 checkPositionPoints(GLOBAL_LAYOUT_Ymax_WHITEBOARD, "y", poly, "max")){
 					poly.setVisible(false);
 				}
+				
 				for(Shape shape:listShapes){
 					if(shape == poly){
 						existInList = true;
@@ -137,6 +135,34 @@ public class EventMouse {
 		}
 	}
 
+	static private boolean checkPositionPoints(double limite, String xy, Polygon s, String maxmin){
+		Double[] tab = toTab(s.getPoints().toArray());
+		int i;
+		double layoutPos = 0;
+		if(xy.compareTo("x") == 0){
+			i=0;
+			layoutPos = s.getLayoutX();
+		}
+		else{
+			i=1;
+			layoutPos = s.getLayoutY();
+		}
+		while(i < tab.length){
+
+			if(maxmin.compareTo("max") == 0){
+				if(tab[i] + layoutPos> limite){
+					return true;
+				}
+			}
+			else{
+				if(tab[i] + layoutPos < limite){
+					return true;
+				}
+			}
+			i = i + 2;
+		}
+		return false;
+	}	
 
 
 
@@ -185,8 +211,30 @@ public class EventMouse {
 		return tab;
 	}
 
+	static private double barycentreX(Double[] tab){
+		double res = 0;
+		for(int i =0; i<tab.length; i= i+2){
+			res += tab[i];
+		}
+		return res / (tab.length /2) ;
+	}
+	
+	static private double barycentreY(Double[] tab){
+		double res = 0;
+		for(int i =1; i<tab.length; i= i+2){
+			res += tab[i];
+		}
+		return res / (tab.length /2) ;
+	}
 
-
+	
+	static private Double [] toTab( Object[] o){
+		Double [] tab = new Double[o.length];
+		for(int i = 0; i< o.length; i++){
+			tab[i] = (Double) o[i];
+		}
+		return tab;
+	}
 
 	/***********************************************************************************/
 	/*************************Deplacement et changement de couleur d'un shape*************************/
@@ -197,7 +245,10 @@ public class EventMouse {
 	/***********************************************************************************/
 
 
-	static EventHandler<MouseEvent> OnMousePressedEventHandler =
+	
+	
+
+	static EventHandler<MouseEvent> OnMousePressedWhiteboard =
 			new EventHandler<MouseEvent>() {
 
 		public void translateRectangle(Rectangle r){
@@ -305,11 +356,11 @@ public class EventMouse {
 						final TextField textFieldCentreX = new TextField();
 						textFieldCentreX.setMaxWidth(60);
 						textFieldCentreX.setText("");
-						textFieldCentreX.setPromptText( String.valueOf( ((Rectangle) t.getSource()).getX() + ((Rectangle) t.getSource()).getWidth()/2 - GLOBAL_LAYOUT_Xmin_WHITEBOARD));
+						textFieldCentreX.setPromptText( String.valueOf( ((Rectangle) t.getSource()).getLayoutX() + ((Rectangle) t.getSource()).getWidth()/2 - GLOBAL_LAYOUT_Xmin_WHITEBOARD));
 						final TextField textFieldCentreY = new TextField();
 						textFieldCentreY.setMaxWidth(60);
 						textFieldCentreY.setText("");
-						textFieldCentreY.setPromptText(String.valueOf( ((Rectangle) t.getSource()).getY() + ((Rectangle) t.getSource()).getHeight()/2 - GLOBAL_LAYOUT_Ymin_WHITEBOARD));
+						textFieldCentreY.setPromptText(String.valueOf( ((Rectangle) t.getSource()).getLayoutY() + ((Rectangle) t.getSource()).getHeight()/2 - GLOBAL_LAYOUT_Ymin_WHITEBOARD));
 
 						/**/
 
@@ -338,6 +389,7 @@ public class EventMouse {
 								if ( textFieldRotation.getText().trim().isEmpty() == false && 
 										textFieldCentreX.getText().trim().isEmpty() == false &&
 										textFieldCentreY.getText().trim().isEmpty() == false){
+									
 									double rotation = Double.parseDouble(textFieldRotation.getText());
 									double pointCentreX = Double.parseDouble(textFieldCentreX.getText()) ;
 									double pointCentreY = Double.parseDouble(textFieldCentreY.getText());
@@ -345,28 +397,20 @@ public class EventMouse {
 									double rotaRadian = rotation * (Math.PI / 180);
 									double cosRotation = Math.cos(rotaRadian);
 									double sinRotation = Math.sin(rotaRadian);
-									double coorX = ((Rectangle) t.getSource()).getX() + ((Rectangle) t.getSource()).getWidth()/2 ;
-									double coorY = ((Rectangle) t.getSource()).getY() + ((Rectangle) t.getSource()).getHeight()/2 ;
-									double centreX = pointCentreX + GLOBAL_LAYOUT_Xmin_WHITEBOARD; 
-									double centreY = pointCentreY + GLOBAL_LAYOUT_Ymin_WHITEBOARD;
-
-
+									double coorX = ((Rectangle) t.getSource()).getLayoutX() + ((Rectangle) t.getSource()).getWidth()/2 - GLOBAL_LAYOUT_Xmin_WHITEBOARD;
+									double coorY = ((Rectangle) t.getSource()).getLayoutY() + ((Rectangle) t.getSource()).getHeight()/2 -  GLOBAL_LAYOUT_Ymin_WHITEBOARD;
+									
 									if( ( coorX - pointCentreX ) * cosRotation - ( coorY - pointCentreY ) * sinRotation + pointCentreX < 0 ||
 											( coorX - pointCentreX ) * cosRotation - ( coorY - pointCentreY ) * sinRotation + pointCentreX > GLOBAL_LAYOUT_Xmax_WHITEBOARD - GLOBAL_LAYOUT_Xmin_WHITEBOARD ||
 											( coorX - pointCentreX ) * sinRotation + ( coorY - pointCentreY ) * cosRotation + pointCentreY < 0 ||
 											( coorX - pointCentreX ) * sinRotation + ( coorY - pointCentreY ) * cosRotation + pointCentreY > GLOBAL_LAYOUT_Ymax_WHITEBOARD - GLOBAL_LAYOUT_Ymin_WHITEBOARD) {
-										Stage stageError = new Stage();
-										stageError.initModality(Modality.APPLICATION_MODAL);
-										stageError.initOwner(View.stage);
-										Group textRoot = new Group();
-										Scene sceneError = new Scene(textRoot, 325, 20);
-										Text t = new Text("\nErreur, rotation dépassant la taille du whiteboard!");
-										textRoot.getChildren().add(t);
-										stageError.setScene(sceneError);
-										stageError.show();
+										GraphicalObjects.errorMessage("Erreur, rotation dépassant la taille du whiteboard!");
 									}
 									else{
-										((Rectangle) t.getSource()).getTransforms().add(new Rotate(rotation, centreX, centreY));
+										((Rectangle) t.getSource()).getTransforms().add(new Rotate(rotation, 
+																								   pointCentreX - ( ((Rectangle) t.getSource()).getLayoutX() - GLOBAL_LAYOUT_Xmin_WHITEBOARD), 
+																								   pointCentreY - ( ((Rectangle) t.getSource()).getLayoutY() - GLOBAL_LAYOUT_Ymin_WHITEBOARD)));
+										
 										checkPosition(((Rectangle) t.getSource()), t);
 										ok.getParent().getScene().getWindow().hide();
 									}
@@ -446,43 +490,89 @@ public class EventMouse {
 						ok.setText("Ok!");
 						ok.setOnAction(new EventHandler<ActionEvent>() {
 							/**
-							 * TODO
+							 * TODO ROTATION
 							 */
 							@Override
 							public void handle(ActionEvent e) {
 
-								if ( textFieldPoints.getText().trim().isEmpty() == false &&
-										textFieldRayon.getText().trim().isEmpty() == false){
+
+
+								if ( !textFieldPoints.getText().trim().isEmpty() &&
+										!textFieldRayon.getText().trim().isEmpty()){
+									
 									int res1 = Integer.parseInt(textFieldPoints.getText());
 									double res2 = Double.parseDouble(textFieldRayon.getText());
+									
 									Double [] tab = transTab(res1, res2);
-
 									((Polygon)t.getSource()).getPoints().clear();
 									((Polygon)t.getSource()).getPoints().addAll(tab);
 								}
-
-								else if ( textFieldPoints.getText().trim().isEmpty() == false){
+								/**
+								 * Trouver un moyen pour choper le rayon / centre du cercle
+								 */
+								else if ( !textFieldPoints.getText().trim().isEmpty()){
+									
 									int res1 = Integer.parseInt(textFieldPoints.getText());
-									Double [] tab = transTab(res1, 10);
+									Object[] listObject = ((Polygon)t.getSource()).getPoints().toArray();
+									Double [] tab1 = toTab(listObject);
+									double intX = barycentreX(tab1);
+									double intY = barycentreY(tab1);
+									double px = tab1[0];
+									double py = tab1[1];
+									double dist = Math.sqrt( (intX - px) * (intX - px) + (intY - py) * (intY - py) );
+									Double [] tab2 = transTab(res1, dist);
 
 									((Polygon)t.getSource()).getPoints().clear();
-									((Polygon)t.getSource()).getPoints().addAll(tab);
+									((Polygon)t.getSource()).getPoints().addAll(tab2);
 
 								}
 
-								else if ( textFieldRayon.getText().trim().isEmpty() == false){
+								else if (!textFieldRayon.getText().trim().isEmpty()){
+									
 									double res2 = Double.parseDouble(textFieldRayon.getText());
-									int tailleTab = ((Polygon) t.getSource()).getPoints().size();
+									int tailleTab = ((Polygon) t.getSource()).getPoints().size() /2;
 									Double [] tab = transTab(tailleTab, res2);
 									((Polygon) t.getSource()).getPoints().clear();
 									((Polygon) t.getSource()).getPoints().addAll(tab);
+									
 								}
-
+								
+								if ( textFieldRotation.getText().trim().isEmpty() == false && 
+										textFieldCentreX.getText().trim().isEmpty() == false &&
+										textFieldCentreY.getText().trim().isEmpty() == false){
+									
+									double rotation = Double.parseDouble(textFieldRotation.getText());
+									double pointCentreX = Double.parseDouble(textFieldCentreX.getText()) ;
+									double pointCentreY = Double.parseDouble(textFieldCentreY.getText());
+									
+									System.out.println(((Polygon) t.getSource()).getLayoutX());
+									
+									double rotaRadian = rotation * (Math.PI / 180);
+									double cosRotation = Math.cos(rotaRadian);
+									double sinRotation = Math.sin(rotaRadian);
+									double coorX = barycentreX(toTab(((Polygon) t.getSource()).getPoints().toArray())) + ((Polygon) t.getSource()).getLayoutX();
+									double coorY = barycentreX(toTab(((Polygon) t.getSource()).getPoints().toArray())) + ((Polygon) t.getSource()).getLayoutY();
+									
+									if( ( coorX - pointCentreX ) * cosRotation - ( coorY - pointCentreY ) * sinRotation + pointCentreX < 0 ||
+											( coorX - pointCentreX ) * cosRotation - ( coorY - pointCentreY ) * sinRotation + pointCentreX > GLOBAL_LAYOUT_Xmax_WHITEBOARD - GLOBAL_LAYOUT_Xmin_WHITEBOARD ||
+											( coorX - pointCentreX ) * sinRotation + ( coorY - pointCentreY ) * cosRotation + pointCentreY < 0 ||
+											( coorX - pointCentreX ) * sinRotation + ( coorY - pointCentreY ) * cosRotation + pointCentreY > GLOBAL_LAYOUT_Ymax_WHITEBOARD - GLOBAL_LAYOUT_Ymin_WHITEBOARD) {
+										GraphicalObjects.errorMessage("Erreur, rotation dépassant la taille du whiteboard!");
+									}
+									else{
+										((Rectangle) t.getSource()).getTransforms().add(new Rotate(rotation, 
+																								   pointCentreX - ( ((Polygon) t.getSource()).getLayoutX() - GLOBAL_LAYOUT_Xmin_WHITEBOARD), 
+																								   pointCentreY - ( ((Polygon) t.getSource()).getLayoutY() - GLOBAL_LAYOUT_Ymin_WHITEBOARD)));
+										
+										checkPosition(((Rectangle) t.getSource()), t);
+										ok.getParent().getScene().getWindow().hide();
+									}
+								}
 								checkPosition(((Shape) t.getSource()), t);
 								ok.getParent().getScene().getWindow().hide();
 							}
 						});
-
+						
 						/**/
 
 						HBox hbHauteurLargeur = new HBox();
@@ -543,6 +633,35 @@ public class EventMouse {
 		}
 	};
 
+	static EventHandler<MouseEvent> OnMousePressedToolbar =
+			new EventHandler<MouseEvent>(){
+
+		@SuppressWarnings("unused")
+		public void handle(MouseEvent t) {
+			if (t.getSource() instanceof Rectangle) {
+				Shape rect = GraphicalObjects.cloneShape((Shape) t.getSource());
+				orgSceneX = t.getSceneX();
+				orgSceneY = t.getSceneY();
+				orgTranslateX = ((Rectangle)(t.getSource())).getTranslateX();
+				orgTranslateY = ((Rectangle)(t.getSource())).getTranslateY();
+				((Rectangle)(t.getSource())).setOnMousePressed(OnMousePressedWhiteboard);
+				((Rectangle)(t.getSource())).setOnMouseReleased(mouseReleasedOnWhiteboardEventHandler);
+			}
+			if (t.getSource() instanceof Polygon) {
+				Shape poly = GraphicalObjects.cloneShape((Shape) t.getSource());
+				orgSceneX = t.getSceneX();
+				orgSceneY = t.getSceneY();
+				orgTranslateX = ((Polygon)(t.getSource())).getTranslateX();
+				orgTranslateY = ((Polygon)(t.getSource())).getTranslateY();
+				((Polygon)(t.getSource())).setOnMousePressed(OnMousePressedWhiteboard);				
+				((Polygon)(t.getSource())).setOnMouseReleased(mouseReleasedOnWhiteboardEventHandler);
+
+
+			}
+		}
+	};
+	
+	
 
 	static EventHandler<MouseEvent> OnMouseDraggedEventHandler =
 			new EventHandler<MouseEvent>() {
@@ -568,33 +687,7 @@ public class EventMouse {
 		}
 	};
 
-	static EventHandler<MouseEvent> OnMousePressedEventHandlerv2 =
-			new EventHandler<MouseEvent>(){
 
-		@SuppressWarnings("unused")
-		public void handle(MouseEvent t) {
-			if (t.getSource() instanceof Rectangle) {
-				Shape rect = GraphicalObjects.cloneShape((Shape) t.getSource());
-				orgSceneX = t.getSceneX();
-				orgSceneY = t.getSceneY();
-				orgTranslateX = ((Rectangle)(t.getSource())).getTranslateX();
-				orgTranslateY = ((Rectangle)(t.getSource())).getTranslateY();
-				((Rectangle)(t.getSource())).setOnMousePressed(OnMousePressedEventHandler);
-				((Rectangle)(t.getSource())).setOnMouseReleased(mouseReleasedOnWhiteboardEventHandler);
-			}
-			if (t.getSource() instanceof Polygon) {
-				Shape poly = GraphicalObjects.cloneShape((Shape) t.getSource());
-				orgSceneX = t.getSceneX();
-				orgSceneY = t.getSceneY();
-				orgTranslateX = ((Polygon)(t.getSource())).getTranslateX();
-				orgTranslateY = ((Polygon)(t.getSource())).getTranslateY();
-				((Polygon)(t.getSource())).setOnMousePressed(OnMousePressedEventHandler);				
-				((Polygon)(t.getSource())).setOnMouseReleased(mouseReleasedOnWhiteboardEventHandler);
-
-
-			}
-		}
-	};
 
 
 	static EventHandler<MouseEvent> mouseReleasedOnWhiteboardEventHandler =
@@ -621,17 +714,15 @@ public class EventMouse {
 			}
 
 			if (t.getSource() instanceof Rectangle){
-				((Rectangle)(t.getSource())).setX(((Rectangle)(t.getSource())).getTranslateX() + 
-						((Rectangle)(t.getSource())).getX());
-				((Rectangle)(t.getSource())).setTranslateX(0);
-
-				((Rectangle)(t.getSource())).setY(((Rectangle)(t.getSource())).getTranslateY() + 
-						((Rectangle)(t.getSource())).getY());
-				((Rectangle)(t.getSource())).setTranslateY(0);
-				if(!((Rectangle) t.getSource()).getTransforms().isEmpty())
-					((Rectangle) t.getSource()).getTransforms().remove(0);
-
+				((Rectangle) t.getSource() ).setLayoutX(((Rectangle) t.getSource() ).getLayoutX() + ((Rectangle) t.getSource() ).getTranslateX() + ((Rectangle) t.getSource() ).getX());
+				((Rectangle) t.getSource() ).setLayoutY(((Rectangle) t.getSource() ).getLayoutY() + ((Rectangle) t.getSource() ).getTranslateY() + ((Rectangle) t.getSource() ).getY());
+				((Rectangle) t.getSource() ).setX(0);
+				((Rectangle) t.getSource() ).setY(0);
+				((Rectangle) t.getSource() ).setTranslateX(0);
+				((Rectangle) t.getSource() ).setTranslateY(0);
 			}
+			
+			
 			if (t.getSource() instanceof Polygon){
 				((Polygon)(t.getSource())).setLayoutX(((Polygon)(t.getSource())).getTranslateX() + ((Polygon)(t.getSource())).getLayoutX());
 				((Polygon)(t.getSource())).setTranslateX(0);
@@ -693,7 +784,7 @@ public class EventMouse {
 			double height = Math.max(selectArea[0].getY(), selectArea[1].getY()) - leftY;
 			if(width >= MIN_WIDTH_SELECTION && height >= MIN_HEIGHT_SELECTION){
 				selectionRectangle = new Rectangle(leftX, leftY, width, height);
-				selectionRectangle.addEventHandler(MouseEvent.MOUSE_CLICKED, OnMousePressedEventHandler);
+				selectionRectangle.addEventHandler(MouseEvent.MOUSE_CLICKED, OnMousePressedWhiteboard);
 				selectionRectangle.setFill(Color.TRANSPARENT);
 				selectionRectangle.setStroke(selectionColor);
 

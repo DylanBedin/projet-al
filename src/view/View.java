@@ -6,16 +6,11 @@ import java.util.ArrayList;
 
 import controller.Controller;
 import javafx.application.Application;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
-import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -162,7 +157,7 @@ public class View extends Application{
         		50, 40, 
         		0, 0,
         		Color.BLUE, Color.BLACK, 
-        		EventMouse.OnMousePressedEventHandlerv2, 
+        		EventMouse.OnMousePressedToolbar, 
         		EventMouse.OnMouseDraggedEventHandler, 
         		false);
         
@@ -175,12 +170,12 @@ public class View extends Application{
         		6, 30, 
         		rect.getX() + 10, rect.getY() + rect.getHeight() + 30, 
         		Color.BLACK, Color.BLACK, 
-        		EventMouse.OnMousePressedEventHandlerv2, 
+        		EventMouse.OnMousePressedToolbar, 
         		EventMouse.OnMouseDraggedEventHandler, 
         		false);
         
         Button TrashCan = GraphicalObjects.createButton(20,490, null, null);
-//        Image buttonImg3 = new Image(getClass().getResourceAsStream("../img/TrashCan.png"));
+        Image buttonImg3 = new Image(getClass().getResourceAsStream("../img/TrashCan.png"));
 //		ImageView iV3 = new ImageView(buttonImg3);
 //		iV3.setFitHeight(20);
 //		iV3.setFitWidth(20);

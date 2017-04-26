@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -16,6 +17,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class GraphicalObjects {
 	
@@ -140,7 +143,7 @@ public class GraphicalObjects {
 		return gr;
 	}
 
-	//GROUP
+	//CLONE
 	public static Shape cloneShape(Shape s){
 		if (s instanceof Rectangle){
 			Rectangle rect = createRectangle( 
@@ -152,7 +155,7 @@ public class GraphicalObjects {
 					((Rectangle) s).getArcHeight(),
 					(Color) ((Rectangle) s).getFill(),
 					(Color) ((Rectangle) s).getStroke(),
-					EventMouse.OnMousePressedEventHandlerv2,
+					EventMouse.OnMousePressedToolbar,
 					EventMouse.OnMouseDraggedEventHandler,
 					false);
 			Group parent = (Group) View.whiteboard.getParent();
@@ -167,7 +170,7 @@ public class GraphicalObjects {
 					LAYOUT_Y_POLYGON,
 					(Color) ((Polygon) s).getFill(),
 					(Color) ((Polygon) s).getStroke(),
-					EventMouse.OnMousePressedEventHandlerv2,
+					EventMouse.OnMousePressedToolbar,
 					EventMouse.OnMouseDraggedEventHandler,
 					false
 					);
@@ -179,6 +182,18 @@ public class GraphicalObjects {
 		return null;
 	}
 	
+	//ERROR MESSAGE
+	public static void errorMessage(String message){
+		Stage stageError = new Stage();
+		stageError.initModality(Modality.APPLICATION_MODAL);
+		stageError.initOwner(View.stage);
+		Group textRoot = new Group();
+		Scene sceneError = new Scene(textRoot, 325, 20);
+		Text t = new Text("\n" + message);
+		textRoot.getChildren().add(t);
+		stageError.setScene(sceneError);
+		stageError.show();
+	}
 	
 
 }
