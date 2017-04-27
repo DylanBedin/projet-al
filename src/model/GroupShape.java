@@ -7,7 +7,7 @@ import java.awt.geom.Point2D;
 
 public class GroupShape implements IShape {
 	private ArrayList<IShape> listShapes;
-	private double rotat, rotatCenter;
+	private double rotat, rotatCenterX, rotatCenterY;
 	
 	public GroupShape(ArrayList<IShape> listShapes){
 		this.listShapes = new ArrayList<IShape>(listShapes);
@@ -83,26 +83,51 @@ public class GroupShape implements IShape {
 		return this.rotat;
 	}
 
-	public void setRotationCenter(double rotatCenter) {
-		this.rotatCenter = rotatCenter;
-	}
-
-	public double getRotationCenter() {
-		return this.rotatCenter;
-	}
-
-	public void setTranslation(double translate) {
-		for(IShape s:this.listShapes){
-			s.setTranslation(translate);
-		}
-	}
-
 	public double getTranslation() {
 		throw new UnsupportedOperationException();
 	}
 
 	public Object clone() throws CloneNotSupportedException{
 		return super.clone();
+	}
+
+	@Override
+	public void setRotationCenter(double rotatCenterX, double rotatCenterY) {
+		this.rotatCenterX = rotatCenterX;
+		this.rotatCenterY = rotatCenterY;
+	}
+
+	@Override
+	public double getRotationCenterX() {
+		return this.rotatCenterX;
+	}
+
+	@Override
+	public double getRotationCenterY() {
+		return this.rotatCenterY;
+	}
+
+	@Override
+	public void setTranslation(double translateX, double translateY) {
+		for(IShape s:this.listShapes){
+			s.setTranslation(translateX, translateY);
+		}
+	}
+
+	@Override
+	public double getTranslationX() {
+		for(IShape s:this.listShapes){
+			return s.getTranslationX();
+		}
+		return 0;
+	}
+
+	@Override
+	public double getTranslationY() {
+		for(IShape s:this.listShapes){
+			return s.getTranslationY();
+		}
+		return 0;
 	}
 
 }

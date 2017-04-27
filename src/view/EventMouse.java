@@ -424,11 +424,11 @@ public class EventMouse {
 						/**/
 
 						Label centre = new Label("Centre de rotation:");
-						TextField textFieldCentreX = new TextField();
+						final TextField textFieldCentreX = new TextField();
 						textFieldCentreX.setMaxWidth(60);
 						textFieldCentreX.setText("");
 						textFieldCentreX.setPromptText(String.valueOf(((Polygon) t.getSource()).getLayoutX()));
-						TextField textFieldCentreY = new TextField();
+						final TextField textFieldCentreY = new TextField();
 						textFieldCentreY.setMaxWidth(60);
 						textFieldCentreY.setText("");
 						textFieldCentreY.setPromptText(String.valueOf(((Polygon) t.getSource()).getLayoutY()));
@@ -436,7 +436,7 @@ public class EventMouse {
 						/**/
 
 						Label rotation = new Label("Rotation :");
-						TextField textFieldRotation = new TextField ();
+						final TextField textFieldRotation = new TextField ();
 						textFieldRotation.setMaxWidth(60);
 						textFieldRotation.setText("");
 						textFieldRotation.setPromptText("degrès");
@@ -740,6 +740,9 @@ public class EventMouse {
 				selectionRectangle.setVisible(false);
 				selectionRectangle = null;
 				for(Shape shape:listShapes){
+					if(shape instanceof ShapeComposite){
+						listShapes.remove(shape);
+					}
 					shape.setStroke(Color.BLACK);
 				}
 			}
@@ -767,43 +770,25 @@ public class EventMouse {
 						OnMousePressedWhiteboard, OnMouseDraggedEventHandler, false);
 				selectionRectangle.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedOnWhiteboardEventHandler);
 				
-				
+
 				Group gr = (Group) ((Rectangle) event.getSource()).getParent();
 				gr.getChildren().add(selectionRectangle);
-
-
-
-								
+				
 				//préciser aux shapes qu'elles sont sélectionnées 
+				ShapeComposite comp = new ShapeComposite();
 				for(Shape shape:listShapes){
-					if(shape instanceof Rectangle){
-						Rectangle shapeRect = (Rectangle) shape;
-						
-						
-						if(shapeRect.getLayoutX() >= selectionRectangle.getX() &&
-								shapeRect.getLayoutX() <= selectionRectangle.getX() + selectionRectangle.getWidth() &&
-								shapeRect.getLayoutY() >= selectionRectangle.getY() &&
-								shapeRect.getLayoutY() <= selectionRectangle.getY() + selectionRectangle.getHeight()){
-							shape.setStroke(selectionColor);
-						}
-					}
-					else{
-						if(shape instanceof Polygon){
-							Polygon shapePoly = (Polygon) shape;
-							if(shapePoly.getLayoutX() >= selectionRectangle.getX() &&
-									shapePoly.getLayoutX() <= selectionRectangle.getX() + selectionRectangle.getWidth() &&
-									shapePoly.getLayoutY() >= selectionRectangle.getY() &&
-									shapePoly.getLayoutY() <= selectionRectangle.getY() + selectionRectangle.getHeight()){
-								shape.setStroke(selectionColor);
-							}	
-						}
+					if(shape.getLayoutX() >= selectionRectangle.getX() &&
+							shape.getLayoutX() <= selectionRectangle.getX() + selectionRectangle.getWidth() &&
+							shape.getLayoutY() >= selectionRectangle.getY() &&
+							shape.getLayoutY() <= selectionRectangle.getY() + selectionRectangle.getHeight()){
+						shape.setStroke(selectionColor);
+						comp.addShape(shape);
 					}
 				}
 			}
 		}
 	};
 }
-
 
 
 
