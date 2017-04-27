@@ -498,7 +498,6 @@ public class EventMouse {
 									double pointCentreX = Double.parseDouble(textFieldCentreX.getText()) ;
 									double pointCentreY = Double.parseDouble(textFieldCentreY.getText());
 									
-									System.out.println(((Polygon) t.getSource()).getLayoutX());
 									
 									double rotaRadian = rotation * (Math.PI / 180);
 									double cosRotation = Math.cos(rotaRadian);
@@ -630,11 +629,11 @@ public class EventMouse {
 		@Override
 		public void handle(MouseEvent t) {
 			
+			
 			double offsetX = t.getSceneX() - orgSceneX;
 			double offsetY = t.getSceneY() - orgSceneY;
 			newTranslateX = offsetX;
 			newTranslateY = offsetY;
-			
 			if(selectionRectangle != null && t.getSource().equals(selectionRectangle)){
 				this.translateRectangle(selectionRectangle);
 				for(Shape shape:listShapes){
@@ -663,33 +662,6 @@ public class EventMouse {
 		}
 	};
 
-
-	
-		static EventHandler<MouseEvent> OnMousePressedEventHandlerClone =
-			new EventHandler<MouseEvent>(){
-
-		public void handle(MouseEvent t) {
-			orgSceneX = t.getSceneX();
-			orgSceneY = t.getSceneY();
-			System.out.println(orgSceneX);
-			System.out.println(orgSceneY);
-
-			if (t.getSource() instanceof Rectangle && t.getSource() != selectionRectangle) {
-				Shape rect = GraphicalObjects.cloneShape((Shape) t.getSource());
-				((Rectangle)(t.getSource())).setOnMousePressed(OnMousePressedToolbar);
-				((Rectangle)(t.getSource())).setOnMouseReleased(mouseReleasedOnWhiteboardEventHandler);
-				System.out.println("rectX="+rect.getLayoutX());
-				System.out.println("rectY="+rect.getLayoutY());
-			}
-			if (t.getSource() instanceof Polygon) {
-				Shape poly = GraphicalObjects.cloneShape((Shape) t.getSource());
-				((Polygon)(t.getSource())).setOnMousePressed(OnMousePressedToolbar);				
-				((Polygon)(t.getSource())).setOnMouseReleased(mouseReleasedOnWhiteboardEventHandler);
-				System.out.println("polyX="+poly.getLayoutX());
-				System.out.println("polyY="+poly.getLayoutY());
-			}
-		}
-	};
 
 
 	static EventHandler<MouseEvent> mouseReleasedOnWhiteboardEventHandler =
@@ -731,16 +703,18 @@ public class EventMouse {
 				((Polygon)(t.getSource())).setTranslateX(0);
 				((Polygon)(t.getSource())).setLayoutY(((Polygon)(t.getSource())).getTranslateY() + ((Polygon)(t.getSource())).getLayoutY());
 				((Polygon)(t.getSource())).setTranslateY(0);
-
 			}
-
+			
+			for(Shape shape:listShapes){
+				if(shape.getStroke().equals(selectionColor)){
+					shape.setLayoutX(shape.getLayoutX() + shape.getTranslateX());
+					shape.setLayoutY(shape.getLayoutY() + shape.getTranslateY());
+					shape.setTranslateX(0);
+					shape.setTranslateY(0);
+					checkPosition( shape, t);
+				}
+			}
 			checkPosition(((Shape) t.getSource()), t);
-
-			if (t.getSource() instanceof Rectangle)
-				//c.addRectangleToWhiteboard((Rectangle) t.getSource());
-				;
-
-
 		}
 	};
 
@@ -790,42 +764,36 @@ public class EventMouse {
 
 				selectionRectangle = GraphicalObjects.createRectangle(leftX, leftY, width, height, 
 						0, 0, Color.TRANSPARENT, selectionColor, 
-						null, OnMouseDraggedEventHandler, false);
+						OnMousePressedWhiteboard, OnMouseDraggedEventHandler, false);
 				selectionRectangle.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedOnWhiteboardEventHandler);
-				
 				
 				
 				Group gr = (Group) ((Rectangle) event.getSource()).getParent();
 				gr.getChildren().add(selectionRectangle);
-				
-				selectionRectangle.setLayoutX(selectionRectangle.getLayoutX() + selectionRectangle.getTranslateX() + selectionRectangle.getX());
-				selectionRectangle.setLayoutY(selectionRectangle.getLayoutY() + selectionRectangle.getTranslateY() + selectionRectangle.getY());
-				selectionRectangle.setX(0);
-				selectionRectangle.setY(0);
-				selectionRectangle.setTranslateX(0);
-				selectionRectangle.setTranslateY(0);				
-				
+
+
+
+								
 				//préciser aux shapes qu'elles sont sélectionnées 
 				for(Shape shape:listShapes){
 					if(shape instanceof Rectangle){
 						Rectangle shapeRect = (Rectangle) shape;
 						
-						System.out.println(shapeRect.getLayoutX() + "VS" + selectionRectangle.getLayoutX());
 						
-						if(shapeRect.getLayoutX() >= selectionRectangle.getLayoutX() &&
-								shapeRect.getLayoutX() <= selectionRectangle.getLayoutX() + selectionRectangle.getWidth() &&
-								shapeRect.getLayoutY() >= selectionRectangle.getLayoutY() &&
-								shapeRect.getLayoutY() <= selectionRectangle.getLayoutY() + selectionRectangle.getHeight()){
+						if(shapeRect.getLayoutX() >= selectionRectangle.getX() &&
+								shapeRect.getLayoutX() <= selectionRectangle.getX() + selectionRectangle.getWidth() &&
+								shapeRect.getLayoutY() >= selectionRectangle.getY() &&
+								shapeRect.getLayoutY() <= selectionRectangle.getY() + selectionRectangle.getHeight()){
 							shape.setStroke(selectionColor);
 						}
 					}
 					else{
 						if(shape instanceof Polygon){
 							Polygon shapePoly = (Polygon) shape;
-							if(shapePoly.getLayoutX() >= selectionRectangle.getLayoutX() &&
-									shapePoly.getLayoutX() <= selectionRectangle.getLayoutX() + selectionRectangle.getWidth() &&
-									shapePoly.getLayoutY() >= selectionRectangle.getLayoutY() &&
-									shapePoly.getLayoutY() <= selectionRectangle.getLayoutY() + selectionRectangle.getHeight()){
+							if(shapePoly.getLayoutX() >= selectionRectangle.getX() &&
+									shapePoly.getLayoutX() <= selectionRectangle.getX() + selectionRectangle.getWidth() &&
+									shapePoly.getLayoutY() >= selectionRectangle.getY() &&
+									shapePoly.getLayoutY() <= selectionRectangle.getY() + selectionRectangle.getHeight()){
 								shape.setStroke(selectionColor);
 							}	
 						}
@@ -833,7 +801,7 @@ public class EventMouse {
 				}
 			}
 		}
-	};	
+	};
 }
 
 
