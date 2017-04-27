@@ -2,9 +2,6 @@ package view;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
-
-
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -21,7 +18,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -517,11 +513,11 @@ public class EventMouse {
 										GraphicalObjects.errorMessage("Erreur, rotation dépassant la taille du whiteboard!");
 									}
 									else{
-										((Rectangle) t.getSource()).getTransforms().add(new Rotate(rotation, 
+										((Polygon) t.getSource()).getTransforms().add(new Rotate(rotation, 
 																								   pointCentreX - ( ((Polygon) t.getSource()).getLayoutX() - GLOBAL_LAYOUT_Xmin_WHITEBOARD), 
 																								   pointCentreY - ( ((Polygon) t.getSource()).getLayoutY() - GLOBAL_LAYOUT_Ymin_WHITEBOARD)));
 										
-										checkPosition(((Rectangle) t.getSource()), t);
+										checkPosition(((Polygon) t.getSource()), t);
 										ok.getParent().getScene().getWindow().hide();
 									}
 								}
@@ -633,10 +629,12 @@ public class EventMouse {
 		
 		@Override
 		public void handle(MouseEvent t) {
+			
 			double offsetX = t.getSceneX() - orgSceneX;
 			double offsetY = t.getSceneY() - orgSceneY;
 			newTranslateX = offsetX;
 			newTranslateY = offsetY;
+			
 			if(selectionRectangle != null && t.getSource().equals(selectionRectangle)){
 				this.translateRectangle(selectionRectangle);
 				for(Shape shape:listShapes){
@@ -667,10 +665,9 @@ public class EventMouse {
 
 
 	
-		static EventHandler<MouseEvent> OnMousePressedEventHandlerv2 =
+		static EventHandler<MouseEvent> OnMousePressedEventHandlerClone =
 			new EventHandler<MouseEvent>(){
 
-		@SuppressWarnings("unused")
 		public void handle(MouseEvent t) {
 			orgSceneX = t.getSceneX();
 			orgSceneY = t.getSceneY();
@@ -761,6 +758,7 @@ public class EventMouse {
 	public static Rectangle selectionRectangle = null;
 	public final static Color selectionColor = new Color(0.7, 0.7, 1, 1);
 	public static final int MIN_WIDTH_SELECTION = 10, MIN_HEIGHT_SELECTION = 10;
+	
 	static EventHandler<MouseEvent> buttonPressedOnWhiteboardForSelection =
 			new EventHandler<MouseEvent>(){
 		public void handle(MouseEvent event) {
@@ -795,30 +793,39 @@ public class EventMouse {
 						null, OnMouseDraggedEventHandler, false);
 				selectionRectangle.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedOnWhiteboardEventHandler);
 				
-				System.out.println( ((Rectangle)(event.getSource())).getX() );
 				
 				
 				Group gr = (Group) ((Rectangle) event.getSource()).getParent();
 				gr.getChildren().add(selectionRectangle);
 				
+				selectionRectangle.setLayoutX(selectionRectangle.getLayoutX() + selectionRectangle.getTranslateX() + selectionRectangle.getX());
+				selectionRectangle.setLayoutY(selectionRectangle.getLayoutY() + selectionRectangle.getTranslateY() + selectionRectangle.getY());
+				selectionRectangle.setX(0);
+				selectionRectangle.setY(0);
+				selectionRectangle.setTranslateX(0);
+				selectionRectangle.setTranslateY(0);				
+				
 				//préciser aux shapes qu'elles sont sélectionnées 
 				for(Shape shape:listShapes){
 					if(shape instanceof Rectangle){
 						Rectangle shapeRect = (Rectangle) shape;
-						if(shapeRect.getX() >= selectionRectangle.getX() &&
-								shapeRect.getX() <= selectionRectangle.getX() + selectionRectangle.getWidth() &&
-								shapeRect.getY() >= selectionRectangle.getY() &&
-								shapeRect.getY() <= selectionRectangle.getY() + selectionRectangle.getHeight()){
+						
+						System.out.println(shapeRect.getLayoutX() + "VS" + selectionRectangle.getLayoutX());
+						
+						if(shapeRect.getLayoutX() >= selectionRectangle.getLayoutX() &&
+								shapeRect.getLayoutX() <= selectionRectangle.getLayoutX() + selectionRectangle.getWidth() &&
+								shapeRect.getLayoutY() >= selectionRectangle.getLayoutY() &&
+								shapeRect.getLayoutY() <= selectionRectangle.getLayoutY() + selectionRectangle.getHeight()){
 							shape.setStroke(selectionColor);
 						}
 					}
 					else{
 						if(shape instanceof Polygon){
 							Polygon shapePoly = (Polygon) shape;
-							if(shapePoly.getLayoutX() >= selectionRectangle.getX() &&
-									shapePoly.getLayoutX() <= selectionRectangle.getX() + selectionRectangle.getWidth() &&
-									shapePoly.getLayoutY() >= selectionRectangle.getY() &&
-									shapePoly.getLayoutY() <= selectionRectangle.getY() + selectionRectangle.getHeight()){
+							if(shapePoly.getLayoutX() >= selectionRectangle.getLayoutX() &&
+									shapePoly.getLayoutX() <= selectionRectangle.getLayoutX() + selectionRectangle.getWidth() &&
+									shapePoly.getLayoutY() >= selectionRectangle.getLayoutY() &&
+									shapePoly.getLayoutY() <= selectionRectangle.getLayoutY() + selectionRectangle.getHeight()){
 								shape.setStroke(selectionColor);
 							}	
 						}

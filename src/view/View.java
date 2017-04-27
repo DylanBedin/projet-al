@@ -175,7 +175,7 @@ public class View extends Application{
         		false);
         
         Button TrashCan = GraphicalObjects.createButton(20,490, null, null);
-        Image buttonImg3 = new Image(getClass().getResourceAsStream("../img/TrashCan.png"));
+//        Image buttonImg3 = new Image(getClass().getResourceAsStream("../img/TrashCan.png"));
 //		ImageView iV3 = new ImageView(buttonImg3);
 //		iV3.setFitHeight(20);
 //		iV3.setFitWidth(20);
