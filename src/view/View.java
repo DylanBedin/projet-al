@@ -8,7 +8,10 @@ import java.util.Observer;
 import controller.MouseEvents;
 
 import main.Main;
+import model.Model;
 import model.ShapeRectangle;
+import model.ShapeRegularPolygon;
+import model.Toolbar;
 import model.Whiteboard;
 
 
@@ -29,11 +32,9 @@ public class View extends Application implements Observer{
 	
 	protected static final double LAYOUT_X_GROUP2 = 5;
 	protected static final double LAYOUT_Y_GROUP2 = 50;
-	protected static final double LAYOUT_X_WHITEBOARD = 85;
-	protected static final double LAYOUT_Y_WHITEBOARD = 20;
+
 			
 	static Stage stage;
-	static Rectangle whiteboard;
 //	public static ArrayList<Shape> listSelectionShapes;
 
 	
@@ -63,8 +64,9 @@ public class View extends Application implements Observer{
 	
 	private Polygon originPoly;
 	private Rectangle originRect;
-	private Whiteboard wb;
+	private Model m;
 	private MouseEvents mouseEvents;
+	private Group gr2 = null;
 	@SuppressWarnings("static-access")
 	@Override
     public void start(Stage primaryStage) {
@@ -72,9 +74,9 @@ public class View extends Application implements Observer{
         primaryStage.setTitle("Shapes");
         Group root = new Group();
         Scene scene = new Scene(root, 500, 600, Color.WHITE);
-        this.wb = Main.wb;
-        this.wb.addObserver(this);
-        this.mouseEvents = new MouseEvents(this.wb);
+        this.m = Main.m;
+        this.m.addObserver(this);
+//        this.mouseEvents = new MouseEvents(this.m);
         /***************************************************************************************/
         /**
          * PREMIER GROUPE : Barre du haut contenant les boutons permettant la gestion
@@ -93,7 +95,8 @@ public class View extends Application implements Observer{
         btnSave.setLayoutY(15);
         btnSave.setText("Save As");
                 
-        /**
+        /**	static Rectangle whiteboard;
+
          * TODO img Load
          */
         Button btnLoad = new Button();
@@ -127,30 +130,17 @@ public class View extends Application implements Observer{
         
         /***********************************************************************************************/
         /*
-         * DEUXIEME GROUPE: Barre contenant les formes stockées ainsi que les groupes de formes.
+         * DEUXIEME GROUPE: Toolbar
          */
         
-        final Group gr2 = GraphicalObjects.createGroup(LAYOUT_X_GROUP2, LAYOUT_Y_GROUP2);
-        
-        Rectangle rect2 = GraphicalObjects.createRectangle(5, 20, 70, 515, 20, 20, 
-        		Color.WHITE, Color.BLACK, null, null, true);
-
-        gr2.getChildren().add(rect2);
+        gr2 = GraphicalObjects.createGroup(LAYOUT_X_GROUP2, LAYOUT_Y_GROUP2);
+      
         
         /***********************************************************************************************/
         /*
-         * TROISIEME GROUPE: Fenetre contenant les formes à afficher.
+         * TROISIEME GROUPE: Whiteboard
          */
         
-                
-        whiteboard = GraphicalObjects.createRectangle(LAYOUT_X_WHITEBOARD, LAYOUT_Y_WHITEBOARD, 
-        		400, 510, 0, 0, 
-        		Color.WHITE,Color.BLACK, 
-        		null, null, false);
-        
-        
-        
-        gr2.getChildren().add(whiteboard);
         root.getChildren().add(gr2);
 
         /***********************************************************************************************/
@@ -170,16 +160,6 @@ public class View extends Application implements Observer{
 //        		false);
 
         
-        //Rectangle rect2 = GraphicalObjects.createRectangle(5, 20, 70, 515, 20, 20, 
-        originRect = GraphicalObjects.createRectangle(
-        		rect2.getX() + 10, rect2.getY() + 10, 
-        		50, 40, 
-        		0, 0,
-        		Color.BLUE, Color.BLACK, 
-        		MouseEvents.OnMousePressedToolbar, 
-        		MouseEvents.OnMouseDraggedEventHandler, 
-        		false);
-//        
 //        originRect.setOnMouseReleased(EventMouse.mouseReleasedOnWhiteboardEventHandler);
         
 
@@ -192,14 +172,14 @@ public class View extends Application implements Observer{
 //        		EventMouse.OnMousePressedToolbar, 
 //        		EventMouse.OnMouseDraggedEventHandler, 
 //        		false);
-        
-        originPoly = GraphicalObjects.createPolygon(
-        		6, 30, 
-        		originRect.getX() + 10, originRect.getY() + originRect.getHeight() + 30, 
-        		Color.BLACK, Color.BLACK, 
-        		MouseEvents.OnMousePressedToolbar, 
-        		null, 
-        		false);
+//        
+//        originPoly = GraphicalObjects.createPolygon(
+//        		6, 30, 
+//        		originRect.getX() + 10, originRect.getY() + originRect.getHeight() + 30, 
+//        		Color.BLACK, Color.BLACK, 
+//        		MouseEvents.OnMousePressedToolbar, 
+//        		null, 
+//        		false);
         
         Button TrashCan = GraphicalObjects.createButton(20,490, null, null);
 //        Image buttonImg3 = new Image(getClass().getResourceAsStream("../img/TrashCan.png"));
@@ -215,24 +195,105 @@ public class View extends Application implements Observer{
 //		whiteboard.addEventHandler(MouseEvent.MOUSE_RELEASED, EventMouse.buttonReleasedOnWhiteboardForSelection);
 //		
 		gr2.getChildren().add(TrashCan);
-        gr2.getChildren().add(originRect);
-        gr2.getChildren().add(originPoly);
+//        gr2.getChildren().add(originRect);
+//        gr2.getChildren().add(originPoly);
         primaryStage.setScene(scene);
         primaryStage.show();
+        this.m.getToolbar();
+        this.m.getWhiteboard();
     }
+	
+	private Rectangle toolbar, whiteboard;
+	public void createToolbar(Toolbar toolbar){
+		Color stroke = new Color(toolbar.getStroke().getRed()/255, toolbar.getStroke().getGreen()/255, 
+				toolbar.getStroke().getBlue()/255, 1);
+		Color fill = new Color(toolbar.getFill().getRed()/255, toolbar.getFill().getGreen()/255,
+				toolbar.getFill().getBlue()/255, 1);
+		this.toolbar = GraphicalObjects.createRectangle(toolbar.getPosition().getX(), 
+				toolbar.getPosition().getY(), 
+				toolbar.getWidth(), 
+				toolbar.getHeight(), 
+				toolbar.getArcWidth(), 
+				toolbar.getArcHeight(), 
+				fill, 
+				stroke, 
+				null, null, true);
+        gr2.getChildren().add(this.toolbar);
+        
+
+        ShapeRectangle shapeRect = (ShapeRectangle) toolbar.getShape(0);
+        Color fillShape = new Color(shapeRect.getFill().getRed()/255, shapeRect.getFill().getGreen()/255,
+        		shapeRect.getFill().getBlue()/255, 1);
+       this.originRect = GraphicalObjects.createRectangle(
+        		shapeRect.getPosition().getX(), shapeRect.getPosition().getY(), 
+        		shapeRect.getWidth(), shapeRect.getHeight(), 
+        		shapeRect.getArcWidth(), shapeRect.getArcHeight(),
+        		fillShape, stroke, 
+        		null, 
+        		null, 
+        		false);
+        gr2.getChildren().add(this.originRect);
+        
+        ShapeRegularPolygon shapePoly = (ShapeRegularPolygon) toolbar.getShape(1);
+        this.originPoly = GraphicalObjects.createPolygon(shapePoly.getTab(), 
+        		shapePoly.getPosition().getX(), shapePoly.getPosition().getY(), 
+        		fillShape, stroke, 
+        		null, 
+        		null, 
+        		false);
+        gr2.getChildren().add(this.originPoly);
+        
+        
+        
+	}
+	
+	
+	public void createWhiteboard(Whiteboard whiteboard){
+		Color stroke = new Color(whiteboard.getStroke().getRed()/255, whiteboard.getStroke().getGreen()/255, 
+				whiteboard.getStroke().getBlue()/255, 1);
+		Color fill = new Color(whiteboard.getFill().getRed()/255, whiteboard.getFill().getGreen()/255,
+				whiteboard.getFill().getBlue()/255, 1);
+		this.whiteboard = GraphicalObjects.createRectangle(whiteboard.getPosition().getX(), 
+				whiteboard.getPosition().getY(), 
+				whiteboard.getWidth(), whiteboard.getHeight(), 
+				whiteboard.getArcWidth(), whiteboard.getArcHeight(), 
+				fill, stroke, 
+				null, null, true);
+		gr2.getChildren().add(this.whiteboard);
+	}
+	
 	
 	
 	private static double orgSceneX, orgSceneY;
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		if(arg1 instanceof ShapeRectangle){
-			ShapeRectangle shapeRect = (ShapeRectangle) arg1;
-			System.out.println(arg0);
-			Shape rect = GraphicalObjects.cloneShape(originRect);
-//			orgSceneX = shapeRect.getPosition().getX();
-//			orgSceneY = shapeRect.getPosition().getY();
+		if(arg1 instanceof Toolbar){
+			createToolbar((Toolbar) arg1);
+		}
+		else{
+			if(arg1 instanceof Whiteboard){
+				createWhiteboard((Whiteboard) arg1);
+			}
 		}
 	}
+		
+//	        whiteboard = GraphicalObjects.createRectangle(LAYOUT_X_WHITEBOARD, LAYOUT_Y_WHITEBOARD, 
+//    		400, 510, 0, 0, 
+//    		Color.WHITE,Color.BLACK, 
+//    		null, null, false);
+//    
+//    
+//    
+//    gr2.getChildren().add(whiteboard);
+//		}
+//		if(arg1 instanceof ShapeRectangle){
+//			ShapeRectangle shapeRect = (ShapeRectangle) arg1;
+//			System.out.println(arg0);
+//			Shape rect = GraphicalObjects.cloneShape(originRect);
+//			orgSceneX = shapeRect.getPosition().getX();
+//			orgSceneY = shapeRect.getPosition().getY();
+//		}
+//	}
 }
 
 

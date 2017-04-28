@@ -4,39 +4,39 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 
 public class ShapeRectangle extends AbstractShape {
-	private double round;
-	private double roundedEdges;
+	private double arcWidth, arcHeight;
 	private double width, height;
 	private final static double ROUND = 0, ROUNDEDEDGES = 0;
 
 
-	public ShapeRectangle(double width, double height, double round,
-			double roundedEdges, double rotat, 
+	public ShapeRectangle(double width, double height, double arcWidth,
+			double arcHeight, double rotat, 
 			double rotatCenterX, double rotatCenterY, 
 			double translateX, double translateY, 
 			Color fill, Color stroke, Point2D.Double position){
 		super(rotat, rotatCenterX, rotatCenterY, translateX, translateY, fill, stroke, position);
 		this.width = width;
 		this.height = height;
-		this.round = round;
-		this.roundedEdges = roundedEdges;
+		this.arcWidth = arcWidth;
+		this.arcHeight = arcHeight;
 	}
 	
-	public ShapeRectangle(double width, double height, Point2D.Double position){
+	public ShapeRectangle(double width, double height){
 		super();
 		this.width = width;
 		this.height = height;
-		this.round = ROUND;
-		this.roundedEdges = ROUNDEDEDGES;
+		this.arcWidth = ROUND;
+		this.arcHeight = ROUNDEDEDGES;
 	}
 
-	private double WIDTH = 70, HEIGHT = 215;
 	public ShapeRectangle(){
 		super();
-		this.width = WIDTH;
-		this.height = HEIGHT;
-		this.width = WIDTH;
+		this.width = 0;
+		this.height = 0;
+		this.arcWidth = ROUND;
+		this.arcHeight = ROUNDEDEDGES;
 	}
+
 	
 	public void setWidth(double width){
 		this.width = width;
@@ -54,20 +54,20 @@ public class ShapeRectangle extends AbstractShape {
 		return this.height;
 	}
 	
-	public void setRound(double round){
-		this.round = round;
+	public void setArcWidth(double arcWidth){
+		this.arcWidth = arcWidth;
 	}
 	
-	public double getRound(){
-		return this.round;
+	public double getArcWidth(){
+		return this.arcWidth;
 	}
 	
-	public void setRoundedEdges(double roundedEdges){
-		this.roundedEdges = roundedEdges;
+	public void setArcHeight(double arcHeight){
+		this.arcHeight = arcHeight;
 	}
 	
-	public double roundedEdges(){
-		return this.roundedEdges;
+	public double getArcHeight(){
+		return this.arcHeight;
 	}
 
 }
