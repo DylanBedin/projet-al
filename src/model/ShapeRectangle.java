@@ -14,8 +14,8 @@ public class ShapeRectangle extends AbstractShape {
 			double roundedEdges, double rotat, 
 			double rotatCenterX, double rotatCenterY, 
 			double translateX, double translateY, 
-			Color color, Point2D.Double position){
-		super(rotat, rotatCenterX, rotatCenterY, translateX, translateY, color, position);
+			Color fill, Color stroke, Point2D.Double position){
+		super(rotat, rotatCenterX, rotatCenterY, translateX, translateY, fill, stroke, position);
 		this.width = width;
 		this.height = height;
 		this.round = round;
@@ -23,11 +23,19 @@ public class ShapeRectangle extends AbstractShape {
 	}
 	
 	public ShapeRectangle(double width, double height, Point2D.Double position){
-		super(position);
+		super();
 		this.width = width;
 		this.height = height;
 		this.round = ROUND;
 		this.roundedEdges = ROUNDEDEDGES;
+	}
+
+	private double WIDTH = 70, HEIGHT = 215;
+	public ShapeRectangle(){
+		super();
+		this.width = WIDTH;
+		this.height = HEIGHT;
+		this.width = WIDTH;
 	}
 	
 	public void setWidth(double width){

@@ -611,7 +611,21 @@ public class EventMouse {
 		}
 	};
 	
-	
+	static EventHandler<MouseEvent> OnMouseReleasedToolbar = 
+			new EventHandler<MouseEvent>() {
+		
+		public void handle(MouseEvent event){
+			if(event.getSource().equals(selectionRectangle)){
+				ShapeComposite comp = null;
+				for(Shape s:listShapes){
+					if(s instanceof ShapeComposite){
+						comp = (ShapeComposite) s;
+					}
+				}
+				
+			}
+		}
+	};
 
 	static EventHandler<MouseEvent> OnMouseDraggedEventHandler =
 			new EventHandler<MouseEvent>() {

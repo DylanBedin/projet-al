@@ -8,8 +8,11 @@ public interface IShape extends Cloneable{
 	public void setPosition(double x, double y);
 	public Point2D getPosition();
 	
-	public void setColor(Color c);
-	public Color getColor();
+	public void setFill(Color c);
+	public Color getFill();
+	
+	public void setStroke(Color c);
+	public Color getStroke();
 	
 	public void setRotation(double rotat);
 	public double getRotation();

@@ -2,9 +2,16 @@ package view;
 
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
+
+import controller.MouseEvents;
+
+import main.Main;
+import model.ShapeRectangle;
+import model.Whiteboard;
 
 
-import controller.Controller;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -18,26 +25,24 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 
-public class View extends Application{
+public class View extends Application implements Observer{
 	
 	protected static final double LAYOUT_X_GROUP2 = 5;
 	protected static final double LAYOUT_Y_GROUP2 = 50;
 	protected static final double LAYOUT_X_WHITEBOARD = 85;
 	protected static final double LAYOUT_Y_WHITEBOARD = 20;
-		
-	public static Controller controller;
-	
+			
 	static Stage stage;
 	static Rectangle whiteboard;
-	public static ArrayList<Shape> listSelectionShapes;
+//	public static ArrayList<Shape> listSelectionShapes;
 
 	
-	public static void main(String[] args) {
-		Application.launch(View.class, args);
-	}
+//	public static void main(String[] args) {
+//		Application.launch(View.class, args);
+//	}
 
 	
-	public void begin(){
+	public void launchApp(){
 		Application.launch(View.class);
 	}
 	
@@ -56,7 +61,10 @@ public class View extends Application{
 	/********************************************************************************************/
 
 	
-	
+	private Polygon originPoly;
+	private Rectangle originRect;
+	private Whiteboard wb;
+	private MouseEvents mouseEvents;
 	@SuppressWarnings("static-access")
 	@Override
     public void start(Stage primaryStage) {
@@ -64,9 +72,9 @@ public class View extends Application{
         primaryStage.setTitle("Shapes");
         Group root = new Group();
         Scene scene = new Scene(root, 500, 600, Color.WHITE);
-
-        this.controller = new Controller(this);
-
+        this.wb = Main.wb;
+        this.wb.addObserver(this);
+        this.mouseEvents = new MouseEvents(this.wb);
         /***************************************************************************************/
         /**
          * PREMIER GROUPE : Barre du haut contenant les boutons permettant la gestion
@@ -94,7 +102,7 @@ public class View extends Application{
         btnLoad.setText("Load");
                 
         Button btnUndo = GraphicalObjects.createButton(145,15, null, null);
-//        Image buttonImg = new Image(getClass().getResourceAsStream("../img/Undo.png"));
+//      Image buttonImg = new Image(getClass().getResourceAsStream("../img/Undo.png"));
 //		ImageView iV = new ImageView(buttonImg);
 //		iV.setFitHeight(20);
 //		iV.setFitWidth(20);
@@ -152,26 +160,45 @@ public class View extends Application{
          */
         
         
-        Rectangle rect = GraphicalObjects.createRectangle(
+//        originRect = GraphicalObjects.createRectangle(
+//        		rect2.getX() + 10, rect2.getY() + 10, 
+//        		50, 40, 
+//        		0, 0,
+//        		Color.BLUE, Color.BLACK, 
+//        		EventMouse.OnMousePressedToolbar, 
+//        		EventMouse.OnMouseDraggedEventHandler, 
+//        		false);
+
+        
+        //Rectangle rect2 = GraphicalObjects.createRectangle(5, 20, 70, 515, 20, 20, 
+        originRect = GraphicalObjects.createRectangle(
         		rect2.getX() + 10, rect2.getY() + 10, 
         		50, 40, 
         		0, 0,
         		Color.BLUE, Color.BLACK, 
-        		EventMouse.OnMousePressedToolbar, 
-        		EventMouse.OnMouseDraggedEventHandler, 
+        		MouseEvents.OnMousePressedToolbar, 
+        		MouseEvents.OnMouseDraggedEventHandler, 
         		false);
-        
-        rect.setOnMouseReleased(EventMouse.mouseReleasedOnWhiteboardEventHandler);
+//        
+//        originRect.setOnMouseReleased(EventMouse.mouseReleasedOnWhiteboardEventHandler);
         
 
         
         
-        Polygon poly = GraphicalObjects.createPolygon(
+//        originPoly = GraphicalObjects.createPolygon(
+//        		6, 30, 
+//        		originRect.getX() + 10, originRect.getY() + originRect.getHeight() + 30, 
+//        		Color.BLACK, Color.BLACK, 
+//        		EventMouse.OnMousePressedToolbar, 
+//        		EventMouse.OnMouseDraggedEventHandler, 
+//        		false);
+        
+        originPoly = GraphicalObjects.createPolygon(
         		6, 30, 
-        		rect.getX() + 10, rect.getY() + rect.getHeight() + 30, 
+        		originRect.getX() + 10, originRect.getY() + originRect.getHeight() + 30, 
         		Color.BLACK, Color.BLACK, 
-        		EventMouse.OnMousePressedToolbar, 
-        		EventMouse.OnMouseDraggedEventHandler, 
+        		MouseEvents.OnMousePressedToolbar, 
+        		null, 
         		false);
         
         Button TrashCan = GraphicalObjects.createButton(20,490, null, null);
@@ -184,16 +211,28 @@ public class View extends Application{
 
 		
 		//Sélection de formes
-		whiteboard.addEventHandler(MouseEvent.MOUSE_PRESSED, EventMouse.buttonPressedOnWhiteboardForSelection);
-		whiteboard.addEventHandler(MouseEvent.MOUSE_RELEASED, EventMouse.buttonReleasedOnWhiteboardForSelection);
-		
+//		whiteboard.addEventHandler(MouseEvent.MOUSE_PRESSED, EventMouse.buttonPressedOnWhiteboardForSelection);
+//		whiteboard.addEventHandler(MouseEvent.MOUSE_RELEASED, EventMouse.buttonReleasedOnWhiteboardForSelection);
+//		
 		gr2.getChildren().add(TrashCan);
-        gr2.getChildren().add(rect);
-        gr2.getChildren().add(poly);
-        
+        gr2.getChildren().add(originRect);
+        gr2.getChildren().add(originPoly);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+	
+	
+	private static double orgSceneX, orgSceneY;
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		if(arg1 instanceof ShapeRectangle){
+			ShapeRectangle shapeRect = (ShapeRectangle) arg1;
+			System.out.println(arg0);
+			Shape rect = GraphicalObjects.cloneShape(originRect);
+//			orgSceneX = shapeRect.getPosition().getX();
+//			orgSceneY = shapeRect.getPosition().getY();
+		}
+	}
 }
 
 

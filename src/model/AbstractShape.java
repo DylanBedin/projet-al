@@ -9,35 +9,38 @@ public abstract class AbstractShape implements IShape {
 	protected double rotat;
 	protected double rotatCenterX, rotatCenterY;
 	protected double translateX, translateY;
-	protected Color color;
+	protected Color fill, stroke;
 	protected Point2D position;
 	protected ArrayList<Memento> mementoList;
 	
 	private final static double ROTAT = 0, ROTATCENTERX = 0, ROTATCENTERY = 0, TRANSLATEX = 0, TRANSLATEY = 0;
-	private final static Color COLOR = new Color(0, 0, 0);
 	
 	public AbstractShape(double rotat, double rotatCenterX, 
 			double rotatCenterY, double translateX, 
-			double translateY, Color color, 
+			double translateY, Color fill, Color stroke, 
 			Point2D.Double position){
 		this.rotat = rotat;
 		this.rotatCenterX = rotatCenterX;
 		this.rotatCenterY = rotatCenterY;
 		this.translateX = translateX;
 		this.translateY = translateY;
-		this.color = color;
+		this.fill = fill;
+		this.stroke = stroke;
 		this.position = (Point2D) position.clone();
 		this.mementoList = new ArrayList<Memento>();
 	}
 	
-	public AbstractShape(Point2D.Double position){
+	private Point2D.Double POSITION = new Point2D.Double(5, 20);
+	private Color FILL = Color.BLUE, STROKE = Color.BLACK;
+	public AbstractShape(){
 		this.rotat = ROTAT;
 		this.rotatCenterX = ROTATCENTERX;
 		this.rotatCenterY = ROTATCENTERY;
 		this.translateX = TRANSLATEX;
 		this.translateY = TRANSLATEY;
-		this.color = COLOR;
-		this.position = (Point2D) position.clone();
+		this.fill = FILL;
+		this.stroke = STROKE;
+		this.position = POSITION;
 		this.mementoList = new ArrayList<Memento>();
 	}
 	
@@ -53,12 +56,20 @@ public abstract class AbstractShape implements IShape {
 		return this.position;
 	}
 	
-	public void setColor(Color c){
-		this.color = c;
+	public void setFill(Color c){
+		this.fill = c;
 	}
 	
-	public Color getColor(){
-		return this.color;
+	public Color getFill(){
+		return this.fill;
+	}
+
+	public void setStroke(Color c){
+		this.stroke = c;
+	}
+	
+	public Color getStroke(){
+		return this.stroke;
 	}
 	
 	public void setRotation(double rotat){

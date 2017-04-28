@@ -1,9 +1,10 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Observable;
 import java.awt.geom.Point2D;
 
-public class Whiteboard{
+public class Whiteboard extends Observable{
 	private ArrayList<Point2D.Double> listPositionShapes;
 	private ArrayList<IShape> listShapes;
 	private double height, width;
@@ -28,9 +29,25 @@ public class Whiteboard{
 		this.upLeftCorner = UPLEFTCORNER;
 	}
 	
+	public void translateShape(IShape shape, double x, double y){
+		int index = -1;
+		for(int i = 0; i < this.listPositionShapes.size(); i++){
+			if(this.listShapes.get(index) == shape){
+				shape.setTranslation(x, y);
+				this.listPositionShapes.get(i).setLocation(new Point2D.Double(
+						this.listPositionShapes.get(i).getX()+x,
+						this.listPositionShapes.get(i).getY()+y));
+			}
+		}
+		setChanged();
+		notifyObservers(shape);
+	}
+	
 	public void add(IShape shape, Point2D.Double position){
 		this.listShapes.add(shape);
 		this.listPositionShapes.add(position);
+		setChanged();
+		notifyObservers(shape);
 	}
 	
 	public void removeShape(IShape shape, Point2D position){
