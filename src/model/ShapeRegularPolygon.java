@@ -1,7 +1,5 @@
 package model;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.geom.Point2D;
 
 public class ShapeRegularPolygon extends AbstractShape {
@@ -55,6 +53,7 @@ public class ShapeRegularPolygon extends AbstractShape {
 	
 	
 	
+	@SuppressWarnings("unused")
 	static private double barycentreX(Double[] tab){
 		double res = 0;
 		for(int i =0; i<tab.length; i= i+2){
@@ -63,6 +62,7 @@ public class ShapeRegularPolygon extends AbstractShape {
 		return res / (tab.length /2) ;
 	}
 	
+	@SuppressWarnings("unused")
 	static private double barycentreY(Double[] tab){
 		double res = 0;
 		for(int i =1; i<tab.length; i= i+2){
@@ -77,8 +77,10 @@ public class ShapeRegularPolygon extends AbstractShape {
 	
 	/*******************************/
 	/**
-	 * 	Commentaire : Les polygones ont leurs champ dépendant les un des autre (Tab <=> Rayon / Tab <=> NombreSommet ...)
-	 * 				  Donc a chaque set de ray / tab / nbVertices, il faut les modifier entre eux.
+	 * 	Commentaire : Les polygones ont leurs champs dépendant les un aux 
+	 * 				  autres (Tab <=> Rayon / Tab <=> NombreSommet ...)
+	 * 				  Donc à chaque set de ray / tab / nbVertices, il faut les 
+	 * 				  modifier entre eux.
 	 */
 	
 	
@@ -121,39 +123,5 @@ public class ShapeRegularPolygon extends AbstractShape {
 	public void setPosition(double x, double y){
 		this.center = new Point2D.Double(x, y);
 		this.tabVertices = createTab(this.ray, this.nbVertices, this.center);
-	}
-	
-	/*******************************/
-	/*       OTHERS_METHODS        */
-	/*******************************/
-	
-	@Override
-	public void setRotation(double rotat) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public double getRotation() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void setRotationCenter(double rotatCenterX, double rotatCenterY) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public double getRotationCenterX() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public double getRotationCenterY() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 }

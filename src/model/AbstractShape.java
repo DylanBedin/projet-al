@@ -1,7 +1,6 @@
 package model;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
@@ -10,13 +9,20 @@ public abstract class AbstractShape implements IShape {
 	protected Color fill, stroke;
 	protected Point2D position;
 	protected ArrayList<Memento> mementoList;
+	protected double rotat;
+	protected double rotatCenterX, rotatCenterY;
 	
 	private final static double TRANSLATEX = 0, TRANSLATEY = 0;
 	
 	public AbstractShape(
+			double rotat,
+			double rotatCenterX, double rotatCenterY,
 			double translateX, double translateY, 
 			Color fill, Color stroke, 
 			Point2D.Double position){
+		this.rotat = rotat;
+		this.rotatCenterX = rotatCenterX;
+		this.rotatCenterY = rotatCenterY;
 		this.translateX = translateX;
 		this.translateY = translateY;
 		this.fill = fill;
@@ -64,25 +70,25 @@ public abstract class AbstractShape implements IShape {
 		return this.stroke;
 	}
 	
-//	public void setRotation(double rotat){
-//		this.rotat = rotat;
-//	}
-//	public double getRotation(){
-//		return this.rotat;
-//	}
-//
-//	public void setRotationCenter(double rotatCenterX, double rotatCenterY){
-//		this.rotatCenterX = rotatCenterX;
-//		this.rotatCenterY = rotatCenterY;
-//	}
-//
-//	public double getRotationCenterX(){
-//		return this.rotatCenterX;
-//	}
-//
-//	public double getRotationCenterY(){
-//		return this.rotatCenterY;
-//	}
+	public void setRotation(double rotat){
+		this.rotat = rotat;
+	}
+	public double getRotation(){
+		return this.rotat;
+	}
+
+	public void setRotationCenter(double rotatCenterX, double rotatCenterY){
+		this.rotatCenterX = rotatCenterX;
+		this.rotatCenterY = rotatCenterY;
+	}
+
+	public double getRotationCenterX(){
+		return this.rotatCenterX;
+	}
+
+	public double getRotationCenterY(){
+		return this.rotatCenterY;
+	}
 	
 	public void setTranslation(double translateX, double translateY){
 		this.translateX = translateX;
