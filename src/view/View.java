@@ -105,18 +105,18 @@ public class View extends Application implements Observer{
         btnLoad.setText("Load");
                 
         Button btnUndo = GraphicalObjects.createButton(145,15, null, null);
-//      Image buttonImg = new Image(getClass().getResourceAsStream("../img/Undo.png"));
-//		ImageView iV = new ImageView(buttonImg);
-//		iV.setFitHeight(20);
-//		iV.setFitWidth(20);
-//		btnUndo.setGraphic(iV);
+        Image buttonImg = new Image(getClass().getResourceAsStream("./../img/Undo.png"));
+		ImageView iV = new ImageView(buttonImg);
+		iV.setFitHeight(20);
+		iV.setFitWidth(20);
+		btnUndo.setGraphic(iV);
                         
         Button btnRedo = GraphicalObjects.createButton(200,15, null, null);
-//        Image buttonImg2 = new Image(getClass().getResourceAsStream("../img/Redo.png"));
-//		ImageView iV2 = new ImageView(buttonImg2);
-//		iV2.setFitHeight(20);
-//		iV2.setFitWidth(20);
-//		btnRedo.setGraphic(iV2);
+        Image buttonImg2 = new Image(getClass().getResourceAsStream("./../img/Redo.png"));
+		ImageView iV2 = new ImageView(buttonImg2);
+		iV2.setFitHeight(20);
+		iV2.setFitWidth(20);
+		btnRedo.setGraphic(iV2);
         
         gr1.getChildren().add(rect1);
         gr1.getChildren().add(btnRedo);
@@ -141,7 +141,6 @@ public class View extends Application implements Observer{
          * TROISIEME GROUPE: Whiteboard
          */
         
-        root.getChildren().add(gr2);
 
         /***********************************************************************************************/
         
@@ -165,24 +164,9 @@ public class View extends Application implements Observer{
 
         
         
-//        originPoly = GraphicalObjects.createPolygon(
-//        		6, 30, 
-//        		originRect.getX() + 10, originRect.getY() + originRect.getHeight() + 30, 
-//        		Color.BLACK, Color.BLACK, 
-//        		EventMouse.OnMousePressedToolbar, 
-//        		EventMouse.OnMouseDraggedEventHandler, 
-//        		false);
-//        
-//        originPoly = GraphicalObjects.createPolygon(
-//        		6, 30, 
-//        		originRect.getX() + 10, originRect.getY() + originRect.getHeight() + 30, 
-//        		Color.BLACK, Color.BLACK, 
-//        		MouseEvents.OnMousePressedToolbar, 
-//        		null, 
-//        		false);
-        
-        Button TrashCan = GraphicalObjects.createButton(20,490, null, null);
-//        Image buttonImg3 = new Image(getClass().getResourceAsStream("../img/TrashCan.png"));
+
+//        Button TrashCan = GraphicalObjects.createButton(20,490, null, null);
+//        Image buttonImg3 = new Image(getClass().getResourceAsStream("./../img/TrashCan.png"));
 //		ImageView iV3 = new ImageView(buttonImg3);
 //		iV3.setFitHeight(20);
 //		iV3.setFitWidth(20);
@@ -194,9 +178,8 @@ public class View extends Application implements Observer{
 //		whiteboard.addEventHandler(MouseEvent.MOUSE_PRESSED, EventMouse.buttonPressedOnWhiteboardForSelection);
 //		whiteboard.addEventHandler(MouseEvent.MOUSE_RELEASED, EventMouse.buttonReleasedOnWhiteboardForSelection);
 //		
-		gr2.getChildren().add(TrashCan);
-//        gr2.getChildren().add(originRect);
-//        gr2.getChildren().add(originPoly);
+		root.getChildren().add(gr2);
+
         primaryStage.setScene(scene);
         primaryStage.show();
         this.m.getToolbar();
@@ -204,6 +187,7 @@ public class View extends Application implements Observer{
     }
 	
 	private Rectangle toolbar, whiteboard;
+	
 	public void createToolbar(Toolbar toolbar){
 		Color stroke = new Color(toolbar.getStroke().getRed()/255, toolbar.getStroke().getGreen()/255, 
 				toolbar.getStroke().getBlue()/255, 1);
@@ -218,15 +202,15 @@ public class View extends Application implements Observer{
 				fill, 
 				stroke, 
 				null, null, true);
-        gr2.getChildren().add(this.toolbar);
-        
+		gr2.getChildren().add(this.toolbar);
 
-        ShapeRectangle shapeRect = (ShapeRectangle) toolbar.getShape(0);
-        Color fillShape = new Color(shapeRect.getFill().getRed()/255, shapeRect.getFill().getGreen()/255,
-        		shapeRect.getFill().getBlue()/255, 1);
-       this.originRect = GraphicalObjects.createRectangle(
-        		shapeRect.getPosition().getX(), shapeRect.getPosition().getY(), 
-        		shapeRect.getWidth(), shapeRect.getHeight(), 
+
+		ShapeRectangle shapeRect = (ShapeRectangle) toolbar.getShape(0);
+		Color fillShape = new Color(shapeRect.getFill().getRed()/255, shapeRect.getFill().getGreen()/255,
+				shapeRect.getFill().getBlue()/255, 1);
+		this.originRect = GraphicalObjects.createRectangle(
+				shapeRect.getPosition().getX(), shapeRect.getPosition().getY(), 
+				shapeRect.getWidth(), shapeRect.getHeight(), 
         		shapeRect.getArcWidth(), shapeRect.getArcHeight(),
         		fillShape, stroke, 
         		null, 
@@ -243,8 +227,14 @@ public class View extends Application implements Observer{
         		false);
         gr2.getChildren().add(this.originPoly);
         
-        
-        
+        Button TrashCan = GraphicalObjects.createButton(20,490, null, null);
+        Image buttonImg3 = new Image(getClass().getResourceAsStream("./../img/TrashCan.png"));
+		ImageView iV3 = new ImageView(buttonImg3);
+		iV3.setFitHeight(20);
+		iV3.setFitWidth(20);
+		TrashCan.setGraphic(iV3);
+		gr2.getChildren().add(TrashCan);
+		
 	}
 	
 	
@@ -276,14 +266,6 @@ public class View extends Application implements Observer{
 			}
 		}
 	}
-		
-//	        whiteboard = GraphicalObjects.createRectangle(LAYOUT_X_WHITEBOARD, LAYOUT_Y_WHITEBOARD, 
-//    		400, 510, 0, 0, 
-//    		Color.WHITE,Color.BLACK, 
-//    		null, null, false);
-//    
-//    
-//    
 //    gr2.getChildren().add(whiteboard);
 //		}
 //		if(arg1 instanceof ShapeRectangle){
