@@ -1,13 +1,14 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
 public class Whiteboard extends ShapeRectangle{
-	private ArrayList<Point2D.Double> listPositionShapes;
 	private ArrayList<IShape> listShapes;
+	
 	private double height, width;
 	private Point2D upLeftCorner;
 	
@@ -32,7 +33,6 @@ public class Whiteboard extends ShapeRectangle{
 //	}
 	
 	private Whiteboard(){
-		this.listPositionShapes = new ArrayList<Point2D.Double>();
 		this.listShapes = new ArrayList<IShape>();
 		this.setPosition(LAYOUT_X_WHITEBOARD, LAYOUT_Y_WHITEBOARD);
 		this.setWidth(WIDTH);
@@ -54,10 +54,22 @@ public class Whiteboard extends ShapeRectangle{
 		return instance;
 	}
 	
-	public void add(IShape shape, Point2D.Double position){
+	public void add(IShape shape){
 		this.listShapes.add(shape);
-		this.listPositionShapes.add(position);
-
+	}
+	
+	public void remove(IShape shape){
+		if(this.listShapes.contains(shape)){
+			this.listShapes.remove(shape);
+		}
+	}
+	
+	public List<IShape> getListShapes(){
+		return this.listShapes;
+	}
+	
+	public boolean containsShape(IShape s){
+		return this.listShapes.contains(s);
 	}
 	
 	public boolean isShapeIn(IShape s){

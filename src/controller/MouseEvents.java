@@ -608,8 +608,8 @@ public class MouseEvents {
 		public void handle(MouseEvent event) {
 			if (event.getSource() instanceof Rectangle) {
 				majOrgScene(event);
-
 			}
+			
 		}
 	};
 
@@ -666,6 +666,33 @@ public class MouseEvents {
 				newTranslateY = offsetY;
 				shapeRect.setTranslation(newTranslateX, newTranslateY);
 				Model.getInstance().notifyChangeShape(shapeRect);
+			}
+		}
+	};
+	
+	public static EventHandler<MouseEvent> OnMouseReleasedTranslationEventHandler =
+			new EventHandler<MouseEvent>(){
+		
+		@Override
+		public void handle(MouseEvent event){
+			if(event.getSource() instanceof Rectangle){
+				Rectangle rect = (Rectangle) event.getSource();
+				ShapeRectangle shapeRect = (ShapeRectangle) rect.getUserData();
+				//ajout d'une shape dans la wb
+				if(Whiteboard.getInstance().isShapeIn(shapeRect) && !Whiteboard.getInstance().containsShape(shapeRect)){
+					Whiteboard.getInstance().add(shapeRect);
+					Model.getInstance().notifyChangeListShapes(Whiteboard.getInstance().getListShapes());
+				}//Suppression d'une shape dans la wb
+				if(Toolbar.getInstance().isInTrashcan(shapeRect) && !Whiteboard.getInstance().containsShape(shapeRect)){
+					Whiteboard.getInstance().remove(shapeRect);
+					Model.getInstance().notifyChangeListShapes(Whiteboard.getInstance().getListShapes());
+				}
+				else{
+					shapeRect.setPosition(shapeRect.getPosition().getX() + shapeRect.getTranslationX(), 
+					shapeRect.getPosition().getY() + shapeRect.getTranslationY());
+					shapeRect.setTranslation(0, 0);
+					Model.getInstance().notifyChangeShape(shapeRect);
+				}
 			}
 		}
 	};

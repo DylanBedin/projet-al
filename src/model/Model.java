@@ -1,5 +1,6 @@
 package model;
 
+import java.util.List;
 import java.util.Observable;
 
 public class Model extends Observable{
@@ -33,8 +34,14 @@ public class Model extends Observable{
 		notifyObservers(this.whiteboard);
 	}
 	
-	public void notifyChangeShape(IShape s){	
+	public void notifyChangeShape(IShape s){
 		setChanged();
 		notifyObservers(s);
 	}
+	
+	public void notifyChangeListShapes(List<IShape> listShapes){
+		setChanged();
+		notifyObservers(listShapes);
+	}
+	
 }

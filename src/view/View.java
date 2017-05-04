@@ -2,6 +2,7 @@ package view;
 
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -225,11 +226,12 @@ public class View extends Application implements Observer{
         		false);
         gr2.getChildren().add(this.originPoly);
         
-        Button TrashCan = GraphicalObjects.createButton(20,490, null, null);
+        Button TrashCan = GraphicalObjects.createButton(Toolbar.getInstance().getTrashcanX(), 
+        												Toolbar.getInstance().getTrashcanY(), null, null);
         Image buttonImg3 = new Image(getClass().getResourceAsStream("./../img/TrashCan.png"));
 		ImageView iV3 = new ImageView(buttonImg3);
-		iV3.setFitHeight(20);
-		iV3.setFitWidth(20);
+		iV3.setFitHeight(Toolbar.getInstance().getTrashcanHeight());
+		iV3.setFitWidth(Toolbar.getInstance().getTrashcanWidth());
 		TrashCan.setGraphic(iV3);
 		gr2.getChildren().add(TrashCan);
 		this.listShapes = new ArrayList<Shape>();
@@ -270,12 +272,13 @@ public class View extends Application implements Observer{
 					null, null,
 					false);
 			r.setUserData(rect);
-			this.listShapes.add(r);
 			Group g = (Group) this.whiteboard.getParent();
 			g.getChildren().add(r);
+			this.listShapes.add(r);
 			rect.setOriginalShape(false);
 			r.addEventHandler(MouseEvent.MOUSE_DRAGGED, this.mouseEvents.OnMouseDraggedEventHandler);
 			r.setOnMousePressed(this.mouseEvents.OnMousePressed);
+			r.setOnMouseReleased(this.mouseEvents.OnMouseReleasedTranslationEventHandler);
 		}
 	}
 
@@ -284,6 +287,28 @@ public class View extends Application implements Observer{
 			if(s.getUserData().equals(shape)){
 				s.setTranslateX(shape.getTranslationX());
 				s.setTranslateY(shape.getTranslationY());
+				s.setLayoutX(shape.getPosition().getX());
+				s.setLayoutY(shape.getPosition().getY());
+			}
+		}
+	}
+	
+	public void majList(List<IShape> listIShapes){
+		List<IShape> tmpList = new ArrayList<IShape>();
+		//créé la liste d'IShape correspondante à listShapes
+		for(Shape s:this.listShapes){
+			tmpList.add((IShape) s.getUserData());
+		}
+		//parcours de l'ancienne liste pour voir si des IShape doivent être supprimées
+		for(IShape shape:tmpList){
+			if(!listIShapes.contains(shape)){
+				tmpList.remove(shape);
+			}
+		}
+		//parcours la liste des userData pour savoir si elle est différente de tmpList et la maj (suppression)
+		for(Shape s:this.listShapes){
+			if(!tmpList.contains(s.getUserData())){
+				listShapes.remove(s);
 			}
 		}
 	}
@@ -299,15 +324,20 @@ public class View extends Application implements Observer{
 			if(arg1 instanceof Whiteboard){
 				createWhiteboard((Whiteboard) arg1);
 			}
+			else{//liste d'IShape
+				if(arg1 instanceof List){
+					
+				}
+			}
 			if(arg1 instanceof ShapeRectangle){
 				ShapeRectangle shapeRect = (ShapeRectangle) arg1;
-				if(Toolbar.getInstance().isShapeIn((shapeRect))){
-					if(shapeRect.isOriginalShape()){
+				if(shapeRect.isOriginalShape()){
+					if(Toolbar.getInstance().isShapeIn((shapeRect))){
 						createNewRectangle(shapeRect);		
 					}
-					else{//Si ce n'est pas un clic sur le rectangle de base de la toolbar
-						majShape(shapeRect);
-					}
+				}
+				else{
+					majShape(shapeRect);
 				}
 			}
 		}
