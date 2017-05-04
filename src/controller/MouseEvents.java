@@ -689,6 +689,21 @@ public class MouseEvents {
 				//Suppression d'une shape dans la wb
 				if(Toolbar.getInstance().isInTrashcan(shapeRect)){
 					Whiteboard.getInstance().remove(shapeRect);
+<<<<<<< HEAD
+=======
+					Model.getInstance().notifyChangeListShapes(Whiteboard.getInstance().getListShapes());
+				}//Dépassement de la shape du whiteboard
+				else{
+					shapeRect.setPosition(shapeRect.getPosition().getX() + shapeRect.getTranslationX(), 
+					shapeRect.getPosition().getY() + shapeRect.getTranslationY());
+					shapeRect.setTranslation(0, 0);
+					//Dépassement de la shape du whiteboard
+					if(!Whiteboard.getInstance().isShapeIn(shapeRect)){
+						Whiteboard.getInstance().getShapeBackInTheWhiteboard(shapeRect);
+					}
+					Model.getInstance().notifyChangeShape(shapeRect);
+
+>>>>>>> bd62b79215257f606a6a5714c1768f561b79b250
 				}
 				//Dépassement de la shape du whiteboard
 //				if(!Whiteboard.getInstance().isShapeIn(shapeRect) && Whiteboard.getInstance().containsShape(shapeRect)){
