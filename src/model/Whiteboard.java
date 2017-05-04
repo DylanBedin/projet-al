@@ -79,6 +79,27 @@ public class Whiteboard extends ShapeRectangle{
 				&& y >= this.LAYOUT_X_WHITEBOARD && y <= this.LAYOUT_Y_WHITEBOARD + this.HEIGHT;
 	}
 	
+	public void getShapeBackInTheWhiteboard(IShape s){
+		if (s instanceof ShapeRectangle){
+			double x = s.getPosition().getX();
+			double y = s.getPosition().getY();
+			
+			if( x < this.LAYOUT_X_WHITEBOARD ){
+				s.setPosition(LAYOUT_X_WHITEBOARD,y);
+			}
+			if( y < this.LAYOUT_Y_WHITEBOARD ){
+				s.setPosition(x, LAYOUT_Y_WHITEBOARD);
+			}
+			if( x > this.LAYOUT_X_WHITEBOARD + this.WIDTH){
+				s.setPosition(this.LAYOUT_X_WHITEBOARD + this.WIDTH - ((ShapeRectangle) s).getWidth() , y);
+			}
+			if( y > this.LAYOUT_Y_WHITEBOARD + this.HEIGHT){
+				s.setPosition(x, this.LAYOUT_Y_WHITEBOARD + this.WIDTH - ((ShapeRectangle) s).getHeight());
+			}
+			
+		}
+	}
+	
 //	
 //	public void translateShape(IShape shape, double x, double y){
 //		int index = -1;

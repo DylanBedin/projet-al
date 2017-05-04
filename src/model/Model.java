@@ -7,6 +7,9 @@ public class Model extends Observable{
 	private Toolbar toolbar;
 	private Whiteboard whiteboard;
 	private static Model instance = null;
+	private final double LAYOUT_X_GROUP2 = 5;
+	private final double LAYOUT_Y_GROUP2 = 50;
+	
 	
 	private Model(){
 		this.toolbar = Toolbar.getInstance();
@@ -42,6 +45,14 @@ public class Model extends Observable{
 	public void notifyChangeListShapes(List<IShape> listShapes){
 		setChanged();
 		notifyObservers(listShapes);
+	}
+	
+	public double getLayoutGroup2X(){
+		return this.LAYOUT_X_GROUP2;
+	}
+	
+	public double getLayoutGroup2Y(){
+		return this.LAYOUT_Y_GROUP2;
 	}
 	
 }

@@ -686,11 +686,15 @@ public class MouseEvents {
 				if(Toolbar.getInstance().isInTrashcan(shapeRect) && !Whiteboard.getInstance().containsShape(shapeRect)){
 					Whiteboard.getInstance().remove(shapeRect);
 					Model.getInstance().notifyChangeListShapes(Whiteboard.getInstance().getListShapes());
-				}
+				}//Dépassement de la shape du whiteboard
 				else{
 					shapeRect.setPosition(shapeRect.getPosition().getX() + shapeRect.getTranslationX(), 
 					shapeRect.getPosition().getY() + shapeRect.getTranslationY());
 					shapeRect.setTranslation(0, 0);
+					//Dépassement de la shape du whiteboard
+					if(!Whiteboard.getInstance().isShapeIn(shapeRect) && Whiteboard.getInstance().containsShape(shapeRect)){
+						Whiteboard.getInstance().getShapeBackInTheWhiteboard(shapeRect);
+					}
 					Model.getInstance().notifyChangeShape(shapeRect);
 				}
 			}

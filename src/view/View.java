@@ -137,7 +137,7 @@ public class View extends Application implements Observer{
          * DEUXIEME GROUPE: Toolbar
          */
         
-        gr2 = GraphicalObjects.createGroup(LAYOUT_X_GROUP2, LAYOUT_Y_GROUP2);
+        gr2 = GraphicalObjects.createGroup( Model.getInstance().getLayoutGroup2X(), Model.getInstance().getLayoutGroup2Y());
       
         this.m.getToolbar();
         this.m.getWhiteboard();
@@ -225,6 +225,7 @@ public class View extends Application implements Observer{
         		null, 
         		false);
         gr2.getChildren().add(this.originPoly);
+             
         
         Button TrashCan = GraphicalObjects.createButton(Toolbar.getInstance().getTrashcanX(), 
         												Toolbar.getInstance().getTrashcanY(), null, null);
