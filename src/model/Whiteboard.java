@@ -64,7 +64,7 @@ public class Whiteboard extends ShapeRectangle{
 		double x = s.getPosition().getX();
 		double y = s.getPosition().getY();
 		return x >= this.LAYOUT_X_WHITEBOARD && x <= this.LAYOUT_X_WHITEBOARD + this.WIDTH
-				&& y >= this.LAYOUT_Y_WHITEBOARD && y <= this.LAYOUT_Y_WHITEBOARD + this.HEIGHT;
+				&& y >= this.LAYOUT_X_WHITEBOARD && y <= this.LAYOUT_Y_WHITEBOARD + this.HEIGHT;
 	}
 	
 //	

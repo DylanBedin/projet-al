@@ -33,7 +33,7 @@ public class Model extends Observable{
 		notifyObservers(this.whiteboard);
 	}
 	
-	public void setCloneShape(IShape s){
+	public void notifyChangeShape(IShape s){	
 		setChanged();
 		notifyObservers(s);
 	}

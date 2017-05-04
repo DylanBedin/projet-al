@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.tools.Tool;
+
 import controller.MouseEvents;
 
 import main.Main;
@@ -211,7 +213,7 @@ public class View extends Application implements Observer{
         		null, 
         		null, 
         		false);
-		
+		this.originRect.setUserData(Toolbar.getInstance().listShapes.get(0));
         gr2.getChildren().add(this.originRect);
         
         ShapeRegularPolygon shapePoly = (ShapeRegularPolygon) toolbar.getShape(1);
@@ -263,24 +265,35 @@ public class View extends Application implements Observer{
 					((ShapeRectangle) rect).getHeight(),
 					((ShapeRectangle) rect).getArcWidth(),
 					((ShapeRectangle) rect).getArcHeight(),
-					fill,
+					Color.PINK,
 					stroke,
 					null, null,
-					true);
+					false);
 			r.setUserData(rect);
 			this.listShapes.add(r);
 			Group g = (Group) this.whiteboard.getParent();
 			g.getChildren().add(r);
-			r.setOnMouseDragged(this.mouseEvents.OnMouseDraggedEventHandler);
+			rect.setOriginalShape(false);
+			r.addEventHandler(MouseEvent.MOUSE_DRAGGED, this.mouseEvents.OnMouseDraggedEventHandler);
+			r.setOnMousePressed(this.mouseEvents.OnMousePressed);
 		}
 	}
 
+	public void majShape(IShape shape){
+		for(Shape s:this.listShapes){
+			if(s.getUserData().equals(shape)){
+				s.setTranslateX(shape.getTranslationX());
+				s.setTranslateY(shape.getTranslationY());
+			}
+		}
+	}
+	
 	private static double orgSceneX, orgSceneY;
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		if(arg1 instanceof Toolbar){
 			createToolbar((Toolbar) arg1);
-			this.originRect.addEventHandler(MouseEvent.MOUSE_PRESSED, this.mouseEvents.OnMousePressed);
+			this.originRect.addEventHandler(MouseEvent.MOUSE_PRESSED, this.mouseEvents.OnMousePressedClone);
 		}
 		else{
 			if(arg1 instanceof Whiteboard){
@@ -289,7 +302,12 @@ public class View extends Application implements Observer{
 			if(arg1 instanceof ShapeRectangle){
 				ShapeRectangle shapeRect = (ShapeRectangle) arg1;
 				if(Toolbar.getInstance().isShapeIn((shapeRect))){
-					createNewRectangle(shapeRect);		
+					if(shapeRect.isOriginalShape()){
+						createNewRectangle(shapeRect);		
+					}
+					else{//Si ce n'est pas un clic sur le rectangle de base de la toolbar
+						majShape(shapeRect);
+					}
 				}
 			}
 		}

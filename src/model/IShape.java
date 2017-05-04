@@ -25,5 +25,8 @@ public interface IShape extends Cloneable{
 	public double getTranslationX();
 	public double getTranslationY();
 	
+	public boolean isOriginalShape();
+	public void setOriginalShape(boolean orig);
+	
 	public Object clone() throws CloneNotSupportedException;
 }

@@ -575,9 +575,12 @@ public class MouseEvents {
 //		}
 //	};
 //
-
+	public static void majOrgScene(MouseEvent event){
+		orgSceneX = event.getSceneX();
+		orgSceneY = event.getSceneY();
+	}
 	
-	public static EventHandler<MouseEvent> OnMousePressed =
+	public static EventHandler<MouseEvent> OnMousePressedClone =
 			new EventHandler<MouseEvent>(){
 		public void handle(MouseEvent event) {
 			if (event.getSource() instanceof Rectangle) {
@@ -587,10 +590,9 @@ public class MouseEvents {
 					shapeRect = (ShapeRectangle) Toolbar.getInstance().getShape(0).clone();
 					if(Toolbar.getInstance().isShapeIn(shapeRect)){
 						//Initialise les positions pour le drag
-						orgSceneX = event.getSceneX();
-						orgSceneY = event.getSceneY();
+						majOrgScene(event);
 						Point2D.Double position = new Point2D.Double(event.getSceneX(), event.getSceneY());
-						Model.getInstance().setCloneShape(shapeRect);
+						Model.getInstance().notifyChangeShape(shapeRect);
 					}
 				}
 				catch (CloneNotSupportedException e) {
@@ -600,9 +602,19 @@ public class MouseEvents {
 			}
 		}
 	};
+	
+	public static EventHandler<MouseEvent> OnMousePressed =
+			new EventHandler<MouseEvent>(){
+		public void handle(MouseEvent event) {
+			if (event.getSource() instanceof Rectangle) {
+				majOrgScene(event);
 
-					//				orgSceneX = t.getSceneX();
-					//				orgSceneY = t.getSceneY();
+			}
+		}
+	};
+
+//				orgSceneX = t.getSceneX();
+//				orgSceneY = t.getSceneY();
 					//				((Rectangle)(t.getSource())).setOnMousePressed(OnMousePressedWhiteboard);
 					//				((Rectangle)(t.getSource())).setOnMouseReleased(mouseReleasedOnWhiteboardEventHandler);
 		
@@ -653,6 +665,7 @@ public class MouseEvents {
 				newTranslateX = offsetX;
 				newTranslateY = offsetY;
 				shapeRect.setTranslation(newTranslateX, newTranslateY);
+				Model.getInstance().notifyChangeShape(shapeRect);
 			}
 		}
 	};

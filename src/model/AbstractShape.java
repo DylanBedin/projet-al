@@ -12,6 +12,8 @@ public abstract class AbstractShape implements IShape {
 	protected double rotat;
 	protected double rotatCenterX, rotatCenterY;
 	
+	private boolean originalShape = false;
+	
 	private final static double TRANSLATEX = 0, TRANSLATEY = 0;
 	
 	public AbstractShape(
@@ -29,6 +31,14 @@ public abstract class AbstractShape implements IShape {
 		this.stroke = stroke;
 		this.position = (Point2D) position.clone();
 		this.mementoList = new ArrayList<Memento>();
+	}
+	
+	public boolean isOriginalShape(){
+		return this.originalShape;
+	}
+	
+	public void setOriginalShape(boolean orig){
+		this.originalShape = orig;
 	}
 	
 	private Point2D.Double POSITION = new Point2D.Double(5, 20);
@@ -93,7 +103,6 @@ public abstract class AbstractShape implements IShape {
 	public void setTranslation(double translateX, double translateY){
 		this.translateX = translateX;
 		this.translateY = translateY;
-		System.out.println("x=" + this.translateX + " y=" + this.translateY);
 	}
 	
 	public double getTranslationX(){

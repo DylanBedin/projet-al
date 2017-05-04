@@ -25,12 +25,16 @@ public class Toolbar extends ShapeRectangle{
 
 		ShapeRectangle rectOrg = new ShapeRectangle(WIDTH_ORIGIN, HEIGHT_ORIGIN);
 		rectOrg.setPosition(rectOrg.getPosition().getX() + 10, rectOrg.getPosition().getY() + 10);
+		rectOrg.setOriginalShape(true);
+		
 		this.listShapes.add(rectOrg);
 
 
 		ShapeRegularPolygon polyOrg = new ShapeRegularPolygon(EDGES_ORIGIN, RAY_ORIGIN);
 		System.out.println(polyOrg.getPosition().getX());
 		polyOrg.setPosition(polyOrg.getPosition().getX() + 20 , polyOrg.getPosition().getY() + 55);
+		polyOrg.setOriginalShape(true);
+		
 		this.listShapes.add(polyOrg);			
 	}//		this.listShapes.add(new ShapeRegularPolygon(edgeLength, nbEdges, rotat, rotatCenterX, rotatCenterY, translateX, translateY, color, size, position))
 	
