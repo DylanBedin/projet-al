@@ -299,20 +299,20 @@ public class View extends Application implements Observer{
 		}
 	}
 	
-	public void majList(List<IShape> listIShapes){
+	public void majList(IShape ishape){
 		List<Shape> copyList = (List<Shape>) this.listShapes.clone();
-		for(Shape shape:copyList){
-			if(shape.getUserData() instanceof ShapeRectangle){
-				if(!listIShapes.contains((ShapeRectangle) shape.getUserData())){
-					shape.setVisible(false);
-					this.listShapes.remove(shape);
+		for(Shape s:copyList){
+			if(s.getUserData() instanceof ShapeRectangle){
+				if(s.getUserData() == ishape){
+					this.listShapes.remove(s);
+					s.setVisible(false);
 				}
 			}
 		}
 	}
 	
 	private static double orgSceneX, orgSceneY;
-	@Override
+	@Override 
 	public void update(Observable arg0, Object arg1) {
 		if(arg1 instanceof Toolbar){
 			createToolbar((Toolbar) arg1);
@@ -323,19 +323,19 @@ public class View extends Application implements Observer{
 				createWhiteboard((Whiteboard) arg1);
 			}
 			else{//liste d'IShape
-				if(arg1 instanceof List){
-					majList((List) arg1);
-				}
-			}
-			if(arg1 instanceof ShapeRectangle){
-				ShapeRectangle shapeRect = (ShapeRectangle) arg1;
-				if(shapeRect.isOriginalShape()){
-					if(Toolbar.getInstance().isShapeIn((shapeRect))){
-						createNewRectangle(shapeRect);		
+				if(arg1 instanceof ShapeRectangle){
+					ShapeRectangle shapeRect = (ShapeRectangle) arg1;
+					if(shapeRect.isOriginalShape()){
+						if(Toolbar.getInstance().isShapeIn((shapeRect))){
+							createNewRectangle(shapeRect);		
+						}
 					}
-				}
-				else{
-					majShape(shapeRect);
+					else{
+						majShape(shapeRect);
+						if(Toolbar.getInstance().isInTrashcan(shapeRect)){
+							majList(shapeRect);
+						}
+					}
 				}
 			}
 		}

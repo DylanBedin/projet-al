@@ -689,7 +689,6 @@ public class MouseEvents {
 				//Suppression d'une shape dans la wb
 				if(Toolbar.getInstance().isInTrashcan(shapeRect)){
 					Whiteboard.getInstance().remove(shapeRect);
-					Model.getInstance().notifyChangeListShapes(Whiteboard.getInstance().getListShapes());
 				}
 				//Dépassement de la shape du whiteboard
 //				if(!Whiteboard.getInstance().isShapeIn(shapeRect) && Whiteboard.getInstance().containsShape(shapeRect)){

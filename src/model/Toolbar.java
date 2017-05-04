@@ -87,8 +87,6 @@ public class Toolbar extends ShapeRectangle{
 	public boolean isInTrashcan(IShape shape){
 		double x = shape.getPosition().getX();
 		double y = shape.getPosition().getY();
-		double x2 = this.getTrashcanX() + this.getTrashcanWidth();
-		double y2 = this.getTrashcanY() + this.getTrashcanHeight() + Model.getInstance().getLayoutGroup2Y();
 
 		return x >= this.getTrashcanX()  && x <= this.getTrashcanX() + this.getTrashcanWidth()  &&
 				y >= this.getTrashcanY()  && y <= this.getTrashcanY() + this.getTrashcanHeight() ;
