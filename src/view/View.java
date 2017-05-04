@@ -290,26 +290,23 @@ public class View extends Application implements Observer{
 				s.setTranslateY(shape.getTranslationY());
 				s.setLayoutX(shape.getPosition().getX());
 				s.setLayoutY(shape.getPosition().getY());
+				if(s instanceof Rectangle){
+					Rectangle r = (Rectangle) s;
+					r.setX(0);
+					r.setY(0);
+				}
 			}
 		}
 	}
 	
 	public void majList(List<IShape> listIShapes){
-		List<IShape> tmpList = new ArrayList<IShape>();
-		//créé la liste d'IShape correspondante à listShapes
-		for(Shape s:this.listShapes){
-			tmpList.add((IShape) s.getUserData());
-		}
-		//parcours de l'ancienne liste pour voir si des IShape doivent être supprimées
-		for(IShape shape:tmpList){
-			if(!listIShapes.contains(shape)){
-				tmpList.remove(shape);
-			}
-		}
-		//parcours la liste des userData pour savoir si elle est différente de tmpList et la maj (suppression)
-		for(Shape s:this.listShapes){
-			if(!tmpList.contains(s.getUserData())){
-				listShapes.remove(s);
+		List<Shape> copyList = (List<Shape>) this.listShapes.clone();
+		for(Shape shape:copyList){
+			if(shape.getUserData() instanceof ShapeRectangle){
+				if(!listIShapes.contains((ShapeRectangle) shape.getUserData())){
+					shape.setVisible(false);
+					this.listShapes.remove(shape);
+				}
 			}
 		}
 	}
@@ -327,7 +324,7 @@ public class View extends Application implements Observer{
 			}
 			else{//liste d'IShape
 				if(arg1 instanceof List){
-					
+					majList((List) arg1);
 				}
 			}
 			if(arg1 instanceof ShapeRectangle){
