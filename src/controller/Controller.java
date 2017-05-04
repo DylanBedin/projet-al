@@ -18,7 +18,7 @@ public class Controller {
 	
 	public Controller(){
 		this.v = new View();
-		Main.m = new Model();
+		Main.m = Model.getInstance();
 	}
 	
 //	public void addRectangleToWhiteboard(Rectangle r){

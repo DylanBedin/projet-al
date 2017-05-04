@@ -5,10 +5,22 @@ import java.util.Observable;
 public class Model extends Observable{
 	private Toolbar toolbar;
 	private Whiteboard whiteboard;
+	private static Model instance = null;
 	
-	public Model(){
-		this.toolbar = new Toolbar();
-		this.whiteboard = new Whiteboard();
+	private Model(){
+		this.toolbar = Toolbar.getInstance();
+		this.whiteboard = Whiteboard.getInstance();
+	}
+	
+	public static Model getInstance(){
+		if(instance == null){
+			synchronized (Model.class) {
+				if(instance == null){
+					instance = new Model();
+				}
+			}
+		}
+		return instance;
 	}
 	
 	public void getToolbar(){
@@ -19,5 +31,10 @@ public class Model extends Observable{
 	public void getWhiteboard(){
 		setChanged();
 		notifyObservers(this.whiteboard);
+	}
+	
+	public void setCloneShape(IShape s){
+		setChanged();
+		notifyObservers(s);
 	}
 }

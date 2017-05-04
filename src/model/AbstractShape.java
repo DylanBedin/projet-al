@@ -93,6 +93,7 @@ public abstract class AbstractShape implements IShape {
 	public void setTranslation(double translateX, double translateY){
 		this.translateX = translateX;
 		this.translateY = translateY;
+		System.out.println("x=" + this.translateX + " y=" + this.translateY);
 	}
 	
 	public double getTranslationX(){

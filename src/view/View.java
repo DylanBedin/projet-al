@@ -8,6 +8,7 @@ import java.util.Observer;
 import controller.MouseEvents;
 
 import main.Main;
+import model.IShape;
 import model.Model;
 import model.ShapeRectangle;
 import model.ShapeRegularPolygon;
@@ -76,7 +77,7 @@ public class View extends Application implements Observer{
         Scene scene = new Scene(root, 500, 600, Color.WHITE);
         this.m = Main.m;
         this.m.addObserver(this);
-//        this.mouseEvents = new MouseEvents(this.m);
+        this.mouseEvents = new MouseEvents();
         /***************************************************************************************/
         /**
          * PREMIER GROUPE : Barre du haut contenant les boutons permettant la gestion
@@ -135,12 +136,8 @@ public class View extends Application implements Observer{
         
         gr2 = GraphicalObjects.createGroup(LAYOUT_X_GROUP2, LAYOUT_Y_GROUP2);
       
-        
-        /***********************************************************************************************/
-        /*
-         * TROISIEME GROUPE: Whiteboard
-         */
-        
+        this.m.getToolbar();
+        this.m.getWhiteboard();
 
         /***********************************************************************************************/
         
@@ -182,8 +179,6 @@ public class View extends Application implements Observer{
 
         primaryStage.setScene(scene);
         primaryStage.show();
-        this.m.getToolbar();
-        this.m.getWhiteboard();
     }
 	
 	private Rectangle toolbar, whiteboard;
@@ -216,6 +211,7 @@ public class View extends Application implements Observer{
         		null, 
         		null, 
         		false);
+		
         gr2.getChildren().add(this.originRect);
         
         ShapeRegularPolygon shapePoly = (ShapeRegularPolygon) toolbar.getShape(1);
@@ -234,6 +230,7 @@ public class View extends Application implements Observer{
 		iV3.setFitWidth(20);
 		TrashCan.setGraphic(iV3);
 		gr2.getChildren().add(TrashCan);
+		this.listShapes = new ArrayList<Shape>();
 		
 	}
 	
@@ -251,18 +248,49 @@ public class View extends Application implements Observer{
 				null, null, true);
 		gr2.getChildren().add(this.whiteboard);
 	}
+
 	
+	private ArrayList<Shape> listShapes;
 	
-	
+	public void createNewRectangle(IShape rect){
+		if(rect instanceof ShapeRectangle){
+			Color stroke = new Color(rect.getStroke().getRed()/255, rect.getStroke().getGreen()/255, 
+					rect.getStroke().getBlue()/255, 1);
+			Color fill = new Color(rect.getFill().getRed()/255, rect.getFill().getGreen()/255,
+					rect.getFill().getBlue()/255, 1);
+			Rectangle r = GraphicalObjects.createRectangle(rect.getPosition().getX(), rect.getPosition().getY(),
+					((ShapeRectangle) rect).getWidth(),
+					((ShapeRectangle) rect).getHeight(),
+					((ShapeRectangle) rect).getArcWidth(),
+					((ShapeRectangle) rect).getArcHeight(),
+					fill,
+					stroke,
+					null, null,
+					true);
+			r.setUserData(rect);
+			this.listShapes.add(r);
+			Group g = (Group) this.whiteboard.getParent();
+			g.getChildren().add(r);
+			r.setOnMouseDragged(this.mouseEvents.OnMouseDraggedEventHandler);
+		}
+	}
+
 	private static double orgSceneX, orgSceneY;
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		if(arg1 instanceof Toolbar){
 			createToolbar((Toolbar) arg1);
+			this.originRect.addEventHandler(MouseEvent.MOUSE_PRESSED, this.mouseEvents.OnMousePressed);
 		}
 		else{
 			if(arg1 instanceof Whiteboard){
 				createWhiteboard((Whiteboard) arg1);
+			}
+			if(arg1 instanceof ShapeRectangle){
+				ShapeRectangle shapeRect = (ShapeRectangle) arg1;
+				if(Toolbar.getInstance().isShapeIn((shapeRect))){
+					createNewRectangle(shapeRect);		
+				}
 			}
 		}
 	}

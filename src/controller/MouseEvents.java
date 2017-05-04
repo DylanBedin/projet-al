@@ -11,7 +11,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
 import model.IShape;
+import model.Model;
 import model.ShapeRectangle;
+import model.Toolbar;
 import model.Whiteboard;
 
 public class MouseEvents {
@@ -126,7 +128,7 @@ public class MouseEvents {
 //		int i;
 //		double layoutPos = 0;
 //		if(xy.compareTo("x") == 0){
-//			i=0;
+//			i=0;public
 //			layoutPos = s.getLayoutX();
 //		}
 //		else{
@@ -287,7 +289,7 @@ public class MouseEvents {
 //					final TextField textFieldHauteur = new TextField ();
 //					textFieldHauteur.setMaxWidth(60);
 //					textFieldHauteur.setText("");
-//					Label largeur = new Label("Largeur :");
+//					Label largeur = new Label("Largeur :");new Model();
 //					final TextField textFieldLargeur = new TextField ();
 //					textFieldLargeur.setMaxWidth(60);
 //					textFieldLargeur.setText("");
@@ -573,41 +575,45 @@ public class MouseEvents {
 //		}
 //	};
 //
-	public MouseEvents(Whiteboard wb){
-		this.wb = wb;
-		this.shapeAssociation = new ShapeModelAndShapeView();
-	}
-	
-	public static Whiteboard wb;
-	public static ShapeModelAndShapeView shapeAssociation;
-	public static EventHandler<MouseEvent> OnMousePressedToolbar =
-			new EventHandler<MouseEvent>(){
 
+	
+	public static EventHandler<MouseEvent> OnMousePressed =
+			new EventHandler<MouseEvent>(){
 		public void handle(MouseEvent event) {
-			orgSceneX = event.getSceneX();
-			orgSceneY = event.getSceneY();
 			if (event.getSource() instanceof Rectangle) {
-				//Shape rect = GraphicalObjects.cloneShape((Shape) t.getSource());
 				Rectangle rect = (Rectangle) event.getSource();
-				Point2D.Double position = new Point2D.Double(event.getSceneX(), event.getSceneY());
-				ShapeRectangle shapeRect = new ShapeRectangle();
-				shapeAssociation.addShape(shapeRect, rect);
-				wb.add(shapeRect, position);
-//				orgSceneX = t.getSceneX();
-//				orgSceneY = t.getSceneY();
-//				((Rectangle)(t.getSource())).setOnMousePressed(OnMousePressedWhiteboard);
-//				((Rectangle)(t.getSource())).setOnMouseReleased(mouseReleasedOnWhiteboardEventHandler);
+				ShapeRectangle shapeRect;
+				try {
+					shapeRect = (ShapeRectangle) Toolbar.getInstance().getShape(0).clone();
+					if(Toolbar.getInstance().isShapeIn(shapeRect)){
+						//Initialise les positions pour le drag
+						orgSceneX = event.getSceneX();
+						orgSceneY = event.getSceneY();
+						Point2D.Double position = new Point2D.Double(event.getSceneX(), event.getSceneY());
+						Model.getInstance().setCloneShape(shapeRect);
+					}
+				}
+				catch (CloneNotSupportedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-			if (event.getSource() instanceof Polygon) {
+		}
+	};
+
+					//				orgSceneX = t.getSceneX();
+					//				orgSceneY = t.getSceneY();
+					//				((Rectangle)(t.getSource())).setOnMousePressed(OnMousePressedWhiteboard);
+					//				((Rectangle)(t.getSource())).setOnMouseReleased(mouseReleasedOnWhiteboardEventHandler);
+		
+//			if (event.getSource() instanceof Polygon) {
 //				Shape poly = GraphicalObjects.cloneShape((Shape) t.getSource());
-				Polygon poly = (Polygon) event.getSource();
+//				Polygon poly = (Polygon) event.getSource();
 //				orgSceneX = t.getSceneX();
 //				orgSceneY = t.getSceneY();
 //				((Polygon)(t.getSource())).setOnMousePressed(OnMousePressedWhiteboard);				
 //				((Polygon)(t.getSource())).setOnMouseReleased(mouseReleasedOnWhiteboardEventHandler);
-			}
-		}
-	};
+
 //
 //	static EventHandler<MouseEvent> OnMouseReleasedToolbar = 
 //			new EventHandler<MouseEvent>() {
@@ -641,13 +647,16 @@ public class MouseEvents {
 		@Override
 		public void handle(MouseEvent event) {
 			if(event.getSource() instanceof Rectangle){
-				IShape shapeRect = shapeAssociation.getIShape((Shape) event.getSource());
+				ShapeRectangle shapeRect = (ShapeRectangle) ((Rectangle) event.getSource()).getUserData();
 				double offsetX = event.getSceneX() - orgSceneX;
 				double offsetY = event.getSceneY() - orgSceneY;
 				newTranslateX = offsetX;
 				newTranslateY = offsetY;
-				wb.translateShape(shapeRect, newTranslateX, newTranslateY);
+				shapeRect.setTranslation(newTranslateX, newTranslateY);
 			}
+		}
+	};
+}
 //
 //			double offsetX = t.getSceneX() - orgSceneX;
 //			double offsetY = t.getSceneY() - orgSceneY;
@@ -678,8 +687,6 @@ public class MouseEvents {
 //				}
 //				}
 //			}
-		}
-	};
 
 //
 //
@@ -808,4 +815,4 @@ public class MouseEvents {
 //		}
 //	};
 //}
-}
+//}
