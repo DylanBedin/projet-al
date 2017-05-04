@@ -290,6 +290,11 @@ public class View extends Application implements Observer{
 				s.setTranslateY(shape.getTranslationY());
 				s.setLayoutX(shape.getPosition().getX());
 				s.setLayoutY(shape.getPosition().getY());
+				if(s instanceof Rectangle){
+					Rectangle r = (Rectangle) s;
+					r.setX(0);
+					r.setY(0);
+				}
 			}
 		}
 	}

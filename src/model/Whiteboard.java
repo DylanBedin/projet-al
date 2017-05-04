@@ -75,26 +75,25 @@ public class Whiteboard extends ShapeRectangle{
 	public boolean isShapeIn(IShape s){
 		double x = s.getPosition().getX();
 		double y = s.getPosition().getY();
-		return x >= this.LAYOUT_X_WHITEBOARD && x <= this.LAYOUT_X_WHITEBOARD + this.WIDTH
-				&& y >= this.LAYOUT_X_WHITEBOARD && y <= this.LAYOUT_Y_WHITEBOARD + this.HEIGHT;
+		return x >= this.LAYOUT_X_WHITEBOARD && x <= this.LAYOUT_X_WHITEBOARD + this.WIDTH - ((ShapeRectangle) s).getHeight()
+				&& y >= this.LAYOUT_X_WHITEBOARD && y <= this.LAYOUT_Y_WHITEBOARD + this.HEIGHT - ((ShapeRectangle) s).getWidth();
 	}
 	
 	public void getShapeBackInTheWhiteboard(IShape s){
 		if (s instanceof ShapeRectangle){
 			double x = s.getPosition().getX();
 			double y = s.getPosition().getY();
-			
 			if( x < this.LAYOUT_X_WHITEBOARD ){
 				s.setPosition(LAYOUT_X_WHITEBOARD,y);
 			}
 			if( y < this.LAYOUT_Y_WHITEBOARD ){
 				s.setPosition(x, LAYOUT_Y_WHITEBOARD);
 			}
-			if( x > this.LAYOUT_X_WHITEBOARD + this.WIDTH){
+			if( x + ((ShapeRectangle) s).getWidth() > this.LAYOUT_X_WHITEBOARD + this.WIDTH ){
 				s.setPosition(this.LAYOUT_X_WHITEBOARD + this.WIDTH - ((ShapeRectangle) s).getWidth() , y);
 			}
-			if( y > this.LAYOUT_Y_WHITEBOARD + this.HEIGHT){
-				s.setPosition(x, this.LAYOUT_Y_WHITEBOARD + this.WIDTH - ((ShapeRectangle) s).getHeight());
+			if( y + ((ShapeRectangle) s).getHeight() > this.LAYOUT_Y_WHITEBOARD + this.HEIGHT ){
+				s.setPosition(x, this.LAYOUT_Y_WHITEBOARD + this.HEIGHT - ((ShapeRectangle) s).getHeight());
 			}
 			
 		}
