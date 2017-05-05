@@ -34,7 +34,7 @@ public class ShapeRegularPolygon extends AbstractShape {
 	/*******************************/	
 	
 	
-	private Double[] createTab(double ray, int vertices){
+	public static Double[] createTab(double ray, int vertices){
 		double verticeX = 0;
 		double verticeY = 0;
 		double angleToAdd = (2 * Math.PI) / vertices;
@@ -43,8 +43,8 @@ public class ShapeRegularPolygon extends AbstractShape {
 		double edgeX = 0;
 		double edgeY = 0;
 		for(int i = 0; i<vertices;i++){			
-			edgeX = verticeX + this.ray * Math.sin(angle);
-			edgeY = verticeY + this.ray * Math.cos(angle);
+			edgeX = verticeX + ray * Math.sin(angle);
+			edgeY = verticeY + ray * Math.cos(angle);
 			tableau[2*i] = edgeX;
 			tableau[(2*i)+1] = edgeY;
 			angle = angle + angleToAdd;
@@ -54,7 +54,7 @@ public class ShapeRegularPolygon extends AbstractShape {
 	
 	
 	
-	static double barycentreX(Double[] tab){
+	public static double barycentreX(Double[] tab){
 		double res = 0;
 		for(int i =0; i<tab.length; i= i+2){
 			res += tab[i];
@@ -62,7 +62,7 @@ public class ShapeRegularPolygon extends AbstractShape {
 		return res / (tab.length /2) ;
 	}
 	
-	static double barycentreY(Double[] tab){
+	public static double barycentreY(Double[] tab){
 		double res = 0;
 		for(int i =1; i<tab.length; i= i+2){
 			res += tab[i];
