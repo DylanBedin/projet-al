@@ -3,7 +3,6 @@ package model;
 import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
-
 public class Toolbar extends ShapeRectangle implements Serializable{
 	public ArrayList<IShape> listShapes;
 	private double WIDTH = 70, HEIGHT = 215;
@@ -13,7 +12,7 @@ public class Toolbar extends ShapeRectangle implements Serializable{
 	
 	/**TRASHCAN**/
 	private int TRASHCAN_X = 20, TRASHCAN_Y = 490;
-	private double TRASHCAN_HEIGHT = 20, TRASHCAN_WIDTH = 20;
+	private double TRASHCAN_HEIGHT = 22, TRASHCAN_WIDTH = 22;
 	private double TOOLBAR_POS_X = 5, TOOLBAR_POS_Y = 20;
 	
 	public Toolbar(){
@@ -74,10 +73,18 @@ public class Toolbar extends ShapeRectangle implements Serializable{
 	}
 	
 	public boolean isInTrashcan(IShape shape){
-		double x = shape.getPosition().getX();
-		double y = shape.getPosition().getY();
-
+		double x = 0;
+		double y = 0;
+		if(shape instanceof ShapeRectangle){
+			x = shape.getPosition().getX() + ((ShapeRectangle) shape).getWidth()/2;
+			y = shape.getPosition().getY() + ((ShapeRectangle) shape).getHeight()/2;
+		}
+		else if (shape instanceof ShapeRegularPolygon){
+			x = shape.getPosition().getX() ;
+			y = shape.getPosition().getY() ;
+		}
 		return x >= this.getTrashcanX()  && x <= this.getTrashcanX() + this.getTrashcanWidth()  &&
 				y >= this.getTrashcanY()  && y <= this.getTrashcanY() + this.getTrashcanHeight() ;
 	}
+
 }

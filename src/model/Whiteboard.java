@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Observable;
 
 import javafx.collections.ObservableList;
-
+import javafx.scene.shape.Polygon;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
@@ -15,8 +15,6 @@ import java.io.Serializable;
 public class Whiteboard extends ShapeRectangle implements Serializable{
 	private ArrayList<IShape> listShapes;
 
-	private double height, width;
-	private Point2D upLeftCorner;
 
 	private final double WIDTH = 400, HEIGHT = 510;
 	private final double LAYOUT_XMIN_WHITEBOARD = 85;
@@ -103,7 +101,6 @@ public class Whiteboard extends ShapeRectangle implements Serializable{
 			
 			Double centreX = baryX + shapePoly.getPosition().getX();
 			Double centreY = baryY + shapePoly.getPosition().getY();
-			System.out.println(centreX + "  " + centreY);
 			
 			
 			Double ray = shapePoly.getRay();
@@ -127,29 +124,6 @@ public class Whiteboard extends ShapeRectangle implements Serializable{
 
 		}
 	}
-	static private double getMaxX(Double[] tab ) {
-
-		double max = 0;
-		for(int i = 0; i < tab.length; i++){
-			if ( tab[i] > max ){
-				max = tab[i];
-			}
-		}
-		return max;
-	}
-
-	static private double getMaxY(Double[] tab ) {
-		double min = 1000;
-		for(int i = 0; i < tab.length; i++){
-			if ( tab[i] < min ){
-				min = tab[i];
-			}
-			
-		}	
-		return min;
-	}
-
-
 
 }	
 
