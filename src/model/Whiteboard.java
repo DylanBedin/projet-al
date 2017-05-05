@@ -125,6 +125,42 @@ public class Whiteboard extends ShapeRectangle implements Serializable{
 		}
 	}
 
+	static private double getMaxX(Double[] tab ) {
+
+		double max = 0;
+		for(int i = 0; i < tab.length; i++){
+			if ( tab[i] > max ){
+				max = tab[i];
+			}
+		}
+		return max;
+	}
+
+	static private double getMaxY(Double[] tab ) {
+		double min = 1000;
+		for(int i = 0; i < tab.length; i++){
+			if ( tab[i] < min ){
+				min = tab[i];
+			}
+			
+		}	
+		return min;
+	}
+
+	public void setListShapes(ArrayList<IShape> listShapes){
+		this.listShapes = listShapes;
+	}
+	
+	public Whiteboard clone() throws CloneNotSupportedException{
+		Whiteboard wb = new Whiteboard();
+		ArrayList<IShape> listShapes = new ArrayList<IShape>();
+		for(IShape ishape:this.getListShapes()){
+			listShapes.add((IShape) ishape.clone());
+		}
+		wb.setListShapes(listShapes);
+		return wb;
+	}
+
 }	
 
 //	

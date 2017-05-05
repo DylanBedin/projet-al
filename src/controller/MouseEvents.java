@@ -608,9 +608,15 @@ public class MouseEvents {
 					if(Main.m.returnToolbar().isShapeIn(shapeRect)){
 						//Initialise les positions pour le drag
 						majOrgScene(event);
-
 						Point2D.Double position = new Point2D.Double(event.getSceneX(), event.getSceneY());
-						Main.m.notifyChangeShape(shapeRect, true);
+						boolean bool;
+						if(!shapeRect.isOriginalShape()){
+							bool = false;
+						}
+						else{
+							bool = true;
+						}
+						Main.m.notifyChangeShape(shapeRect, bool);
 					}
 				}
 				catch (CloneNotSupportedException e) {
@@ -625,7 +631,14 @@ public class MouseEvents {
 					if(Main.m.returnToolbar().isShapeIn(shapePoly)){
 						//Initialise les positions pour le drag
 						majOrgScene(event);
-						Main.m.notifyChangeShape(shapePoly, true);
+						boolean bool;
+						if(!shapePoly.isOriginalShape()){
+							bool = false;
+						}
+						else{
+							bool = true;
+						}
+						Main.m.notifyChangeShape(shapePoly, bool);
 					}
 				}
 				catch (CloneNotSupportedException e) {
@@ -661,6 +674,14 @@ public class MouseEvents {
 		}
 	};
 
+	
+	public static EventHandler<MouseEvent> OnMousePressedRedo =
+			new EventHandler<MouseEvent>() {
+		public void handle(MouseEvent event){
+			Main.m.notifyRedo();
+		}
+	};
+	
 	public static EventHandler<MouseEvent> OnMouseDraggedEventHandler =
 			new EventHandler<MouseEvent>() {
 
@@ -717,7 +738,6 @@ public class MouseEvents {
 						Main.m.returnWhiteboard().getShapeBackInTheWhiteboard(shapeRect);
 
 
-						Main.m.notifyChangeShape(shapeRect, true);
 					}
 				}
 				Main.m.notifyChangeShape(shapeRect, true);
