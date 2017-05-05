@@ -389,9 +389,8 @@ public class View extends Application implements Observer{
 			}
 
 			else{//liste d'IShape
-				
-				if(arg1 instanceof UndoClass){
-					restoreLastView(Main.m);
+				if(arg1 instanceof Memento){
+					restoreLastView(((Memento) arg1).getState());
 				}
 				
 				if(arg1 instanceof ShapeRectangle){

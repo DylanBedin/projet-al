@@ -661,48 +661,8 @@ public class MouseEvents {
 		}
 	};
 	
-//				orgSceneX = t.getSceneX();
-//				orgSceneY = t.getSceneY();
-					//				((Rectangle)(t.getSource())).setOnMousePressed(OnMousePressedWhiteboard);
-					//				((Rectangle)(t.getSource())).setOnMouseReleased(mouseReleasedOnWhiteboardEventHandler);
-		
-//			if (event.getSource() instanceof Polygon) {
-//				Shape poly = GraphicalObjects.cloneShape((Shape) t.getSource());
-//				Polygon poly = (Polygon) event.getSource();
-//				orgSceneX = t.getSceneX();
-//				orgSceneY = t.getSceneY();
-//				((Polygon)(t.getSource())).setOnMousePressed(OnMousePressedWhiteboard);				
-//				((Polygon)(t.getSource())).setOnMouseReleased(mouseReleasedOnWhiteboardEventHandler);
-
-//
-//	static EventHandler<MouseEvent> OnMouseReleasedToolbar = 
-//			new EventHandler<MouseEvent>() {
-//
-//		public void handle(MouseEvent event){
-//			if(event.getSource().equals(selectionRectangle)){
-//				ShapeComposite comp = null;
-//				for(Shape s:listShapes){
-//					if(s instanceof ShapeComposite){
-//						comp = (ShapeComposite) s;
-//					}
-//				}
-//
-//			}
-//		}
-//	};
-//
 	public static EventHandler<MouseEvent> OnMouseDraggedEventHandler =
 			new EventHandler<MouseEvent>() {
-
-//		public void translateRectangle(Rectangle r){
-//			r.setTranslateX(newTranslateX);
-//			r.setTranslateY(newTranslateY);
-//		}
-//
-//		public void translatePolygon(Polygon p){
-//			p.setTranslateX(newTranslateX);
-//			p.setTranslateY(newTranslateY);
-		//		}
 
 		@Override
 		public void handle(MouseEvent event) {
@@ -840,8 +800,6 @@ public class MouseEvents {
 			}
 		}
 	};
-
-
 }
 //
 //			double offsetX = t.getSceneX() - orgSceneX;
