@@ -710,7 +710,6 @@ public class MouseEvents {
 						Whiteboard.getInstance().getShapeBackInTheWhiteboard(shapeRect);
 					}
 					Model.getInstance().notifyChangeShape(shapeRect);
-
 				}
 				//Dépassement de la shape du whiteboard
 //				if(!Whiteboard.getInstance().isShapeIn(shapeRect) && Whiteboard.getInstance().containsShape(shapeRect)){

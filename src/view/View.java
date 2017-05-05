@@ -258,29 +258,47 @@ public class View extends Application implements Observer{
 	
 	private ArrayList<Shape> listShapes;
 	
-	public void createNewRectangle(IShape rect){
-		if(rect instanceof ShapeRectangle){
-			Color stroke = new Color(rect.getStroke().getRed()/255, rect.getStroke().getGreen()/255, 
-					rect.getStroke().getBlue()/255, 1);
-			Color fill = new Color(rect.getFill().getRed()/255, rect.getFill().getGreen()/255,
-					rect.getFill().getBlue()/255, 1);
-			Rectangle r = GraphicalObjects.createRectangle(rect.getPosition().getX(), rect.getPosition().getY(),
-					((ShapeRectangle) rect).getWidth(),
-					((ShapeRectangle) rect).getHeight(),
-					((ShapeRectangle) rect).getArcWidth(),
-					((ShapeRectangle) rect).getArcHeight(),
+	public void createNewShape(IShape shape){
+		Color stroke = new Color(shape.getStroke().getRed()/255, shape.getStroke().getGreen()/255, 
+				shape.getStroke().getBlue()/255, 1);
+		Color fill = new Color(shape.getFill().getRed()/255, shape.getFill().getGreen()/255,
+				shape.getFill().getBlue()/255, 1);
+		if(shape instanceof ShapeRectangle){
+			Rectangle r = GraphicalObjects.createRectangle(shape.getPosition().getX(), shape.getPosition().getY(),
+					((ShapeRectangle) shape).getWidth(),
+					((ShapeRectangle) shape).getHeight(),
+					((ShapeRectangle) shape).getArcWidth(),
+					((ShapeRectangle) shape).getArcHeight(),
 					Color.PINK,
 					stroke,
 					null, null,
 					false);
-			r.setUserData(rect);
+			r.setUserData(shape);
 			Group g = (Group) this.whiteboard.getParent();
 			g.getChildren().add(r);
 			this.listShapes.add(r);
-			rect.setOriginalShape(false);
+			shape.setOriginalShape(false);
 			r.addEventHandler(MouseEvent.MOUSE_DRAGGED, this.mouseEvents.OnMouseDraggedEventHandler);
 			r.setOnMousePressed(this.mouseEvents.OnMousePressed);
 			r.setOnMouseReleased(this.mouseEvents.OnMouseReleasedTranslationEventHandler);
+		}
+		else{
+			if(shape instanceof ShapeRegularPolygon){
+				ShapeRegularPolygon srp = (ShapeRegularPolygon) shape;
+				Shape s = GraphicalObjects.createPolygon(((ShapeRegularPolygon) shape).getTab(),
+						srp.getPosition().getX(),
+						srp.getPosition().getY(),
+						Color.PINK,
+						stroke,
+						null, null,
+						false);
+				s.setUserData(shape);
+				Group g = (Group) this.whiteboard.getParent();
+				g.getChildren().add(s);
+				shape.setOriginalShape(false);
+				s.setOnMousePressed(this.mouseEvents.OnMousePressed);
+				s.setOnMouseDragged(this.mouseEvents.OnMouseDraggedEventHandler);
+			}
 		}
 	}
 
@@ -300,43 +318,44 @@ public class View extends Application implements Observer{
 		}
 	}
 	
-	public void majList(List<IShape> listIShapes){
+	public void majList(IShape ishape){
 		List<Shape> copyList = (List<Shape>) this.listShapes.clone();
-		for(Shape shape:copyList){
-			if(shape.getUserData() instanceof ShapeRectangle){
-				if(!listIShapes.contains((ShapeRectangle) shape.getUserData())){
-					shape.setVisible(false);
-					this.listShapes.remove(shape);
+		for(Shape s:copyList){
+			if(s.getUserData() instanceof ShapeRectangle){
+				if(s.getUserData() == ishape){
+					this.listShapes.remove(s);
+					s.setVisible(false);
 				}
 			}
 		}
 	}
 	
 	private static double orgSceneX, orgSceneY;
-	@Override
+	@Override 
 	public void update(Observable arg0, Object arg1) {
 		if(arg1 instanceof Toolbar){
 			createToolbar((Toolbar) arg1);
 			this.originRect.addEventHandler(MouseEvent.MOUSE_PRESSED, this.mouseEvents.OnMousePressedClone);
+			this.originPoly.addEventHandler(MouseEvent.MOUSE_PRESSED, this.mouseEvents.OnMousePressedClone);
 		}
 		else{
 			if(arg1 instanceof Whiteboard){
 				createWhiteboard((Whiteboard) arg1);
 			}
 			else{//liste d'IShape
-				if(arg1 instanceof List){
-					majList((List) arg1);
-				}
-			}
-			if(arg1 instanceof ShapeRectangle){
-				ShapeRectangle shapeRect = (ShapeRectangle) arg1;
-				if(shapeRect.isOriginalShape()){
-					if(Toolbar.getInstance().isShapeIn((shapeRect))){
-						createNewRectangle(shapeRect);		
+				if(arg1 instanceof ShapeRectangle){
+					ShapeRectangle shapeRect = (ShapeRectangle) arg1;
+					if(shapeRect.isOriginalShape()){
+						if(Toolbar.getInstance().isShapeIn((shapeRect))){
+							createNewShape(shapeRect);		
+						}
 					}
-				}
-				else{
-					majShape(shapeRect);
+					else{
+						majShape(shapeRect);
+						if(Toolbar.getInstance().isInTrashcan(shapeRect)){
+							majList(shapeRect);
+						}
+					}
 				}
 			}
 		}
