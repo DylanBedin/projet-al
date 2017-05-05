@@ -648,7 +648,7 @@ public class MouseEvents {
 				majOrgScene(event);
 			}
 			if( event.getButton() == MouseButton.SECONDARY){
-
+				
 			}
 		}
 	};
@@ -701,13 +701,15 @@ public class MouseEvents {
 //		public void translatePolygon(Polygon p){
 //			p.setTranslateX(newTranslateX);
 //			p.setTranslateY(newTranslateY);
-//		}
+		//		}
 
 		@Override
 		public void handle(MouseEvent event) {
-
-			if(event.getSource() instanceof Rectangle){
-				ShapeRectangle shapeRect = (ShapeRectangle) ((Rectangle) event.getSource()).getUserData();
+			if( event.getButton() == MouseButton.SECONDARY){
+				//do nothing
+			}
+			else if (event.getButton() == MouseButton.PRIMARY){
+				IShape shapeRect = (IShape) ((Shape) event.getSource()).getUserData();
 				double offsetX = event.getSceneX() - orgSceneX;
 				double offsetY = event.getSceneY() - orgSceneY;
 				newTranslateX = offsetX;

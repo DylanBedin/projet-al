@@ -17,7 +17,7 @@ import model.Model;
 import model.ShapeRectangle;
 import model.ShapeRegularPolygon;
 import model.Toolbar;
-//import model.UndoClass;
+import model.UndoClass;
 import model.Whiteboard;
 
 
@@ -372,11 +372,11 @@ public class View extends Application implements Observer{
 			}
 
 			else{//liste d'IShape
-				/*
+				
 				if(arg1 instanceof UndoClass){
 					restoreLastView(Main.m);
 				}
-				*/
+				
 				if(arg1 instanceof ShapeRectangle){
 					ShapeRectangle shapeRect = (ShapeRectangle) arg1;
 					if(shapeRect.isOriginalShape()){
