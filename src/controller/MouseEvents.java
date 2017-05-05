@@ -609,7 +609,14 @@ public class MouseEvents {
 						//Initialise les positions pour le drag
 						majOrgScene(event);
 						Point2D.Double position = new Point2D.Double(event.getSceneX(), event.getSceneY());
-						Main.m.notifyChangeShape(shapeRect, true);
+						boolean bool;
+						if(!shapeRect.isOriginalShape()){
+							bool = false;
+						}
+						else{
+							bool = true;
+						}
+						Main.m.notifyChangeShape(shapeRect, bool);
 					}
 				}
 				catch (CloneNotSupportedException e) {
@@ -626,7 +633,14 @@ public class MouseEvents {
 					if(Main.m.returnToolbar().isShapeIn(shapePoly)){
 						//Initialise les positions pour le drag
 						majOrgScene(event);
-						Main.m.notifyChangeShape(shapePoly, true);
+						boolean bool;
+						if(!shapePoly.isOriginalShape()){
+							bool = false;
+						}
+						else{
+							bool = true;
+						}
+						Main.m.notifyChangeShape(shapePoly, bool);
 					}
 				}
 				catch (CloneNotSupportedException e) {
@@ -659,6 +673,13 @@ public class MouseEvents {
 			new EventHandler<MouseEvent>(){
 		public void handle(MouseEvent event){
 			Main.m.notifyUndo();
+		}
+	};
+	
+	public static EventHandler<MouseEvent> OnMousePressedRedo =
+			new EventHandler<MouseEvent>() {
+		public void handle(MouseEvent event){
+			Main.m.notifyRedo();
 		}
 	};
 	

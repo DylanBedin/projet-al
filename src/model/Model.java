@@ -1,12 +1,10 @@
 package model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.EmptyStackException;
 import java.util.List;
 import java.util.Observable;
 import java.util.Stack;
-
-import com.sun.org.apache.xpath.internal.operations.String;
 
 public class Model extends Observable implements Serializable{
 	private Toolbar toolbar;
@@ -14,12 +12,15 @@ public class Model extends Observable implements Serializable{
 	private final double LAYOUT_X_GROUP2 = 5;
 	private final double LAYOUT_Y_GROUP2 = 50;
 	
-	private transient Stack<Memento> undoStack;
+	private final int GET_MAX_STACK = 3;
+	
+	private transient Stack<Memento> undoStack, redoStack;
 	
 	public Model(){
 		this.toolbar = new Toolbar();
 		this.whiteboard = new Whiteboard();
 		this.undoStack = new Stack<Memento>();
+		this.redoStack = new Stack<Memento>();
 	}
 	
 	private Model(Toolbar toolbar, Whiteboard wb, Stack<Memento> undoStack){
@@ -33,12 +34,31 @@ public class Model extends Observable implements Serializable{
 		this.whiteboard = state.returnWhiteboard();
 	}
 	
-	public void addMemento(Memento state){
-		this.undoStack.add(state);
+	public boolean isFull(Stack<Memento> stack){
+		return stack.size() == this.GET_MAX_STACK;
 	}
 	
-	public Memento getMemento(){
-		return this.undoStack.pop();
+	public void addMemento(Memento state){
+		this.undoStack.push(state);
+		this.redoStack.clear();
+	}
+	
+	
+	
+	public Memento getMementoUndo(){
+		try{
+			return this.redoStack.push(this.undoStack.pop());
+		}
+		catch(EmptyStackException e){}
+		return null;
+	}
+	
+	public Memento getMementoRedo(){
+		try{
+			return this.undoStack.push(this.redoStack.pop());
+		}
+		catch(EmptyStackException e){}
+		return null;
 	}
 	
 	public void saveMemento(){
@@ -84,8 +104,13 @@ public class Model extends Observable implements Serializable{
 	}
 	
 	public void notifyUndo(){
-		Memento m = this.getMemento();
-		System.out.println(m.getState().returnWhiteboard().getListShapes());
+		Memento m = this.getMementoUndo();
+		setChanged();
+		this.notifyObservers(m, false);
+	}
+	
+	public void notifyRedo(){
+		Memento m = this.getMementoRedo();
 		setChanged();
 		this.notifyObservers(m, false);
 	}

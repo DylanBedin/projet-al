@@ -127,6 +127,7 @@ public class View extends Application implements Observer{
 		iV2.setFitHeight(20);
 		iV2.setFitWidth(20);
 		btnRedo.setGraphic(iV2);
+		btnRedo.addEventHandler(MouseEvent.MOUSE_PRESSED, mouseEvents.OnMousePressedRedo);
         
         gr1.getChildren().add(rect1);
         gr1.getChildren().add(btnRedo);
