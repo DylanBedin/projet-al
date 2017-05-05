@@ -1,1 +1,16 @@
-\chapter{Limites de notre programme}
+\chapter{Limites de notre projet}
+
+Les limites évidentes de notre programme sont les fonctionnalités non implémentées. 
+Cependant, comme indiqué précédemment, le Model est quasiment prêt à recevoir
+ces modifications. La classe GroupShape, composite d'IShape,
+devait recevoir un ensemble de formes. Il aurait été pertinent d'ajouter un visiteur à chacun des éléments de cette classe afin d'opérer les différentes
+modifications sur l'ensemble des IShape le composant. Un design pattern a été éliminé, malgré qu'il semblait pertinent au premier abord, il s'agit du singleton.
+Il évitait d'avoir à déclaré un paramètre Model en static dans la classe Main, chose que nous avons choisi de faire à défaut de passer le Model de méthode
+en méthode en paramètre. Cependant, dans le cas du Memento, il est impossible
+de n'avoir qu'une seule instance de Model dans tout le projet car la modification
+du modèle courant modifierait également de façon synchronisée tous ceux situés dans les piles.
+\\
+De plus, le Memento est un pattern simple et pertinent dans le cadre de notre projet, car nous stockons des petits objets. Cependant, si le Model
+venait à être beaucoup plus lourd, il serait pertinent de remplacer ce design
+pattern par le pattern Command qui nous permettrait également de faire des
+undo/redo.
