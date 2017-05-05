@@ -24,7 +24,7 @@ public class ShapeRegularPolygon extends AbstractShape {
 		this.ray = rayon;
 		this.center = new Point2D.Double(0,0);
 		assert (rayon > 0 && sommet > 2);
-		this.tabVertices = createTab(rayon, sommet, center);
+		this.tabVertices = createTab(rayon, sommet);
 		}		
 	
 	
@@ -33,9 +33,9 @@ public class ShapeRegularPolygon extends AbstractShape {
 	/*******************************/	
 	
 	
-	private Double[] createTab(double ray, int vertices, Point2D center){
-		double verticeX = center.getX();
-		double verticeY = center.getY();
+	private Double[] createTab(double ray, int vertices){
+		double verticeX = 0;
+		double verticeY = 0;
 		double angleToAdd = (2 * Math.PI) / vertices;
 		double angle = 0;
 		Double[] tableau = new Double[vertices*2];
@@ -90,7 +90,7 @@ public class ShapeRegularPolygon extends AbstractShape {
 	
 	public void setRay(int ray){
 		this.ray = ray;
-		this.tabVertices = createTab(this.ray, this.nbVertices, this.center);
+		//this.tabVertices = createTab(this.ray, this.nbVertices, this.center);
 	}
 	
 	public int getNbEdges(){
@@ -99,7 +99,7 @@ public class ShapeRegularPolygon extends AbstractShape {
 	
 	public void setNbEdges(int nbEdges){
 		this.nbVertices = nbEdges;
-		this.tabVertices = createTab(this.ray, this.nbVertices, this.center);
+		//this.tabVertices = createTab(this.ray, this.nbVertices, this.center);
 
 	}
 	
@@ -117,11 +117,11 @@ public class ShapeRegularPolygon extends AbstractShape {
 	
 	public void setPosition(Point2D p){
 		this.center = p;
-		this.tabVertices = createTab(this.ray, this.nbVertices, p);
+		//this.tabVertices = createTab(this.ray, this.nbVertices, p);
 	}
 	
 	public void setPosition(double x, double y){
 		this.center = new Point2D.Double(x, y);
-		this.tabVertices = createTab(this.ray, this.nbVertices, this.center);
+		//this.tabVertices = createTab(this.ray, this.nbVertices, this.center);
 	}
 }

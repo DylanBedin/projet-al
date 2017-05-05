@@ -14,7 +14,7 @@ public class Model extends Observable implements Serializable{
 	private final double LAYOUT_X_GROUP2 = 5;
 	private final double LAYOUT_Y_GROUP2 = 50;
 	
-	private Stack<Memento> undoStack;
+	private transient Stack<Memento> undoStack;
 	
 	public Model(){
 		this.toolbar = new Toolbar();
@@ -71,7 +71,6 @@ public class Model extends Observable implements Serializable{
 	public void getWhiteboard(){
 		setChanged();
 		this.notifyObservers(this.whiteboard, false);
-
 	}
 	
 	public void notifyChangeShape(IShape s, boolean undoable){
@@ -86,6 +85,7 @@ public class Model extends Observable implements Serializable{
 	
 	public void notifyUndo(){
 		Memento m = this.getMemento();
+		System.out.println(m.getState().returnWhiteboard().getListShapes());
 		setChanged();
 		this.notifyObservers(m, false);
 	}

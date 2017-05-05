@@ -34,7 +34,7 @@ public class Toolbar extends ShapeRectangle implements Serializable{
 
 
 		ShapeRegularPolygon polyOrg = new ShapeRegularPolygon(EDGES_ORIGIN, RAY_ORIGIN);
-		polyOrg.setPosition(polyOrg.getPosition().getX() + 20 , polyOrg.getPosition().getY() + 55);
+		polyOrg.setPosition(polyOrg.getPosition().getX() + 40 , polyOrg.getPosition().getY() + 110);
 		polyOrg.setOriginalShape(true);
 		
 		this.listShapes.add(polyOrg);			

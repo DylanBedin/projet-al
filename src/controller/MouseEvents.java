@@ -11,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
@@ -620,6 +621,8 @@ public class MouseEvents {
 				ShapeRegularPolygon shapePoly;
 				try {
 					shapePoly = (ShapeRegularPolygon) Main.m.returnToolbar().getShape(1).clone();
+					System.out.println(shapePoly.getPosition());
+					System.out.println(shapePoly.getTab().toString());
 					if(Main.m.returnToolbar().isShapeIn(shapePoly)){
 						//Initialise les positions pour le drag
 						majOrgScene(event);
@@ -710,10 +713,6 @@ public class MouseEvents {
 					}
 
 				}
-				//Dépassement de la shape du whiteboard
-//				if(!Main.m.returnWhiteboard().isShapeIn(shapeRect) && Main.m.returnWhiteboard().containsShape(shapeRect)){
-//					Main.m.returnWhiteboard().getShapeBackInTheWhiteboard(shapeRect);
-//				}
 				Main.m.notifyChangeShape(shapeRect, true);
 			}
 			if(event.getSource() instanceof Polygon){
@@ -735,11 +734,11 @@ public class MouseEvents {
 					shapePoly.getPosition().getY() + shapePoly.getTranslationY());
 					shapePoly.setTranslation(0, 0);
 					//Dépassement de la shape du whiteboard
-					/*
+					
 					if(!Main.m.returnWhiteboard().isShapeIn(shapePoly)){
 						Main.m.returnWhiteboard().getShapeBackInTheWhiteboard(shapePoly);
 					}
-					*/
+					
 				}
 				Main.m.notifyChangeShape(shapePoly, true);
 			}
@@ -756,7 +755,7 @@ public class MouseEvents {
 				File file = fileChooser.getSelectedFile();
 				try {
 					ObjectOutputStream oos =  new ObjectOutputStream(new FileOutputStream(file)) ;
-					oos.writeObject(m);
+					oos.writeObject(m.returnWhiteboard().getListShapes());
 					oos.close();
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
@@ -778,8 +777,18 @@ public class MouseEvents {
 				File file = fileChooser.getSelectedFile();
 				try {
 					ObjectInputStream ois =  new ObjectInputStream(new FileInputStream(file)) ;
-					Model m = (Model)ois.readObject();
-					Main.m = m;
+					@SuppressWarnings("unchecked")
+					ArrayList<IShape> list = (ArrayList<IShape>) ois.readObject();
+					Main.m.returnWhiteboard().getListShapes().clear();
+					for(IShape i : list){
+						Main.m.returnWhiteboard().add(i);
+					}
+					
+					Main.m.notifyChangeListShapes((List<IShape>) Main.m.returnWhiteboard().getListShapes());
+					for(IShape i : Main.m.returnWhiteboard().getListShapes()){
+						
+					}
+					
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -790,7 +799,6 @@ public class MouseEvents {
 				}
 			}
 		}
-
 	};
 }
 //
