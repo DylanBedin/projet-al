@@ -2,9 +2,10 @@ package model;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class AbstractShape implements IShape {
+public abstract class AbstractShape implements IShape,Serializable{
 	protected double translateX, translateY;
 	protected Color fill, stroke;
 	protected Point2D position;

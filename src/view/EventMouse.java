@@ -83,6 +83,8 @@ public class EventMouse {
 			if(s instanceof Polygon){
 				Polygon poly = (Polygon) s;
 				
+				//Point 2D point = new Point2D.Double();
+				
 				if ( checkPositionPoints(GLOBAL_LAYOUT_Xmin_WHITEBOARD, "x", poly, "min") )
 					poly.setLayoutX(GLOBAL_LAYOUT_Xmin_WHITEBOARD +12);
 

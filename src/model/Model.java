@@ -1,9 +1,10 @@
 package model;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Observable;
 
-public class Model extends Observable{
+public class Model extends Observable implements Serializable{
 	private Toolbar toolbar;
 	private Whiteboard whiteboard;
 	private static Model instance = null;

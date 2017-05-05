@@ -1,20 +1,30 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
+
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.shape.Polygon;
+
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 
-public class Whiteboard extends ShapeRectangle{
+public class Whiteboard extends ShapeRectangle implements Serializable{
 	private ArrayList<IShape> listShapes;
 	
 	private double height, width;
 	private Point2D upLeftCorner;
 	
-	private final double LAYOUT_X_WHITEBOARD = 85;
-	private final double LAYOUT_Y_WHITEBOARD = 20;
 	private final double WIDTH = 400, HEIGHT = 510;
+	private final double LAYOUT_XMIN_WHITEBOARD = 85;
+	private final double LAYOUT_YMIN_WHITEBOARD = 20;
+	private final double LAYOUT_XMAX_WHITEBOARD = LAYOUT_XMIN_WHITEBOARD + WIDTH;
+	private final double LAYOUT_YMAX_WHITEBOARD = LAYOUT_YMIN_WHITEBOARD + HEIGHT;
+
 	
 	private static volatile Whiteboard instance = null;	
 
@@ -34,7 +44,7 @@ public class Whiteboard extends ShapeRectangle{
 	
 	private Whiteboard(){
 		this.listShapes = new ArrayList<IShape>();
-		this.setPosition(LAYOUT_X_WHITEBOARD, LAYOUT_Y_WHITEBOARD);
+		this.setPosition(LAYOUT_XMIN_WHITEBOARD, LAYOUT_YMIN_WHITEBOARD);
 		this.setWidth(WIDTH);
 		this.setHeight(HEIGHT);
 		this.setFill(Color.WHITE);
@@ -73,32 +83,131 @@ public class Whiteboard extends ShapeRectangle{
 	}
 	
 	public boolean isShapeIn(IShape s){
-		double x = s.getPosition().getX();
-		double y = s.getPosition().getY();
-		return x >= this.LAYOUT_X_WHITEBOARD && x <= this.LAYOUT_X_WHITEBOARD + this.WIDTH - ((ShapeRectangle) s).getHeight()
-				&& y >= this.LAYOUT_X_WHITEBOARD && y <= this.LAYOUT_Y_WHITEBOARD + this.HEIGHT - ((ShapeRectangle) s).getWidth();
+		if(s instanceof ShapeRectangle){
+			double x = s.getPosition().getX();
+			double y = s.getPosition().getY();
+			return x >= this.LAYOUT_XMIN_WHITEBOARD && x <= LAYOUT_XMAX_WHITEBOARD - ((ShapeRectangle) s).getHeight()
+					&& y >= this.LAYOUT_YMIN_WHITEBOARD && y <= LAYOUT_YMAX_WHITEBOARD - ((ShapeRectangle) s).getWidth();
+		}
+		else if (s instanceof ShapeRegularPolygon){
+			double x = s.getPosition().getX();
+			double y = s.getPosition().getY();
+			return x >= this.LAYOUT_XMIN_WHITEBOARD && x <= LAYOUT_XMAX_WHITEBOARD
+					&& y >= this.LAYOUT_YMIN_WHITEBOARD && y <= LAYOUT_YMAX_WHITEBOARD ;
+		}
+		return false;
 	}
 	
 	public void getShapeBackInTheWhiteboard(IShape s){
+		double x = s.getPosition().getX();
+		double y = s.getPosition().getY();
 		if (s instanceof ShapeRectangle){
-			double x = s.getPosition().getX();
-			double y = s.getPosition().getY();
-			if( x < this.LAYOUT_X_WHITEBOARD ){
-				s.setPosition(LAYOUT_X_WHITEBOARD,y);
+
+			if( x < this.LAYOUT_XMIN_WHITEBOARD ){
+				x = LAYOUT_XMIN_WHITEBOARD;
+				s.setPosition(x, y);
 			}
-			if( y < this.LAYOUT_Y_WHITEBOARD ){
-				s.setPosition(x, LAYOUT_Y_WHITEBOARD);
+			if( y < this.LAYOUT_YMIN_WHITEBOARD ){
+				y = LAYOUT_YMIN_WHITEBOARD;
+				s.setPosition(x, y);
 			}
-			if( x + ((ShapeRectangle) s).getWidth() > this.LAYOUT_X_WHITEBOARD + this.WIDTH ){
-				s.setPosition(this.LAYOUT_X_WHITEBOARD + this.WIDTH - ((ShapeRectangle) s).getWidth() , y);
+			if( x + ((ShapeRectangle) s).getWidth() > LAYOUT_XMAX_WHITEBOARD ){
+				x = LAYOUT_XMAX_WHITEBOARD - ((ShapeRectangle) s).getWidth();
+				s.setPosition(x, y);
 			}
-			if( y + ((ShapeRectangle) s).getHeight() > this.LAYOUT_Y_WHITEBOARD + this.HEIGHT ){
-				s.setPosition(x, this.LAYOUT_Y_WHITEBOARD + this.HEIGHT - ((ShapeRectangle) s).getHeight());
+			if( y + ((ShapeRectangle) s).getHeight() > LAYOUT_YMAX_WHITEBOARD ){
+				y = LAYOUT_YMAX_WHITEBOARD - ((ShapeRectangle) s).getHeight();
+				s.setPosition(x, y);
 			}
-			
+		}
+		
+		if (s instanceof ShapeRegularPolygon){
+			ShapeRegularPolygon shapePoly = (ShapeRegularPolygon) s;
+			Double [] tab = shapePoly.getTab();
+			Double baryX = ShapeRegularPolygon.barycentreX(tab);
+			Double baryY = ShapeRegularPolygon.barycentreY(tab);
+			Double ray = shapePoly.getRay();
+			if ( baryX - ray > LAYOUT_XMIN_WHITEBOARD ){
+				x = LAYOUT_XMIN_WHITEBOARD + ray;
+				shapePoly.setPosition(x,y);
+			}
+			if ( baryY - ray > LAYOUT_YMIN_WHITEBOARD){
+				y = LAYOUT_YMIN_WHITEBOARD + ray;
+				shapePoly.setPosition(x,y);
+			}
+			if (baryX + ray < LAYOUT_XMAX_WHITEBOARD){
+				x = LAYOUT_XMAX_WHITEBOARD - getMaxY(tab);
+				shapePoly.setPosition(x,y);
+			}
+			if (baryY + ray < LAYOUT_YMAX_WHITEBOARD){
+				y = LAYOUT_YMAX_WHITEBOARD - getMaxX(tab);
+				shapePoly.setPosition(x,y);	
+			}
+
 		}
 	}
-	
+	static private boolean checkPositionPoints(double limite, String xy, ShapeRegularPolygon s, String maxmin){
+		Double[] tab = s.getTab();
+		for(int i = 0; i< tab.length; i++){
+			System.out.println(tab[i]);
+			System.out.println("----------");
+		}
+		int i;
+		double layoutPos = 0;
+		if(xy.compareTo("x") == 0){
+			i=0;
+			layoutPos =  s.getPosition().getX();
+		}
+		else{
+			i=1;
+			layoutPos = s.getPosition().getY();
+		}
+		while(i < tab.length){
+
+			if(maxmin.compareTo("max") == 0){
+				if(tab[i] + layoutPos> limite){
+					return true;
+				}
+			}
+			else{
+				if(tab[i] + layoutPos < limite){
+					return true;
+				}
+			}
+			i = i + 2;
+		}
+		return false;
+	}	
+
+	static private double getMaxX(Double[] tab ) {
+		
+		double max = 0;
+		for(int i = 0; i < tab.length; i++){
+			if ( tab[i] > max ){
+				max = tab[i];
+			}
+		}
+		return max;
+	}
+
+	static private double getMaxY(Double[] tab ) {
+		double min = 1000;
+		for(int i = 0; i < tab.length; i++){
+			if ( tab[i] < min ){
+				min = tab[i];
+			}
+		}
+		return min;
+	}
+
+
+
+
+
+
+
+}
+
 //	
 //	public void translateShape(IShape shape, double x, double y){
 //		int index = -1;
@@ -133,4 +242,4 @@ public class Whiteboard extends ShapeRectangle{
 //		return this.listShapes;
 //	}
 	
-}
+

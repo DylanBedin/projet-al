@@ -2,8 +2,9 @@ package model;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 
-public class ShapeRectangle extends AbstractShape {
+public class ShapeRectangle extends AbstractShape{
 	private double arcWidth, arcHeight;
 	private double width, height;
 	private final static double ROUND = 0, ROUNDEDEDGES = 0;

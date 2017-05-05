@@ -99,6 +99,7 @@ public class View extends Application implements Observer{
         btnSave.setLayoutX(15);
         btnSave.setLayoutY(15);
         btnSave.setText("Save As");
+        btnSave.setOnAction(this.mouseEvents.buttonSerialize);
                 
         /**	static Rectangle whiteboard;
 
@@ -108,6 +109,7 @@ public class View extends Application implements Observer{
         btnLoad.setLayoutX(85);
         btnLoad.setLayoutY(15);
         btnLoad.setText("Load");
+        btnLoad.setOnAction(this.mouseEvents.buttonLoading);
                 
         Button btnUndo = GraphicalObjects.createButton(145,15, null, null);
         Image buttonImg = new Image(getClass().getResourceAsStream("./../img/Undo.png"));
@@ -225,6 +227,7 @@ public class View extends Application implements Observer{
         		null, 
         		null, 
         		false);
+        this.originPoly.setUserData(Toolbar.getInstance().listShapes.get(1));
         gr2.getChildren().add(this.originPoly);
              
         
@@ -295,9 +298,11 @@ public class View extends Application implements Observer{
 				s.setUserData(shape);
 				Group g = (Group) this.whiteboard.getParent();
 				g.getChildren().add(s);
+				this.listShapes.add(s);
 				shape.setOriginalShape(false);
 				s.setOnMousePressed(this.mouseEvents.OnMousePressed);
 				s.setOnMouseDragged(this.mouseEvents.OnMouseDraggedEventHandler);
+				s.setOnMouseReleased(this.mouseEvents.OnMouseReleasedTranslationEventHandler);
 			}
 		}
 	}
@@ -342,7 +347,7 @@ public class View extends Application implements Observer{
 			if(arg1 instanceof Whiteboard){
 				createWhiteboard((Whiteboard) arg1);
 			}
-			else{//liste d'IShape
+			else {//liste d'IShape
 				if(arg1 instanceof ShapeRectangle){
 					ShapeRectangle shapeRect = (ShapeRectangle) arg1;
 					if(shapeRect.isOriginalShape()){
@@ -357,10 +362,27 @@ public class View extends Application implements Observer{
 						}
 					}
 				}
+				else{
+					if(arg1 instanceof ShapeRegularPolygon){
+						ShapeRegularPolygon shapePoly = (ShapeRegularPolygon) arg1;
+						if(shapePoly.isOriginalShape()){
+							if(Toolbar.getInstance().isShapeIn(shapePoly)){
+								createNewShape(shapePoly);
+							}
+						}
+						else{
+							majShape(shapePoly);
+							if(Toolbar.getInstance().isInTrashcan(shapePoly)){
+								majList(shapePoly);
+							}
+						}
+					}
+
+				}
 			}
 		}
 	}
-	
+
 	public static Color createWindow(MouseEvent m){
 		Stage stagePopUp = new Stage();
 		stagePopUp.initModality(Modality.APPLICATION_MODAL);

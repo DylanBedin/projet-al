@@ -1,9 +1,21 @@
 package controller;
 
+import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.swing.JFileChooser;
+import javax.swing.JPanel;
+
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -11,10 +23,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-
+import main.Main;
 import model.IShape;
 import model.Model;
 import model.ShapeRectangle;
+import model.ShapeRegularPolygon;
 import model.Toolbar;
 import model.Whiteboard;
 import view.View;
@@ -587,14 +600,12 @@ public class MouseEvents {
 			new EventHandler<MouseEvent>(){
 		public void handle(MouseEvent event) {
 			if (event.getSource() instanceof Rectangle) {
-				Rectangle rect = (Rectangle) event.getSource();
 				ShapeRectangle shapeRect;
 				try {
 					shapeRect = (ShapeRectangle) Toolbar.getInstance().getShape(0).clone();
 					if(Toolbar.getInstance().isShapeIn(shapeRect)){
 						//Initialise les positions pour le drag
 						majOrgScene(event);
-						Point2D.Double position = new Point2D.Double(event.getSceneX(), event.getSceneY());
 						Model.getInstance().notifyChangeShape(shapeRect);
 					}
 				}
@@ -603,6 +614,24 @@ public class MouseEvents {
 					e.printStackTrace();
 				}
 			}
+			if (event.getSource() instanceof Polygon) {
+				ShapeRegularPolygon shapePoly;
+				try {
+					shapePoly = (ShapeRegularPolygon) Toolbar.getInstance().getShape(1).clone();
+					if(Toolbar.getInstance().isShapeIn(shapePoly)){
+						//Initialise les positions pour le drag
+						majOrgScene(event);
+						Model.getInstance().notifyChangeShape(shapePoly);
+					}
+				}
+				catch (CloneNotSupportedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			
+			
 		}
 	};
 
@@ -613,9 +642,7 @@ public class MouseEvents {
 				if(event.getSource() instanceof Shape){
 					((Shape) event.getSource()).toFront();
 				}
-				if (event.getSource() instanceof Rectangle) {
-					majOrgScene(event);
-				}
+				majOrgScene(event);
 			}
 			if( event.getButton() == MouseButton.SECONDARY){
 
@@ -668,15 +695,14 @@ public class MouseEvents {
 
 		@Override
 		public void handle(MouseEvent event) {
-			if(event.getSource() instanceof Rectangle){
-				ShapeRectangle shapeRect = (ShapeRectangle) ((Rectangle) event.getSource()).getUserData();
-				double offsetX = event.getSceneX() - orgSceneX;
-				double offsetY = event.getSceneY() - orgSceneY;
-				newTranslateX = offsetX;
-				newTranslateY = offsetY;
-				shapeRect.setTranslation(newTranslateX, newTranslateY);
-				Model.getInstance().notifyChangeShape(shapeRect);
-			}
+			double offsetX = event.getSceneX() - orgSceneX;
+			double offsetY = event.getSceneY() - orgSceneY;
+			newTranslateX = offsetX;
+			newTranslateY = offsetY;
+			IShape is = (IShape) ((Shape) event.getSource()).getUserData();
+			is.setTranslation(newTranslateX, newTranslateY);
+			Model.getInstance().notifyChangeShape(is);
+
 		}
 	};
 	
@@ -709,16 +735,87 @@ public class MouseEvents {
 					if(!Whiteboard.getInstance().isShapeIn(shapeRect)){
 						Whiteboard.getInstance().getShapeBackInTheWhiteboard(shapeRect);
 					}
-					Model.getInstance().notifyChangeShape(shapeRect);
 				}
-				//Dépassement de la shape du whiteboard
-//				if(!Whiteboard.getInstance().isShapeIn(shapeRect) && Whiteboard.getInstance().containsShape(shapeRect)){
-//					Whiteboard.getInstance().getShapeBackInTheWhiteboard(shapeRect);
-//				}
 				Model.getInstance().notifyChangeShape(shapeRect);
+			}
+			if(event.getSource() instanceof Polygon){
+				Shape s = (Shape) event.getSource();
+				ShapeRegularPolygon shapePoly = (ShapeRegularPolygon) s.getUserData();
+				if(Whiteboard.getInstance().isShapeIn(shapePoly) && !Whiteboard.getInstance().containsShape(shapePoly)){
+					Whiteboard.getInstance().add(shapePoly);
+					Model.getInstance().notifyChangeListShapes(Whiteboard.getInstance().getListShapes());
+				}
+				shapePoly.setPosition(shapePoly.getPosition().getX() + shapePoly.getTranslationX(), 
+						shapePoly.getPosition().getY() + shapePoly.getTranslationY());
+				shapePoly.setTranslation(0, 0);
+				if(Toolbar.getInstance().isInTrashcan(shapePoly)){
+					Whiteboard.getInstance().remove(shapePoly);
+					Model.getInstance().notifyChangeListShapes(Whiteboard.getInstance().getListShapes());
+				}//Dépassement de la shape du whiteboard
+				else{
+					shapePoly.setPosition(shapePoly.getPosition().getX() + shapePoly.getTranslationX(), 
+					shapePoly.getPosition().getY() + shapePoly.getTranslationY());
+					shapePoly.setTranslation(0, 0);
+					//Dépassement de la shape du whiteboard
+					/*
+					if(!Whiteboard.getInstance().isShapeIn(shapePoly)){
+						Whiteboard.getInstance().getShapeBackInTheWhiteboard(shapePoly);
+					}
+					*/
+				}
+				Model.getInstance().notifyChangeShape(shapePoly);
 			}
 		}
 	};
+	
+	public static EventHandler<ActionEvent> buttonSerialize =
+			new EventHandler<ActionEvent>(){
+		@Override
+		public void handle(ActionEvent event){
+			Model m = Model.getInstance();
+			JFileChooser fileChooser = new JFileChooser();
+			if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+				File file = fileChooser.getSelectedFile();
+				try {
+					ObjectOutputStream oos =  new ObjectOutputStream(new FileOutputStream(file)) ;
+					oos.writeObject(m);
+					oos.close();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+			}
+
+		}
+	};
+
+	public static EventHandler<ActionEvent> buttonLoading = 
+			new EventHandler<ActionEvent>(){
+		@Override 
+		public void handle(ActionEvent event){
+			JFileChooser fileChooser = new JFileChooser();
+			if(fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+				File file = fileChooser.getSelectedFile();
+				try {
+					ObjectInputStream ois =  new ObjectInputStream(new FileInputStream(file)) ;
+					Model m = (Model)ois.readObject();
+					Main.m = m;
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+
+	};
+
+
 }
 //
 //			double offsetX = t.getSceneX() - orgSceneX;

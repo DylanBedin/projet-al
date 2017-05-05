@@ -54,7 +54,7 @@ public class ShapeRegularPolygon extends AbstractShape {
 	
 	
 	@SuppressWarnings("unused")
-	static private double barycentreX(Double[] tab){
+	static double barycentreX(Double[] tab){
 		double res = 0;
 		for(int i =0; i<tab.length; i= i+2){
 			res += tab[i];
@@ -63,7 +63,7 @@ public class ShapeRegularPolygon extends AbstractShape {
 	}
 	
 	@SuppressWarnings("unused")
-	static private double barycentreY(Double[] tab){
+	static double barycentreY(Double[] tab){
 		double res = 0;
 		for(int i =1; i<tab.length; i= i+2){
 			res += tab[i];

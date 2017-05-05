@@ -1,9 +1,10 @@
 package model;
 
 import java.awt.Color;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Toolbar extends ShapeRectangle{
+public class Toolbar extends ShapeRectangle implements Serializable{
 	public ArrayList<IShape> listShapes;
 	private double WIDTH = 70, HEIGHT = 215;
 	private double WIDTH_ORIGIN = 50, HEIGHT_ORIGIN = 40, RAY_ORIGIN = 30;
@@ -34,7 +35,6 @@ public class Toolbar extends ShapeRectangle{
 
 
 		ShapeRegularPolygon polyOrg = new ShapeRegularPolygon(EDGES_ORIGIN, RAY_ORIGIN);
-		System.out.println(polyOrg.getPosition().getX());
 		polyOrg.setPosition(polyOrg.getPosition().getX() + 20 , polyOrg.getPosition().getY() + 55);
 		polyOrg.setOriginalShape(true);
 		
