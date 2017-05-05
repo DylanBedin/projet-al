@@ -15,7 +15,7 @@ public class Model extends Observable implements Serializable{
 	private final double LAYOUT_X_GROUP2 = 5;
 	private final double LAYOUT_Y_GROUP2 = 50;
 	
-	private Stack<Memento> undoStack;
+	private transient Stack<Memento> undoStack;
 	
 	public Model(){
 		this.toolbar = new Toolbar();

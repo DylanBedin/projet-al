@@ -11,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
@@ -752,10 +753,6 @@ public class MouseEvents {
 
 					Main.m.notifyChangeShape(shapeRect, true);
 				}
-				//Dépassement de la shape du whiteboard
-//				if(!Main.m.returnWhiteboard().isShapeIn(shapeRect) && Main.m.returnWhiteboard().containsShape(shapeRect)){
-//					Main.m.returnWhiteboard().getShapeBackInTheWhiteboard(shapeRect);
-//				}
 				Main.m.notifyChangeShape(shapeRect, true);
 			}
 			if(event.getSource() instanceof Polygon){
@@ -798,7 +795,7 @@ public class MouseEvents {
 				File file = fileChooser.getSelectedFile();
 				try {
 					ObjectOutputStream oos =  new ObjectOutputStream(new FileOutputStream(file)) ;
-					oos.writeObject(m);
+					oos.writeObject(m.returnWhiteboard().getListShapes());
 					oos.close();
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
@@ -820,8 +817,23 @@ public class MouseEvents {
 				File file = fileChooser.getSelectedFile();
 				try {
 					ObjectInputStream ois =  new ObjectInputStream(new FileInputStream(file)) ;
-					Model m = (Model)ois.readObject();
-					Main.m = m;
+					@SuppressWarnings("unchecked")
+					ArrayList<IShape> list = (ArrayList<IShape>) ois.readObject();
+					System.out.println(list);
+					System.out.println();
+					System.out.println(Main.m.returnWhiteboard().getListShapes());
+					System.out.println();
+					Main.m.returnWhiteboard().getListShapes().clear();
+					System.out.println(Main.m.returnWhiteboard().getListShapes());
+					System.out.println();
+					for(IShape i : list){
+						System.out.println(i);
+						Main.m.returnWhiteboard().add(i);
+					}
+					System.out.println(Main.m.returnWhiteboard().getListShapes());
+					
+					Main.m.notifyChangeListShapes((List<IShape>) Main.m.returnWhiteboard().getListShapes());
+					
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -832,7 +844,6 @@ public class MouseEvents {
 				}
 			}
 		}
-
 	};
 
 
