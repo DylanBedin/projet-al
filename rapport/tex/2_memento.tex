@@ -1,0 +1,19 @@
+\chapter{Memento: undo/redo et Prototype}
+
+Le choix a été fait de mettre en place un Memento afin de pouvoir annuler et
+refaire des opérations. Pour cela, nous allons stocker des Model
+dans des piles d'objets Memento. Nous avons ainsi créé 2 classes. La classe
+Memento sert à stocker un Model et à pouvoir y accéder. La classe
+MementoOriginator permet de stocker un Model et s'occupera de sauvegarder
+ce dernier dans l'objet Memento. Enfin, la clase Model stocke 2 piles, une pile
+servant à effectuer des undo, l'autre servant à faire les redo. A l'instanciation, les deux sont vides. A chaque fois que l'on notifie les
+observeurs, nous faisons appel non pas directement à la méthode ``notifyObservers'' de la classe Observable mais à une méthode ayant un booléen
+``memento''. Si celui-ci est set à ``true'', nous faisons appel à
+la méthode ``saveMemento'' qui sauvegarde le Model courant et l'empile dans la pile ``undoStack''. Ainsi, dès que nous voulons effectuer un undo,
+il suffit de dépiler cette pile. Or, afin de permettre de faire l'opération redo, il suffit, au moment du dépilement d'''undoStack'', d'empiler dans
+la pile redo. On dépilera cette dernière afin de faire l'opération redo. Cependant, à chaque fois que l'on empile dans la pile
+``undo'',  l'idée est de vider la pile redo afin de ne pas obtenir des incohérences si l'on mêle des undo et des redo.
+\\
+Afin de garantir que les Model stockés dans les piles de Memento sont
+des instances à part, non partagées, il aura fallu implémenter des méthodes
+clone sur les objets Model, mais aussi Whiteboard et Toolbar, que Model contient. Il aura donc fallu mettre en place le design pattern ``prototype''.

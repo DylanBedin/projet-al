@@ -8,7 +8,8 @@ import java.awt.geom.Point2D;
 public class GroupShape implements IShape {
 	private ArrayList<IShape> listShapes;
 	private double rotat, rotatCenterX, rotatCenterY;
-	
+	private boolean originalShape = false;
+
 	public GroupShape(ArrayList<IShape> listShapes){
 		this.listShapes = new ArrayList<IShape>(listShapes);
 	}
@@ -51,25 +52,6 @@ public class GroupShape implements IShape {
 			}
 		}
 		return new Point2D.Double(minX, minY);
-	}
-
-	public void setColor(Color c) {
-		for(IShape s:this.listShapes){
-			s.setColor(c);
-		}
-	}
-
-	public Color getColor() {
-		if(this.listShapes.isEmpty()){
-			throw new IllegalStateException();
-		}
-		Color c = this.listShapes.get(0).getColor();
-		for(IShape s:this.listShapes){
-			if(s.getColor() != c){
-				throw new IllegalStateException();
-			}
-		}
-		return c;
 	}
 
 	public void setRotation(double rotat) {
@@ -128,6 +110,40 @@ public class GroupShape implements IShape {
 			return s.getTranslationY();
 		}
 		return 0;
+	}
+
+	@Override
+	public void setFill(Color c) {
+		for(IShape ishape:this.listShapes){
+			ishape.setFill(c);
+		}
+	}
+
+	@Override
+	public Color getFill() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setStroke(Color c) {
+		for(IShape ishape:this.listShapes){
+			ishape.setStroke(c);
+		}
+	}
+
+	@Override
+	public Color getStroke() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean isOriginalShape() {
+		return this.originalShape;
+	}
+
+	@Override
+	public void setOriginalShape(boolean orig) {
+		this.originalShape = orig;
 	}
 
 }
