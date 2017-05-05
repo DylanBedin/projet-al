@@ -12,10 +12,12 @@ import controller.MouseEvents;
 
 import main.Main;
 import model.IShape;
+import model.Memento;
 import model.Model;
 import model.ShapeRectangle;
 import model.ShapeRegularPolygon;
 import model.Toolbar;
+import model.UndoClass;
 import model.Whiteboard;
 
 
@@ -114,6 +116,7 @@ public class View extends Application implements Observer{
 		iV.setFitHeight(20);
 		iV.setFitWidth(20);
 		btnUndo.setGraphic(iV);
+		btnUndo.addEventHandler(MouseEvent.MOUSE_PRESSED, mouseEvents.OnMousePressedUndo);
                         
         Button btnRedo = GraphicalObjects.createButton(200,15, null, null);
         Image buttonImg2 = new Image(getClass().getResourceAsStream("./../img/Redo.png"));
@@ -137,8 +140,8 @@ public class View extends Application implements Observer{
          * DEUXIEME GROUPE: Toolbar
          */
         
-        gr2 = GraphicalObjects.createGroup( Model.getInstance().getLayoutGroup2X(), Model.getInstance().getLayoutGroup2Y());
-      
+        gr2 = GraphicalObjects.createGroup(Main.m.getLayoutGroup2X(), Main.m.getLayoutGroup2Y());
+        
         this.m.getToolbar();
         this.m.getWhiteboard();
 
@@ -200,6 +203,7 @@ public class View extends Application implements Observer{
 				fill, 
 				stroke, 
 				null, null, true);
+		this.toolbar.setUserData(Main.m.returnToolbar());
 		gr2.getChildren().add(this.toolbar);
 
 
@@ -214,7 +218,7 @@ public class View extends Application implements Observer{
         		null, 
         		null, 
         		false);
-		this.originRect.setUserData(Toolbar.getInstance().listShapes.get(0));
+		this.originRect.setUserData(Main.m.returnToolbar().listShapes.get(0));
         gr2.getChildren().add(this.originRect);
         
         ShapeRegularPolygon shapePoly = (ShapeRegularPolygon) toolbar.getShape(1);
@@ -227,12 +231,12 @@ public class View extends Application implements Observer{
         gr2.getChildren().add(this.originPoly);
              
         
-        Button TrashCan = GraphicalObjects.createButton(Toolbar.getInstance().getTrashcanX(), 
-        												Toolbar.getInstance().getTrashcanY(), null, null);
+        Button TrashCan = GraphicalObjects.createButton(Main.m.returnToolbar().getTrashcanX(), 
+        		Main.m.returnToolbar().getTrashcanY(), null, null);
         Image buttonImg3 = new Image(getClass().getResourceAsStream("./../img/TrashCan.png"));
 		ImageView iV3 = new ImageView(buttonImg3);
-		iV3.setFitHeight(Toolbar.getInstance().getTrashcanHeight());
-		iV3.setFitWidth(Toolbar.getInstance().getTrashcanWidth());
+		iV3.setFitHeight(Main.m.returnToolbar().getTrashcanHeight());
+		iV3.setFitWidth(Main.m.returnToolbar().getTrashcanWidth());
 		TrashCan.setGraphic(iV3);
 		gr2.getChildren().add(TrashCan);
 		this.listShapes = new ArrayList<Shape>();
@@ -251,9 +255,21 @@ public class View extends Application implements Observer{
 				whiteboard.getArcWidth(), whiteboard.getArcHeight(), 
 				fill, stroke, 
 				null, null, true);
+		this.whiteboard.setUserData(Main.m.returnWhiteboard());
 		gr2.getChildren().add(this.whiteboard);
 	}
 
+	public void setWhiteboard(Whiteboard whiteboard){
+		for(int i = 0; i < this.listShapes.size(); i++){
+			this.listShapes.get(i).setVisible(false);
+			this.listShapes.remove(i);
+		}
+		ArrayList<IShape> listIShape = ((ArrayList<IShape>) whiteboard.getListShapes());
+		System.out.println("empty:" + listIShape.isEmpty());
+		for(IShape shape:listIShape){
+			this.createNewShape(shape);
+		}
+	}
 	
 	private ArrayList<Shape> listShapes;
 	
@@ -297,7 +313,11 @@ public class View extends Application implements Observer{
 				shape.setOriginalShape(false);
 				s.setOnMousePressed(this.mouseEvents.OnMousePressed);
 				s.setOnMouseDragged(this.mouseEvents.OnMouseDraggedEventHandler);
+				this.listShapes.add(s);
 			}
+		}
+		if(!Main.m.returnWhiteboard().containsShape(shape)){
+			Main.m.returnWhiteboard().add(shape);
 		}
 	}
 
@@ -329,6 +349,10 @@ public class View extends Application implements Observer{
 		}
 	}
 	
+	public void restoreLastView(Model model){
+		setWhiteboard(model.returnWhiteboard());
+	}
+	
 	private static double orgSceneX, orgSceneY;
 	@Override 
 	public void update(Observable arg0, Object arg1) {
@@ -339,19 +363,22 @@ public class View extends Application implements Observer{
 		}
 		else{
 			if(arg1 instanceof Whiteboard){
-				createWhiteboard((Whiteboard) arg1);
+					createWhiteboard((Whiteboard) arg1);
 			}
 			else{//liste d'IShape
+				if(arg1 instanceof UndoClass){
+					restoreLastView(Main.m);
+				}
 				if(arg1 instanceof ShapeRectangle){
 					ShapeRectangle shapeRect = (ShapeRectangle) arg1;
 					if(shapeRect.isOriginalShape()){
-						if(Toolbar.getInstance().isShapeIn((shapeRect))){
+						if(Main.m.returnToolbar().isShapeIn((shapeRect))){
 							createNewShape(shapeRect);		
 						}
 					}
 					else{
 						majShape(shapeRect);
-						if(Toolbar.getInstance().isInTrashcan(shapeRect)){
+						if(Main.m.returnToolbar().isInTrashcan(shapeRect)){
 							majList(shapeRect);
 						}
 					}
@@ -359,18 +386,7 @@ public class View extends Application implements Observer{
 			}
 		}
 	}
-//    gr2.getChildren().add(whiteboard);
-//		}
-//		if(arg1 instanceof ShapeRectangle){
-//			ShapeRectangle shapeRect = (ShapeRectangle) arg1;
-//			System.out.println(arg0);
-//			Shape rect = GraphicalObjects.cloneShape(originRect);
-//			orgSceneX = shapeRect.getPosition().getX();
-//			orgSceneY = shapeRect.getPosition().getY();
-//		}
-//	}
 }
-
 
 
 

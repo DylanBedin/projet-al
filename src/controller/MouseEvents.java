@@ -10,6 +10,7 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
+import main.Main;
 import model.IShape;
 import model.Model;
 import model.ShapeRectangle;
@@ -587,12 +588,12 @@ public class MouseEvents {
 				Rectangle rect = (Rectangle) event.getSource();
 				ShapeRectangle shapeRect;
 				try {
-					shapeRect = (ShapeRectangle) Toolbar.getInstance().getShape(0).clone();
-					if(Toolbar.getInstance().isShapeIn(shapeRect)){
+					shapeRect = (ShapeRectangle) Main.m.returnToolbar().getShape(0).clone();
+					if(Main.m.returnToolbar().isShapeIn(shapeRect)){
 						//Initialise les positions pour le drag
 						majOrgScene(event);
 						Point2D.Double position = new Point2D.Double(event.getSceneX(), event.getSceneY());
-						Model.getInstance().notifyChangeShape(shapeRect);
+						Main.m.notifyChangeShape(shapeRect, true);
 					}
 				}
 				catch (CloneNotSupportedException e) {
@@ -613,6 +614,13 @@ public class MouseEvents {
 		}
 	};
 
+	public static EventHandler<MouseEvent> OnMousePressedUndo = 
+			new EventHandler<MouseEvent>(){
+		public void handle(MouseEvent event){
+			Main.m.notifyUndo();
+		}
+	};
+	
 //				orgSceneX = t.getSceneX();
 //				orgSceneY = t.getSceneY();
 					//				((Rectangle)(t.getSource())).setOnMousePressed(OnMousePressedWhiteboard);
@@ -665,7 +673,7 @@ public class MouseEvents {
 				newTranslateX = offsetX;
 				newTranslateY = offsetY;
 				shapeRect.setTranslation(newTranslateX, newTranslateY);
-				Model.getInstance().notifyChangeShape(shapeRect);
+				Main.m.notifyChangeShape(shapeRect, false);
 			}
 		}
 	};
@@ -679,33 +687,33 @@ public class MouseEvents {
 				Rectangle rect = (Rectangle) event.getSource();
 				ShapeRectangle shapeRect = (ShapeRectangle) rect.getUserData();
 				//ajout d'une shape dans la wb
-				if(Whiteboard.getInstance().isShapeIn(shapeRect) && !Whiteboard.getInstance().containsShape(shapeRect)){
-					Whiteboard.getInstance().add(shapeRect);
-					Model.getInstance().notifyChangeListShapes(Whiteboard.getInstance().getListShapes());
+				if(Main.m.returnWhiteboard().isShapeIn(shapeRect) && !Main.m.returnWhiteboard().containsShape(shapeRect)){
+					Main.m.returnWhiteboard().add(shapeRect);
+					Main.m.notifyChangeListShapes(Main.m.returnWhiteboard().getListShapes());
 				}//Dépassement de la shape du whiteboard
 				shapeRect.setPosition(shapeRect.getPosition().getX() + shapeRect.getTranslationX(), 
 						shapeRect.getPosition().getY() + shapeRect.getTranslationY());
 				shapeRect.setTranslation(0, 0);
 				//Suppression d'une shape dans la wb
-				if(Toolbar.getInstance().isInTrashcan(shapeRect)){
-					Whiteboard.getInstance().remove(shapeRect);
-					Model.getInstance().notifyChangeListShapes(Whiteboard.getInstance().getListShapes());
+				if(Main.m.returnToolbar().isInTrashcan(shapeRect)){
+					Main.m.returnWhiteboard().remove(shapeRect);
+					Main.m.notifyChangeListShapes(Main.m.returnWhiteboard().getListShapes());
 				}//Dépassement de la shape du whiteboard
 				else{
 					shapeRect.setPosition(shapeRect.getPosition().getX() + shapeRect.getTranslationX(), 
 					shapeRect.getPosition().getY() + shapeRect.getTranslationY());
 					shapeRect.setTranslation(0, 0);
 					//Dépassement de la shape du whiteboard
-					if(!Whiteboard.getInstance().isShapeIn(shapeRect)){
-						Whiteboard.getInstance().getShapeBackInTheWhiteboard(shapeRect);
+					if(!Main.m.returnWhiteboard().isShapeIn(shapeRect)){
+						Main.m.returnWhiteboard().getShapeBackInTheWhiteboard(shapeRect);
 					}
-					Model.getInstance().notifyChangeShape(shapeRect);
+					Main.m.notifyChangeShape(shapeRect, true);
 				}
 				//Dépassement de la shape du whiteboard
 //				if(!Whiteboard.getInstance().isShapeIn(shapeRect) && Whiteboard.getInstance().containsShape(shapeRect)){
 //					Whiteboard.getInstance().getShapeBackInTheWhiteboard(shapeRect);
 //				}
-				Model.getInstance().notifyChangeShape(shapeRect);
+				Main.m.notifyChangeShape(shapeRect, true);
 			}
 		}
 	};

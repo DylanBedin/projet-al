@@ -9,14 +9,13 @@ public class Toolbar extends ShapeRectangle{
 	private double WIDTH_ORIGIN = 50, HEIGHT_ORIGIN = 40, RAY_ORIGIN = 30;
 	private int EDGES_ORIGIN = 6;
 	private double POS_X_POLY = 60, POS_Y_POLY = 10;
-	private static volatile Toolbar instance = null;	
 	
 	/**TRASHCAN**/
 	private int TRASHCAN_X = 20, TRASHCAN_Y = 490;
 	private double TRASHCAN_HEIGHT = 20, TRASHCAN_WIDTH = 20;
 	private double TOOLBAR_POS_X = 5, TOOLBAR_POS_Y = 20;
 	
-	private Toolbar(){
+	public Toolbar(){
 		this.setPosition(TOOLBAR_POS_X, TOOLBAR_POS_Y);
 		this.setWidth(70);
 		this.setHeight(515);
@@ -49,17 +48,7 @@ public class Toolbar extends ShapeRectangle{
 			return null;
 		}
 	}
-	
-	public static Toolbar getInstance(){
-		if(instance == null){
-			synchronized (Toolbar.class) {
-				if(instance == null){
-					instance = new Toolbar();
-				}
-			}
-		}
-		return instance;
-	}
+
 	
 	public boolean isShapeIn(IShape s){
 		double x = s.getPosition().getX();
