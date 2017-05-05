@@ -1,0 +1,17 @@
+\chapter{Observer}
+
+Le pattern Observer est au coeur du projet. C'est lui qui permet de faire en sorte que le Model mette à jour
+la View. Lorsque l'utilisateur effectue un évènement souris, cela fait appel à la classe ``MouseEvents'' située
+dans le package ``Controller''. Son rôle est de mettre à jour les élèments du Model. Ce dernier est une classe contenant la whiteboard
+et la toolbar du point de vue Model. Il s'agit d'un objet Observable. Ainsi, la View observe et override la méthode ``public void update(Observable arg0, Object arg1)''.
+Cette dernière saura en fonction de l'objet arg1 reçu la façon dont elle doit se mettre à jour.
+\\
+Nous avons décidé que les objets ``toolbar'' et ``whiteboard'' devaient être créés au lancement de la View. Ainsi, les premières méthodes appelées sont ``createWhiteboard()'' et
+``createToolbar()'' dont les shapes présentes et la taille dépendent du modèle.
+\\
+Une méthode importante de cette classe est ``majShape(IShape shape)''. En effet, quelque soit la modification effectuée sur une IShape, on appellera cette méthode afin que son
+équivalent en JavaFX soit update. On peut donc imaginer simplement que l'ajout d'une fenêtre permettant de modifier d'autres données instanciées à l'heure actuelle dans le Model
+mais pas dans la View, telles que la couleur ou le centre de rotation d'une Shape, se fasse aisément. Il suffira d'envoyer la shape à la méthode ``update'' qui appellera la même
+méthode ``majShape'' et mettra à jour toutes les données. Nous avons souhaité privilégier cette méthode à une autre visant à séparer chaque changement de type de donnée car, même
+si cette dernière est nécessairement plus lourde et longue à exécuter, elle offre une facilité d'utilisation et diminue grandement le code d'update, les Shape n'ayant pas à être
+différenciées selon le type de traitement souhaité.
