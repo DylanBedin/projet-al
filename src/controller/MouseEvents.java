@@ -622,6 +622,8 @@ public class MouseEvents {
 				ShapeRegularPolygon shapePoly;
 				try {
 					shapePoly = (ShapeRegularPolygon) Main.m.returnToolbar().getShape(1).clone();
+					System.out.println(shapePoly.getPosition());
+					System.out.println(shapePoly.getTab().toString());
 					if(Main.m.returnToolbar().isShapeIn(shapePoly)){
 						//Initialise les positions pour le drag
 						majOrgScene(event);
@@ -734,11 +736,11 @@ public class MouseEvents {
 					shapePoly.getPosition().getY() + shapePoly.getTranslationY());
 					shapePoly.setTranslation(0, 0);
 					//Dépassement de la shape du whiteboard
-					/*
+					
 					if(!Main.m.returnWhiteboard().isShapeIn(shapePoly)){
 						Main.m.returnWhiteboard().getShapeBackInTheWhiteboard(shapePoly);
 					}
-					*/
+					
 				}
 				Main.m.notifyChangeShape(shapePoly, true);
 			}

@@ -64,7 +64,7 @@ public class Model extends Observable implements Serializable{
 		setChanged();
 		this.notifyObservers(this.whiteboard, false);
 		MementoOriginator mementoOrig = new MementoOriginator();
-		mementoOrig.setState(this);
+		mementoOrig.setState(this.clone());
 		this.undoStack.add(mementoOrig.saveStateToMemento());
 	}
 	
@@ -80,6 +80,7 @@ public class Model extends Observable implements Serializable{
 	
 	public void notifyUndo(){
 		Memento m = this.getMemento();
+		System.out.println(m.getState().returnWhiteboard().getListShapes());
 		setChanged();
 		this.notifyObservers(m, false);
 	}

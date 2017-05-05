@@ -97,23 +97,31 @@ public class Whiteboard extends ShapeRectangle implements Serializable{
 		if (s instanceof ShapeRegularPolygon){
 			ShapeRegularPolygon shapePoly = (ShapeRegularPolygon) s;
 			Double [] tab = shapePoly.getTab();
+			
 			Double baryX = ShapeRegularPolygon.barycentreX(tab);
 			Double baryY = ShapeRegularPolygon.barycentreY(tab);
+			
+			Double centreX = baryX + shapePoly.getPosition().getX();
+			Double centreY = baryY + shapePoly.getPosition().getY();
+			System.out.println(centreX + "  " + centreY);
+			
+			
 			Double ray = shapePoly.getRay();
-			if ( baryX - ray > LAYOUT_XMIN_WHITEBOARD ){
-				x = LAYOUT_XMIN_WHITEBOARD + ray;
+			
+			if ( centreX - ray < LAYOUT_XMIN_WHITEBOARD ){
+				x = LAYOUT_XMIN_WHITEBOARD +ray;
 				shapePoly.setPosition(x,y);
 			}
-			if ( baryY - ray > LAYOUT_YMIN_WHITEBOARD){
-				y = LAYOUT_YMIN_WHITEBOARD + ray;
+			if ( centreY - ray < LAYOUT_YMIN_WHITEBOARD){
+				y = LAYOUT_YMIN_WHITEBOARD +ray;
 				shapePoly.setPosition(x,y);
 			}
-			if (baryX + ray < LAYOUT_XMAX_WHITEBOARD){
-				x = LAYOUT_XMAX_WHITEBOARD - getMaxY(tab);
+			if (centreX + ray > LAYOUT_XMAX_WHITEBOARD){
+				x = LAYOUT_XMAX_WHITEBOARD -ray;
 				shapePoly.setPosition(x,y);
 			}
-			if (baryY + ray < LAYOUT_YMAX_WHITEBOARD){
-				y = LAYOUT_YMAX_WHITEBOARD - getMaxX(tab);
+			if (centreY + ray > LAYOUT_YMAX_WHITEBOARD){
+				y = LAYOUT_YMAX_WHITEBOARD -ray;
 				shapePoly.setPosition(x,y);	
 			}
 
