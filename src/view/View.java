@@ -355,6 +355,16 @@ public class View extends Application implements Observer{
 		}
 	}
 	
+	public void majList(ArrayList<IShape> i){
+		for(IShape shape : i){
+			createNewShape(shape);
+		}
+		for(Shape fxShape : this.listShapes){
+			if(!i.contains(fxShape.getUserData()))
+					fxShape.setVisible(false);
+		}
+	}
+	
 	public void restoreLastView(Model model){
 		setWhiteboard(model.returnWhiteboard());
 	}
@@ -366,6 +376,13 @@ public class View extends Application implements Observer{
 			this.originRect.addEventHandler(MouseEvent.MOUSE_PRESSED, this.mouseEvents.OnMousePressedClone);
 			this.originPoly.addEventHandler(MouseEvent.MOUSE_PRESSED, this.mouseEvents.OnMousePressedClone);
 		}
+
+		if (arg1 instanceof ArrayList){
+			if( ((ArrayList<IShape>) arg1).size() > 1){
+				majList( (ArrayList<IShape>) arg1);
+			}
+		}
+				
 		else{
 			if(arg1 instanceof Whiteboard){
 					createWhiteboard((Whiteboard) arg1);

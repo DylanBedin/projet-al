@@ -819,20 +819,15 @@ public class MouseEvents {
 					ObjectInputStream ois =  new ObjectInputStream(new FileInputStream(file)) ;
 					@SuppressWarnings("unchecked")
 					ArrayList<IShape> list = (ArrayList<IShape>) ois.readObject();
-					System.out.println(list);
-					System.out.println();
-					System.out.println(Main.m.returnWhiteboard().getListShapes());
-					System.out.println();
 					Main.m.returnWhiteboard().getListShapes().clear();
-					System.out.println(Main.m.returnWhiteboard().getListShapes());
-					System.out.println();
 					for(IShape i : list){
-						System.out.println(i);
 						Main.m.returnWhiteboard().add(i);
 					}
-					System.out.println(Main.m.returnWhiteboard().getListShapes());
 					
 					Main.m.notifyChangeListShapes((List<IShape>) Main.m.returnWhiteboard().getListShapes());
+					for(IShape i : Main.m.returnWhiteboard().getListShapes()){
+						
+					}
 					
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
