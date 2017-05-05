@@ -1,2 +1,7 @@
 \chapter{Introduction}
 
+L'objectif de ce projet est d'obtenir un micro éditeur de figures géométriques. Les différentes étapes qui ont été implémentées sont les suivantes. Notre logiciel comporte deux formes, un rectangle bleu et
+un polygone bleu et est capable de sélectionner ces formes depuis la toolbar pour les positionner dans la whiteboard. De plus, nous avons mis en place un système d'undo/redo ainsi que rendu possible la sérialisation
+de la whiteboard. Nous n'avons pas implémenté la modification des objets par le biais des handlers ou l'association des groupes mais avons effectué un modèle de telle sorte que l'ajout de ces différentes fonctions soit aisé.
+\\
+L'idée principale du projet est de faire en sorte que toutes les modifications visibles dans la View se fassent par le biais d'une mise à jour du Model. Dans ce rapport, nous allons détailler les différents design patterns utilisés et justifier les choix de ces derniers, ainsi que leur utilité dans le sein du projet.
