@@ -30,6 +30,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class View extends Application implements Observer{
@@ -339,6 +340,17 @@ public class View extends Application implements Observer{
 				}
 			}
 		}
+	}
+	
+	public static Color createWindow(MouseEvent m){
+		Stage stagePopUp = new Stage();
+		stagePopUp.initModality(Modality.APPLICATION_MODAL);
+		stagePopUp.initOwner(View.stage);
+		Group root = new Group();
+		Scene theScene = new Scene(root, 300, 160);
+		stagePopUp.setScene(theScene);
+		stagePopUp.show();
+		return Color.BLACK;
 	}
 //    gr2.getChildren().add(whiteboard);
 //		}

@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javafx.event.EventHandler;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
@@ -15,6 +17,7 @@ import model.Model;
 import model.ShapeRectangle;
 import model.Toolbar;
 import model.Whiteboard;
+import view.View;
 
 public class MouseEvents {
 	static final double GLOBAL_LAYOUT_Xmin_WHITEBOARD = 85;
@@ -602,14 +605,21 @@ public class MouseEvents {
 			}
 		}
 	};
-	
+
 	public static EventHandler<MouseEvent> OnMousePressed =
 			new EventHandler<MouseEvent>(){
 		public void handle(MouseEvent event) {
-			if (event.getSource() instanceof Rectangle) {
-				majOrgScene(event);
+			if( event.getButton() == MouseButton.PRIMARY){
+				if(event.getSource() instanceof Shape){
+					((Shape) event.getSource()).toFront();
+				}
+				if (event.getSource() instanceof Rectangle) {
+					majOrgScene(event);
+				}
 			}
-			
+			if( event.getButton() == MouseButton.SECONDARY){
+
+			}
 		}
 	};
 
