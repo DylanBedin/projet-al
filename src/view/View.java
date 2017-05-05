@@ -36,39 +36,39 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class View extends Application implements Observer{
-	
+
 	protected static final double LAYOUT_X_GROUP2 = 5;
 	protected static final double LAYOUT_Y_GROUP2 = 50;
 
-			
+
 	static Stage stage;
-//	public static ArrayList<Shape> listSelectionShapes;
+	//	public static ArrayList<Shape> listSelectionShapes;
 
-	
-//	public static void main(String[] args) {
-//		Application.launch(View.class, args);
-//	}
 
-	
+	//	public static void main(String[] args) {
+	//		Application.launch(View.class, args);
+	//	}
+
+
 	public void launchApp(){
 		Application.launch(View.class);
 	}
-	
-	
-	
-/***************************************************************************************************************************/
-/**
- * TODO : Faire une liste répertoriant toutes les formes présentes DANS LE WHITEBOARD 
- * 		  (ignorer ceux qui sont passé en invisible)
- * 
- */
-	
+
+
+
+	/***************************************************************************************************************************/
+	/**
+	 * TODO : Faire une liste répertoriant toutes les formes présentes DANS LE WHITEBOARD 
+	 * 		  (ignorer ceux qui sont passé en invisible)
+	 * 
+	 */
+
 
 	/********************************************************************************************/
 	/***************************CREATION GRAPHIC INTERFACE***************************************/
 	/********************************************************************************************/
 
-	
+
 	private Polygon originPoly;
 	private Rectangle originRect;
 	private Model m;
@@ -76,57 +76,58 @@ public class View extends Application implements Observer{
 	private Group gr2 = null;
 	@SuppressWarnings("static-access")
 	@Override
-    public void start(Stage primaryStage) {
+	public void start(Stage primaryStage) {
 		this.stage = primaryStage;
-        primaryStage.setTitle("Shapes");
-        Group root = new Group();
-        Scene scene = new Scene(root, 500, 600, Color.WHITE);
-        this.m = Main.m;
-        this.m.addObserver(this);
-        this.mouseEvents = new MouseEvents();
-        /***************************************************************************************/
-        /**
-         * PREMIER GROUPE : Barre du haut contenant les boutons permettant la gestion
-         * de données.
-         */
-        
-        Group gr1 = GraphicalObjects.createGroup(5,5);
-        
-        Rectangle rect1 = GraphicalObjects.createRectangle(5,5,480,50,30,30,Color.WHITE,Color.BLACK,null,null,true);
-        
-        /**
-         *  TODO img SaveAs
-         */
-        Button btnSave = new Button();
-        btnSave.setLayoutX(15);
-        btnSave.setLayoutY(15);
-        btnSave.setText("Save As");
-        btnSave.setOnAction(this.mouseEvents.buttonSerialize);
-                
-        /**	static Rectangle whiteboard;
+		primaryStage.setTitle("Shapes");
+		Group root = new Group();
+		Scene scene = new Scene(root, 500, 600, Color.WHITE);
+		this.m = Main.m;
+		this.m.addObserver(this);
+		this.mouseEvents = new MouseEvents();
+		/***************************************************************************************/
+		/**
+		 * PREMIER GROUPE : Barre du haut contenant les boutons permettant la gestion
+		 * de données.
+		 */
 
-         * TODO img Load
-         */
-        Button btnLoad = new Button();
-        btnLoad.setLayoutX(85);
-        btnLoad.setLayoutY(15);
-        btnLoad.setText("Load");
-        btnLoad.setOnAction(this.mouseEvents.buttonLoading);
-                
-        Button btnUndo = GraphicalObjects.createButton(145,15, null, null);
-        Image buttonImg = new Image(getClass().getResourceAsStream("./../img/Undo.png"));
+		Group gr1 = GraphicalObjects.createGroup(5,5);
+
+		Rectangle rect1 = GraphicalObjects.createRectangle(5,5,480,50,30,30,Color.WHITE,Color.BLACK,null,null,true);
+
+		/**
+		 *  TODO img SaveAs
+		 */
+		Button btnSave = new Button();
+		btnSave.setLayoutX(15);
+		btnSave.setLayoutY(15);
+		btnSave.setText("Save As");
+		btnSave.setOnAction(this.mouseEvents.buttonSerialize);
+
+		/**	static Rectangle whiteboard;
+
+		 * TODO img Load
+		 */
+		Button btnLoad = new Button();
+		btnLoad.setLayoutX(85);
+		btnLoad.setLayoutY(15);
+		btnLoad.setText("Load");
+		btnLoad.setOnAction(this.mouseEvents.buttonLoading);
+
+		Button btnUndo = GraphicalObjects.createButton(145,15, null, null);
+		Image buttonImg = new Image(getClass().getResourceAsStream("./../img/Undo.png"));
 		ImageView iV = new ImageView(buttonImg);
 		iV.setFitHeight(20);
 		iV.setFitWidth(20);
 		btnUndo.setGraphic(iV);
 		btnUndo.addEventHandler(MouseEvent.MOUSE_PRESSED, mouseEvents.OnMousePressedUndo);
-                        
-        Button btnRedo = GraphicalObjects.createButton(200,15, null, null);
-        Image buttonImg2 = new Image(getClass().getResourceAsStream("./../img/Redo.png"));
+
+		Button btnRedo = GraphicalObjects.createButton(200,15, null, null);
+		Image buttonImg2 = new Image(getClass().getResourceAsStream("./../img/Redo.png"));
 		ImageView iV2 = new ImageView(buttonImg2);
 		iV2.setFitHeight(20);
 		iV2.setFitWidth(20);
 		btnRedo.setGraphic(iV2);
+
 		btnRedo.addEventHandler(MouseEvent.MOUSE_PRESSED, mouseEvents.OnMousePressedRedo);
         
         gr1.getChildren().add(rect1);
@@ -153,12 +154,12 @@ public class View extends Application implements Observer{
  	
 		root.getChildren().add(gr2);
 
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-	
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
+
 	private Rectangle toolbar, whiteboard;
-	
+
 	public void createToolbar(Toolbar toolbar){
 		Color stroke = new Color(toolbar.getStroke().getRed()/255, toolbar.getStroke().getGreen()/255, 
 				toolbar.getStroke().getBlue()/255, 1);
@@ -183,28 +184,28 @@ public class View extends Application implements Observer{
 		this.originRect = GraphicalObjects.createRectangle(
 				shapeRect.getPosition().getX(), shapeRect.getPosition().getY(), 
 				shapeRect.getWidth(), shapeRect.getHeight(), 
-        		shapeRect.getArcWidth(), shapeRect.getArcHeight(),
-        		fillShape, stroke, 
-        		null, 
-        		null, 
-        		false);
+				shapeRect.getArcWidth(), shapeRect.getArcHeight(),
+				fillShape, stroke, 
+				null, 
+				null, 
+				false);
 		this.originRect.setUserData(Main.m.returnToolbar().listShapes.get(0));
-        gr2.getChildren().add(this.originRect);
-        
-        ShapeRegularPolygon shapePoly = (ShapeRegularPolygon) toolbar.getShape(1);
-        this.originPoly = GraphicalObjects.createPolygon(shapePoly.getTab(), 
-        		shapePoly.getPosition().getX(), shapePoly.getPosition().getY(), 
-        		fillShape, stroke, 
-        		null, 
-        		null, 
-        		false);
-        this.originPoly.setUserData(Main.m.returnToolbar().listShapes.get(1));
-        gr2.getChildren().add(this.originPoly);
-             
-        
-        Button TrashCan = GraphicalObjects.createButton(Main.m.returnToolbar().getTrashcanX(), 
-        		Main.m.returnToolbar().getTrashcanY(), null, null);
-        Image buttonImg3 = new Image(getClass().getResourceAsStream("./../img/TrashCan.png"));
+		gr2.getChildren().add(this.originRect);
+
+		ShapeRegularPolygon shapePoly = (ShapeRegularPolygon) toolbar.getShape(1);
+		this.originPoly = GraphicalObjects.createPolygon(shapePoly.getTab(), 
+				shapePoly.getPosition().getX(), shapePoly.getPosition().getY(), 
+				fillShape, stroke, 
+				null, 
+				null, 
+				false);
+		this.originPoly.setUserData(Main.m.returnToolbar().listShapes.get(1));
+		gr2.getChildren().add(this.originPoly);
+
+
+		Button TrashCan = GraphicalObjects.createButton(Main.m.returnToolbar().getTrashcanX(), 
+				Main.m.returnToolbar().getTrashcanY(), null, null);
+		Image buttonImg3 = new Image(getClass().getResourceAsStream("./../img/TrashCan.png"));
 		ImageView iV3 = new ImageView(buttonImg3);
 		iV3.setFitHeight(Main.m.returnToolbar().getTrashcanHeight());
 		iV3.setFitWidth(Main.m.returnToolbar().getTrashcanWidth());
@@ -212,9 +213,10 @@ public class View extends Application implements Observer{
 		gr2.getChildren().add(TrashCan);
 		this.listShapes = new ArrayList<Shape>();
 		
+
 	}
-	
-	
+
+
 	public void createWhiteboard(Whiteboard whiteboard){
 		Color stroke = new Color(whiteboard.getStroke().getRed()/255, whiteboard.getStroke().getGreen()/255, 
 				whiteboard.getStroke().getBlue()/255, 1);
@@ -243,9 +245,9 @@ public class View extends Application implements Observer{
 			this.createNewShape(shape);
 		}
 	}
-	
+
 	private ArrayList<Shape> listShapes;
-	
+
 	public void createNewShape(IShape shape){
 		Color stroke = new Color(shape.getStroke().getRed()/255, shape.getStroke().getGreen()/255, 
 				shape.getStroke().getBlue()/255, 1);
@@ -311,11 +313,11 @@ public class View extends Application implements Observer{
 			}
 		}
 	}
-	
+
 	public void majList(IShape ishape){
 		List<Shape> copyList = (List<Shape>) this.listShapes.clone();
 		for(Shape s:copyList){
-			if(s.getUserData() instanceof ShapeRectangle){
+			if(s.getUserData() instanceof IShape){
 				if(s.getUserData() == ishape){
 					this.listShapes.remove(s);
 					s.setVisible(false);
@@ -323,21 +325,21 @@ public class View extends Application implements Observer{
 			}
 		}
 	}
-	
+
 	public void majList(ArrayList<IShape> i){
 		for(IShape shape : i){
 			createNewShape(shape);
 		}
 		for(Shape fxShape : this.listShapes){
 			if(!i.contains(fxShape.getUserData()))
-					fxShape.setVisible(false);
+				fxShape.setVisible(false);
 		}
 	}
-	
+
 	public void restoreLastView(Model model){
 		setWhiteboard(model.returnWhiteboard());
 	}
-	
+
 	@Override 
 	public void update(Observable arg0, Object arg1) {
 		if(arg1 instanceof Toolbar){
@@ -348,20 +350,20 @@ public class View extends Application implements Observer{
 
 		if (arg1 instanceof ArrayList){
 			if( ((ArrayList<IShape>) arg1).size() > 1){
-				majList( (ArrayList<IShape>) arg1);
+				majList((ArrayList<IShape>) arg1);
 			}
 		}
-				
+
 		else{
 			if(arg1 instanceof Whiteboard){
-					createWhiteboard((Whiteboard) arg1);
+				createWhiteboard((Whiteboard) arg1);
 			}
 
 			else{//liste d'IShape
 				if(arg1 instanceof Memento){
 					restoreLastView(((Memento) arg1).getState());
 				}
-				
+
 				if(arg1 instanceof ShapeRectangle){
 					ShapeRectangle shapeRect = (ShapeRectangle) arg1;
 					if(shapeRect.isOriginalShape()){

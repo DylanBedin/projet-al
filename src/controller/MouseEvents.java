@@ -43,561 +43,561 @@ public class MouseEvents {
 	static final double GLOBAL_LAYOUT_Ymin_BUTTONTRASH = 510;
 	static final double GLOBAL_LAYOUT_Xmax_BUTTONTRASH = 125;
 	static final double GLOBAL_LAYOUT_Ymax_BUTTONTRASH = 50;
-//
-//
-//	static public void checkPosition(Shape s, MouseEvent t){
-//		boolean existInList = false;
-//		if(t.getSceneX() <= GLOBAL_LAYOUT_Xmin_BUTTONTRASH ||
-//				t.getSceneY() <= GLOBAL_LAYOUT_Ymin_BUTTONTRASH ||
-//				t.getSceneX() >= GLOBAL_LAYOUT_Xmax_BUTTONTRASH ||
-//				t.getSceneY() >= GLOBAL_LAYOUT_Ymax_BUTTONTRASH){
-//			if(s instanceof Rectangle){
-//				Rectangle rect = (Rectangle) s;	
-//				ShapeRectangle shapeRect = new ShapeRectangle(((Rectangle)s).getWidth(), 
-//						((Rectangle)s).getHeight(), rect.)
-//						if (rect.getLayoutX() < GLOBAL_LAYOUT_Xmin_WHITEBOARD){
-//							rect.setLayoutX(GLOBAL_LAYOUT_Xmin_WHITEBOARD);
-//						}
-//				if (rect.getLayoutY() < GLOBAL_LAYOUT_Ymin_WHITEBOARD){
-//					rect.setLayoutY(GLOBAL_LAYOUT_Ymin_WHITEBOARD);
-//				}
-//				if (rect.getLayoutX() +  rect.getWidth() > GLOBAL_LAYOUT_Xmax_WHITEBOARD){
-//					rect.setLayoutX(GLOBAL_LAYOUT_Xmax_WHITEBOARD - rect.getWidth());
-//				}
-//				if (rect.getLayoutY() +  rect.getHeight() > GLOBAL_LAYOUT_Ymax_WHITEBOARD){
-//					rect.setLayoutY(GLOBAL_LAYOUT_Ymax_WHITEBOARD - rect.getHeight());
-//				}
-//				if ( rect.getLayoutX() < GLOBAL_LAYOUT_Xmin_WHITEBOARD || 
-//						rect.getLayoutY() < GLOBAL_LAYOUT_Ymin_WHITEBOARD ||
-//						rect.getLayoutX() +  rect.getWidth() > GLOBAL_LAYOUT_Xmax_WHITEBOARD ||
-//						rect.getLayoutY() +  rect.getHeight() > GLOBAL_LAYOUT_Ymax_WHITEBOARD){
-//
-//					rect.setVisible(false);
-//				}
-//				if(rect.getLayoutX() >= GLOBAL_LAYOUT_Xmin_WHITEBOARD &&
-//						rect.getLayoutX() <= GLOBAL_LAYOUT_Xmax_WHITEBOARD &&
-//						rect.getLayoutY() >= GLOBAL_LAYOUT_Ymin_WHITEBOARD &&
-//						rect.getLayoutY() <= GLOBAL_LAYOUT_Ymax_WHITEBOARD){
-//					for(Shape shape:listShapes){
-//						if(shape == rect){
-//							existInList = true;
-//						}
-//					}
-//					if(!existInList){
-//						listShapes.add(rect);
-//						View.controller.addRectangleToWhiteboard(rect);	
-//					}
-//					existInList = false;
-//				}
-//			}
-//			if(s instanceof Polygon){
-//				Polygon poly = (Polygon) s;
-//
-//				if ( checkPositionPoints(GLOBAL_LAYOUT_Xmin_WHITEBOARD, "x", poly, "min") )
-//					poly.setLayoutX(GLOBAL_LAYOUT_Xmin_WHITEBOARD +12);
-//
-//				if ( checkPositionPoints(GLOBAL_LAYOUT_Ymin_WHITEBOARD, "y", poly, "min"))
-//					poly.setLayoutY(GLOBAL_LAYOUT_Ymin_WHITEBOARD +15);
-//
-//				if (checkPositionPoints(GLOBAL_LAYOUT_Xmax_WHITEBOARD, "x", poly, "max"))
-//					poly.setLayoutX(GLOBAL_LAYOUT_Xmax_WHITEBOARD - getMaxX(poly.getPoints()));
-//
-//				if (checkPositionPoints(GLOBAL_LAYOUT_Ymax_WHITEBOARD, "y", poly, "max"))
-//					poly.setLayoutY(GLOBAL_LAYOUT_Ymax_WHITEBOARD - getMaxY(poly.getPoints()));
-//
-//
-//				if ( checkPositionPoints(GLOBAL_LAYOUT_Xmin_WHITEBOARD, "x", poly, "min") || 
-//						checkPositionPoints(GLOBAL_LAYOUT_Ymin_WHITEBOARD, "y", poly, "min") ||
-//						checkPositionPoints(GLOBAL_LAYOUT_Xmax_WHITEBOARD, "x", poly, "max") ||
-//						checkPositionPoints(GLOBAL_LAYOUT_Ymax_WHITEBOARD, "y", poly, "max")){
-//					poly.setVisible(false);
-//				}
-//
-//				for(Shape shape:listShapes){
-//					if(shape == poly){
-//						existInList = true;
-//					}
-//				}
-//				if(!existInList){
-//					listShapes.add(poly);
-//					View.controller.addPolygonToWhiteboard(poly);	
-//				}
-//				if(poly.getLayoutX() >= GLOBAL_LAYOUT_Xmin_WHITEBOARD &&
-//						poly.getLayoutX() <= GLOBAL_LAYOUT_Xmax_WHITEBOARD &&
-//						poly.getLayoutY() >= GLOBAL_LAYOUT_Ymin_WHITEBOARD &&
-//						poly.getLayoutY() <= GLOBAL_LAYOUT_Ymax_WHITEBOARD){
-//					for(Shape shape:listShapes){
-//						if(shape == poly){
-//							existInList = true;
-//						}
-//					}
-//					if(!existInList){
-//						listShapes.add(poly);
-//						View.controller.addPolygonToWhiteboard(poly);	
-//					}
-//					existInList = false;
-//				}
-//			}
-//		}
-//	}
-//
-//	static private boolean checkPositionPoints(double limite, String xy, Polygon s, String maxmin){
-//		Double[] tab = toTab(s.getPoints().toArray());
-//		int i;
-//		double layoutPos = 0;
-//		if(xy.compareTo("x") == 0){
-//			i=0;public
-//			layoutPos = s.getLayoutX();
-//		}
-//		else{
-//			i=1;
-//			layoutPos = s.getLayoutY();
-//		}
-//		while(i < tab.length){
-//
-//			if(maxmin.compareTo("max") == 0){
-//				if(tab[i] + layoutPos> limite){
-//					return true;
-//				}
-//			}
-//			else{
-//				if(tab[i] + layoutPos < limite){
-//					return true;
-//				}
-//			}
-//			i = i + 2;
-//		}
-//		return false;
-//	}	
-//
-//
-//
-//	static private double getMaxX(ObservableList<Double> tab ) {
-//		Iterator<Double> i = tab.iterator();
-//		double max = 0;
-//		while(i.hasNext()){
-//			double a = i.next();
-//			if ( a > max ){
-//				max = a;
-//				i.next();
-//			}
-//		}
-//		return max;
-//	}
-//
-//	static private double getMaxY(ObservableList<Double> tab ) {
-//		Iterator<Double> i = tab.iterator();
-//		double max = 0;
-//		i.next();
-//		while(i.hasNext()){
-//			double a = i.next();
-//			if ( a > max ){
-//				max = a;
-//				i.next();
-//			}
-//		}
-//		return max;
-//	}
-//
-//	static private Double[] transTab(int vertices, double r){
-//		double centerX = r/2;
-//		double centerY = r/2;
-//		Double[] tab = new Double[vertices*2];
-//		double verticeX = centerX;
-//		double verticeY = centerY;
-//		double angleToAdd = (2 * Math.PI) / vertices;
-//		double angle = 0;
-//		for(int i = 0; i<vertices;i++){			
-//			verticeX = centerX + r*Math.sin(angle);
-//			verticeY = centerY + r*Math.cos(angle);
-//			tab[2*i] = verticeX;
-//			tab[(2*i)+1] = verticeY;
-//			angle = angle + angleToAdd;
-//		}
-//		return tab;
-//	}
-//
-//	static private double barycentreX(Double[] tab){
-//		double res = 0;
-//		for(int i =0; i<tab.length; i= i+2){
-//			res += tab[i];
-//		}
-//		return res / (tab.length /2) ;
-//	}
-//
-//	static private double barycentreY(Double[] tab){
-//		double res = 0;
-//		for(int i =1; i<tab.length; i= i+2){
-//			res += tab[i];
-//		}
-//		return res / (tab.length /2) ;
-//	}
-//
-//
-//	static private Double [] toTab( Object[] o){
-//		Double [] tab = new Double[o.length];
-//		for(int i = 0; i< o.length; i++){
-//			tab[i] = (Double) o[i];
-//		}
-//		return tab;
-//	}
-//
-//	/***********************************************************************************/
-//	/*************************Deplacement et changement de couleur d'un shape*************************/
-//	/***********************************************************************************/
+	//
+	//
+	//	static public void checkPosition(Shape s, MouseEvent t){
+	//		boolean existInList = false;
+	//		if(t.getSceneX() <= GLOBAL_LAYOUT_Xmin_BUTTONTRASH ||
+	//				t.getSceneY() <= GLOBAL_LAYOUT_Ymin_BUTTONTRASH ||
+	//				t.getSceneX() >= GLOBAL_LAYOUT_Xmax_BUTTONTRASH ||
+	//				t.getSceneY() >= GLOBAL_LAYOUT_Ymax_BUTTONTRASH){
+	//			if(s instanceof Rectangle){
+	//				Rectangle rect = (Rectangle) s;	
+	//				ShapeRectangle shapeRect = new ShapeRectangle(((Rectangle)s).getWidth(), 
+	//						((Rectangle)s).getHeight(), rect.)
+	//						if (rect.getLayoutX() < GLOBAL_LAYOUT_Xmin_WHITEBOARD){
+	//							rect.setLayoutX(GLOBAL_LAYOUT_Xmin_WHITEBOARD);
+	//						}
+	//				if (rect.getLayoutY() < GLOBAL_LAYOUT_Ymin_WHITEBOARD){
+	//					rect.setLayoutY(GLOBAL_LAYOUT_Ymin_WHITEBOARD);
+	//				}
+	//				if (rect.getLayoutX() +  rect.getWidth() > GLOBAL_LAYOUT_Xmax_WHITEBOARD){
+	//					rect.setLayoutX(GLOBAL_LAYOUT_Xmax_WHITEBOARD - rect.getWidth());
+	//				}
+	//				if (rect.getLayoutY() +  rect.getHeight() > GLOBAL_LAYOUT_Ymax_WHITEBOARD){
+	//					rect.setLayoutY(GLOBAL_LAYOUT_Ymax_WHITEBOARD - rect.getHeight());
+	//				}
+	//				if ( rect.getLayoutX() < GLOBAL_LAYOUT_Xmin_WHITEBOARD || 
+	//						rect.getLayoutY() < GLOBAL_LAYOUT_Ymin_WHITEBOARD ||
+	//						rect.getLayoutX() +  rect.getWidth() > GLOBAL_LAYOUT_Xmax_WHITEBOARD ||
+	//						rect.getLayoutY() +  rect.getHeight() > GLOBAL_LAYOUT_Ymax_WHITEBOARD){
+	//
+	//					rect.setVisible(false);
+	//				}
+	//				if(rect.getLayoutX() >= GLOBAL_LAYOUT_Xmin_WHITEBOARD &&
+	//						rect.getLayoutX() <= GLOBAL_LAYOUT_Xmax_WHITEBOARD &&
+	//						rect.getLayoutY() >= GLOBAL_LAYOUT_Ymin_WHITEBOARD &&
+	//						rect.getLayoutY() <= GLOBAL_LAYOUT_Ymax_WHITEBOARD){
+	//					for(Shape shape:listShapes){
+	//						if(shape == rect){
+	//							existInList = true;
+	//						}
+	//					}
+	//					if(!existInList){
+	//						listShapes.add(rect);
+	//						View.controller.addRectangleToWhiteboard(rect);	
+	//					}
+	//					existInList = false;
+	//				}
+	//			}
+	//			if(s instanceof Polygon){
+	//				Polygon poly = (Polygon) s;
+	//
+	//				if ( checkPositionPoints(GLOBAL_LAYOUT_Xmin_WHITEBOARD, "x", poly, "min") )
+	//					poly.setLayoutX(GLOBAL_LAYOUT_Xmin_WHITEBOARD +12);
+	//
+	//				if ( checkPositionPoints(GLOBAL_LAYOUT_Ymin_WHITEBOARD, "y", poly, "min"))
+	//					poly.setLayoutY(GLOBAL_LAYOUT_Ymin_WHITEBOARD +15);
+	//
+	//				if (checkPositionPoints(GLOBAL_LAYOUT_Xmax_WHITEBOARD, "x", poly, "max"))
+	//					poly.setLayoutX(GLOBAL_LAYOUT_Xmax_WHITEBOARD - getMaxX(poly.getPoints()));
+	//
+	//				if (checkPositionPoints(GLOBAL_LAYOUT_Ymax_WHITEBOARD, "y", poly, "max"))
+	//					poly.setLayoutY(GLOBAL_LAYOUT_Ymax_WHITEBOARD - getMaxY(poly.getPoints()));
+	//
+	//
+	//				if ( checkPositionPoints(GLOBAL_LAYOUT_Xmin_WHITEBOARD, "x", poly, "min") || 
+	//						checkPositionPoints(GLOBAL_LAYOUT_Ymin_WHITEBOARD, "y", poly, "min") ||
+	//						checkPositionPoints(GLOBAL_LAYOUT_Xmax_WHITEBOARD, "x", poly, "max") ||
+	//						checkPositionPoints(GLOBAL_LAYOUT_Ymax_WHITEBOARD, "y", poly, "max")){
+	//					poly.setVisible(false);
+	//				}
+	//
+	//				for(Shape shape:listShapes){
+	//					if(shape == poly){
+	//						existInList = true;
+	//					}
+	//				}
+	//				if(!existInList){
+	//					listShapes.add(poly);
+	//					View.controller.addPolygonToWhiteboard(poly);	
+	//				}
+	//				if(poly.getLayoutX() >= GLOBAL_LAYOUT_Xmin_WHITEBOARD &&
+	//						poly.getLayoutX() <= GLOBAL_LAYOUT_Xmax_WHITEBOARD &&
+	//						poly.getLayoutY() >= GLOBAL_LAYOUT_Ymin_WHITEBOARD &&
+	//						poly.getLayoutY() <= GLOBAL_LAYOUT_Ymax_WHITEBOARD){
+	//					for(Shape shape:listShapes){
+	//						if(shape == poly){
+	//							existInList = true;
+	//						}
+	//					}
+	//					if(!existInList){
+	//						listShapes.add(poly);
+	//						View.controller.addPolygonToWhiteboard(poly);	
+	//					}
+	//					existInList = false;
+	//				}
+	//			}
+	//		}
+	//	}
+	//
+	//	static private boolean checkPositionPoints(double limite, String xy, Polygon s, String maxmin){
+	//		Double[] tab = toTab(s.getPoints().toArray());
+	//		int i;
+	//		double layoutPos = 0;
+	//		if(xy.compareTo("x") == 0){
+	//			i=0;public
+	//			layoutPos = s.getLayoutX();
+	//		}
+	//		else{
+	//			i=1;
+	//			layoutPos = s.getLayoutY();
+	//		}
+	//		while(i < tab.length){
+	//
+	//			if(maxmin.compareTo("max") == 0){
+	//				if(tab[i] + layoutPos> limite){
+	//					return true;
+	//				}
+	//			}
+	//			else{
+	//				if(tab[i] + layoutPos < limite){
+	//					return true;
+	//				}
+	//			}
+	//			i = i + 2;
+	//		}
+	//		return false;
+	//	}	
+	//
+	//
+	//
+	//	static private double getMaxX(ObservableList<Double> tab ) {
+	//		Iterator<Double> i = tab.iterator();
+	//		double max = 0;
+	//		while(i.hasNext()){
+	//			double a = i.next();
+	//			if ( a > max ){
+	//				max = a;
+	//				i.next();
+	//			}
+	//		}
+	//		return max;
+	//	}
+	//
+	//	static private double getMaxY(ObservableList<Double> tab ) {
+	//		Iterator<Double> i = tab.iterator();
+	//		double max = 0;
+	//		i.next();
+	//		while(i.hasNext()){
+	//			double a = i.next();
+	//			if ( a > max ){
+	//				max = a;
+	//				i.next();
+	//			}
+	//		}
+	//		return max;
+	//	}
+	//
+	//	static private Double[] transTab(int vertices, double r){
+	//		double centerX = r/2;
+	//		double centerY = r/2;
+	//		Double[] tab = new Double[vertices*2];
+	//		double verticeX = centerX;
+	//		double verticeY = centerY;
+	//		double angleToAdd = (2 * Math.PI) / vertices;
+	//		double angle = 0;
+	//		for(int i = 0; i<vertices;i++){			
+	//			verticeX = centerX + r*Math.sin(angle);
+	//			verticeY = centerY + r*Math.cos(angle);
+	//			tab[2*i] = verticeX;
+	//			tab[(2*i)+1] = verticeY;
+	//			angle = angle + angleToAdd;
+	//		}
+	//		return tab;
+	//	}
+	//
+	//	static private double barycentreX(Double[] tab){
+	//		double res = 0;
+	//		for(int i =0; i<tab.length; i= i+2){
+	//			res += tab[i];
+	//		}
+	//		return res / (tab.length /2) ;
+	//	}
+	//
+	//	static private double barycentreY(Double[] tab){
+	//		double res = 0;
+	//		for(int i =1; i<tab.length; i= i+2){
+	//			res += tab[i];
+	//		}
+	//		return res / (tab.length /2) ;
+	//	}
+	//
+	//
+	//	static private Double [] toTab( Object[] o){
+	//		Double [] tab = new Double[o.length];
+	//		for(int i = 0; i< o.length; i++){
+	//			tab[i] = (Double) o[i];
+	//		}
+	//		return tab;
+	//	}
+	//
+	//	/***********************************************************************************/
+	//	/*************************Deplacement et changement de couleur d'un shape*************************/
+	//	/***********************************************************************************/
 	private static double orgSceneX, orgSceneY;
 	private static double newTranslateX, newTranslateY;
-//	/***********************************************************************************/
-//
-//	static EventHandler<MouseEvent> OnMousePressedWhiteboard =
-//			new EventHandler<MouseEvent>() {
-//
-//		@Override
-//		public void handle(final MouseEvent t) {
-//			if (t.getButton() == MouseButton.PRIMARY){
-//				orgSceneX = t.getSceneX();
-//				orgSceneY = t.getSceneY();				
-//				if(t.getSource() instanceof Shape){
-//					((Shape) t.getSource()).toFront();
-//				}
-//			}
-//			if(t.getButton() == MouseButton.SECONDARY){
-//				Stage stagePopUp = new Stage();
-//				stagePopUp.initModality(Modality.APPLICATION_MODAL);
-//				stagePopUp.initOwner(View.stage);
-//				Group root = new Group();
-//				Scene theScene = new Scene(root, 300, 160);
-//
-//				//Buttons
-//				Button red = GraphicalObjects.createButton(2, 5, Color.RED, ((Shape)(t.getSource())));
-//
-//				Button blue = GraphicalObjects.createButton(22, 5, Color.BLUE, ((Shape)(t.getSource())));
-//
-//				Button green = GraphicalObjects.createButton(42, 5, Color.GREEN, ((Shape)(t.getSource())));
-//
-//				Button aqua = GraphicalObjects.createButton(62, 5, Color.AQUA, ((Shape)(t.getSource())));
-//
-//				Button beige = GraphicalObjects.createButton(82, 5, Color.BEIGE, ((Shape)(t.getSource())));
-//
-//				Button turquoise = GraphicalObjects.createButton(102, 5, Color.TURQUOISE, ((Shape)(t.getSource())));
-//
-//				Button brown = GraphicalObjects.createButton(122, 5, Color.BROWN, ((Shape)(t.getSource())));
-//
-//				Button cyan = GraphicalObjects.createButton(142, 5, Color.CYAN, ((Shape)(t.getSource())));
-//
-//				Button grey = GraphicalObjects.createButton(162, 5, Color.GRAY, ((Shape)(t.getSource())));
-//
-//				Button pink = GraphicalObjects.createButton(182, 5, Color.PINK, ((Shape)(t.getSource())));
-//
-//				Button orange = GraphicalObjects.createButton(202, 5, Color.ORANGE, ((Shape)(t.getSource())));
-//
-//				Button lGreen = GraphicalObjects.createButton(222, 5, Color.LIGHTGREEN, ((Shape)(t.getSource())));
-//
-//				Button purple = GraphicalObjects.createButton(242, 5, Color.PURPLE, ((Shape)(t.getSource())));
-//
-//				Button black = GraphicalObjects.createButton(262, 5, Color.BLACK, ((Shape)(t.getSource())));
-//
-//				Button white = GraphicalObjects.createButton(282, 5, Color.WHITE, ((Shape)(t.getSource())));
-//
-//				if (t.getSource() instanceof Rectangle){
-//
-//					/**/
-//
-//					Label hauteur = new Label("Hauteur :");
-//					final TextField textFieldHauteur = new TextField ();
-//					textFieldHauteur.setMaxWidth(60);
-//					textFieldHauteur.setText("");
-//					Label largeur = new Label("Largeur :");new Model();
-//					final TextField textFieldLargeur = new TextField ();
-//					textFieldLargeur.setMaxWidth(60);
-//					textFieldLargeur.setText("");
-//
-//					/**/
-//
-//					Label centre = new Label("Centre de rotation:");
-//					final TextField textFieldCentreX = new TextField();
-//					textFieldCentreX.setMaxWidth(60);
-//					textFieldCentreX.setText("");
-//					textFieldCentreX.setPromptText( String.valueOf( ((Rectangle) t.getSource()).getLayoutX() + ((Rectangle) t.getSource()).getWidth()/2 - GLOBAL_LAYOUT_Xmin_WHITEBOARD));
-//					final TextField textFieldCentreY = new TextField();
-//					textFieldCentreY.setMaxWidth(60);
-//					textFieldCentreY.setText("");
-//					textFieldCentreY.setPromptText(String.valueOf( ((Rectangle) t.getSource()).getLayoutY() + ((Rectangle) t.getSource()).getHeight()/2 - GLOBAL_LAYOUT_Ymin_WHITEBOARD));
-//
-//					Label rotation = new Label("Rotation :");
-//					final TextField textFieldRotation = new TextField ();
-//					textFieldRotation.setMaxWidth(60);
-//					textFieldRotation.setText("");
-//					textFieldRotation.setPromptText("degrès");
-//					final Button ok = GraphicalObjects.createButton(0,0,null, null);
-//					ok.setText("Ok!");
-//					ok.setOnAction(new EventHandler<ActionEvent>() {
-//
-//						@Override
-//						public void handle(ActionEvent e) {
-//							if ( textFieldHauteur.getText().trim().isEmpty() == false){
-//								double res = Double.parseDouble(textFieldHauteur.getText());
-//								((Rectangle) t.getSource()).setHeight(res);
-//
-//							}
-//
-//							if ( textFieldLargeur.getText().trim().isEmpty() == false){
-//								double res = Double.parseDouble(textFieldLargeur.getText());
-//								((Rectangle) t.getSource()).setWidth(res);
-//							}
-//
-//
-//							if ( textFieldRotation.getText().trim().isEmpty() == false && 
-//									textFieldCentreX.getText().trim().isEmpty() == false &&
-//									textFieldCentreY.getText().trim().isEmpty() == false){
-//
-//								double rotation = Double.parseDouble(textFieldRotation.getText());
-//								double pointCentreX = Double.parseDouble(textFieldCentreX.getText()) ;
-//								double pointCentreY = Double.parseDouble(textFieldCentreY.getText());
-//
-//								double rotaRadian = rotation * (Math.PI / 180);
-//								double cosRotation = Math.cos(rotaRadian);
-//								double sinRotation = Math.sin(rotaRadian);
-//								double coorX = ((Rectangle) t.getSource()).getLayoutX() + ((Rectangle) t.getSource()).getWidth()/2 - GLOBAL_LAYOUT_Xmin_WHITEBOARD;
-//								double coorY = ((Rectangle) t.getSource()).getLayoutY() + ((Rectangle) t.getSource()).getHeight()/2 -  GLOBAL_LAYOUT_Ymin_WHITEBOARD;
-//
-//								if( ( coorX - pointCentreX ) * cosRotation - ( coorY - pointCentreY ) * sinRotation + pointCentreX < 0 ||
-//										( coorX - pointCentreX ) * cosRotation - ( coorY - pointCentreY ) * sinRotation + pointCentreX > GLOBAL_LAYOUT_Xmax_WHITEBOARD - GLOBAL_LAYOUT_Xmin_WHITEBOARD ||
-//										( coorX - pointCentreX ) * sinRotation + ( coorY - pointCentreY ) * cosRotation + pointCentreY < 0 ||
-//										( coorX - pointCentreX ) * sinRotation + ( coorY - pointCentreY ) * cosRotation + pointCentreY > GLOBAL_LAYOUT_Ymax_WHITEBOARD - GLOBAL_LAYOUT_Ymin_WHITEBOARD) {
-//									GraphicalObjects.errorMessage("Erreur, rotation dépassant la taille du whiteboard!");
-//								}
-//								else{
-//									((Rectangle) t.getSource()).getTransforms().add(new Rotate(rotation, 
-//											pointCentreX - ( ((Rectangle) t.getSource()).getLayoutX() - GLOBAL_LAYOUT_Xmin_WHITEBOARD), 
-//											pointCentreY - ( ((Rectangle) t.getSource()).getLayoutY() - GLOBAL_LAYOUT_Ymin_WHITEBOARD)));
-//
-//									checkPosition(((Rectangle) t.getSource()), t);
-//									ok.getParent().getScene().getWindow().hide();
-//								}
-//							}
-//							checkPosition(((Rectangle) t.getSource()), t);
-//							ok.getParent().getScene().getWindow().hide();
-//						}
-//					});
-//
-//					/**/
-//
-//					HBox hbHauteurLargeur = new HBox();
-//					hbHauteurLargeur.setLayoutX(2);
-//					hbHauteurLargeur.setLayoutY(42);
-//					hbHauteurLargeur.getChildren().add(hauteur);
-//					hbHauteurLargeur.getChildren().add(textFieldHauteur);
-//					hbHauteurLargeur.getChildren().add(largeur);
-//					hbHauteurLargeur.getChildren().add(textFieldLargeur);
-//
-//					/**/
-//
-//					HBox hbCentreRotation = new HBox();
-//					hbCentreRotation.setLayoutX(2);
-//					hbCentreRotation.setLayoutY(82);
-//					hbCentreRotation.getChildren().add(centre);
-//					hbCentreRotation.getChildren().add(textFieldCentreX);
-//					hbCentreRotation.getChildren().add(textFieldCentreY);
-//
-//					/**/
-//
-//					HBox hbRotation = new HBox();
-//					hbRotation.setLayoutX(2);
-//					hbRotation.setLayoutY(122);
-//					hbRotation.getChildren().add(rotation);
-//					hbRotation.getChildren().add(textFieldRotation);
-//					hbRotation.getChildren().add(ok);
-//					root.getChildren().add(hbHauteurLargeur);
-//					root.getChildren().add(hbCentreRotation);
-//					root.getChildren().add(hbRotation);					
-//
-//				}
-//				////////////POLYGON//////////////
-//				if (t.getSource() instanceof Polygon){
-//
-//					/**/
-//
-//					Label points = new Label("Nombre de points :");
-//					final TextField textFieldPoints = new TextField ();
-//					textFieldPoints.setMaxWidth(60);
-//					textFieldPoints.setText("");
-//					Label rayon = new Label("Rayon :");
-//					final TextField textFieldRayon = new TextField ();
-//					textFieldRayon.setMaxWidth(60);
-//					textFieldRayon.setText("");
-//
-//					/**/
-//
-//					Label centre = new Label("Centre de rotation:");
-//					final TextField textFieldCentreX = new TextField();
-//					textFieldCentreX.setMaxWidth(60);
-//					textFieldCentreX.setText("");
-//					textFieldCentreX.setPromptText(String.valueOf(((Polygon) t.getSource()).getLayoutX()));
-//					final TextField textFieldCentreY = new TextField();
-//					textFieldCentreY.setMaxWidth(60);
-//					textFieldCentreY.setText("");
-//					textFieldCentreY.setPromptText(String.valueOf(((Polygon) t.getSource()).getLayoutY()));
-//
-//					/**/
-//
-//					Label rotation = new Label("Rotation :");
-//					final TextField textFieldRotation = new TextField ();
-//					textFieldRotation.setMaxWidth(60);
-//					textFieldRotation.setText("");
-//					textFieldRotation.setPromptText("degrès");
-//					final Button ok = GraphicalObjects.createButton(0,0,null, null);
-//					ok.setText("Ok!");
-//					ok.setOnAction(new EventHandler<ActionEvent>() {
-//						/**
-//						 * TODO ROTATION
-//						 */
-//						@Override
-//						public void handle(ActionEvent e) {
-//
-//
-//
-//							if ( !textFieldPoints.getText().trim().isEmpty() &&
-//									!textFieldRayon.getText().trim().isEmpty()){
-//
-//								int res1 = Integer.parseInt(textFieldPoints.getText());
-//								double res2 = Double.parseDouble(textFieldRayon.getText());
-//
-//								Double [] tab = transTab(res1, res2);
-//								((Polygon)t.getSource()).getPoints().clear();
-//								((Polygon)t.getSource()).getPoints().addAll(tab);
-//							}
-//							/**
-//							 * Trouver un moyen pour choper le rayon / centre du cercle
-//							 */
-//							else if ( !textFieldPoints.getText().trim().isEmpty()){
-//
-//								int res1 = Integer.parseInt(textFieldPoints.getText());
-//								Object[] listObject = ((Polygon)t.getSource()).getPoints().toArray();
-//								Double [] tab1 = toTab(listObject);
-//								double intX = barycentreX(tab1);
-//								double intY = barycentreY(tab1);
-//								double px = tab1[0];
-//								double py = tab1[1];
-//								double dist = Math.sqrt( (intX - px) * (intX - px) + (intY - py) * (intY - py) );
-//								Double [] tab2 = transTab(res1, dist);
-//
-//								((Polygon)t.getSource()).getPoints().clear();
-//								((Polygon)t.getSource()).getPoints().addAll(tab2);
-//							}
-//
-//							else if (!textFieldRayon.getText().trim().isEmpty()){
-//
-//								double res2 = Double.parseDouble(textFieldRayon.getText());
-//								int tailleTab = ((Polygon) t.getSource()).getPoints().size() /2;
-//								Double [] tab = transTab(tailleTab, res2);
-//								((Polygon) t.getSource()).getPoints().clear();
-//								((Polygon) t.getSource()).getPoints().addAll(tab);
-//
-//							}
-//
-//							if ( textFieldRotation.getText().trim().isEmpty() == false && 
-//									textFieldCentreX.getText().trim().isEmpty() == false &&
-//									textFieldCentreY.getText().trim().isEmpty() == false){
-//
-//								double rotation = Double.parseDouble(textFieldRotation.getText());
-//								double pointCentreX = Double.parseDouble(textFieldCentreX.getText()) ;
-//								double pointCentreY = Double.parseDouble(textFieldCentreY.getText());
-//
-//
-//								double rotaRadian = rotation * (Math.PI / 180);
-//								double cosRotation = Math.cos(rotaRadian);
-//								double sinRotation = Math.sin(rotaRadian);
-//								double coorX = barycentreX(toTab(((Polygon) t.getSource()).getPoints().toArray())) + ((Polygon) t.getSource()).getLayoutX();
-//								double coorY = barycentreX(toTab(((Polygon) t.getSource()).getPoints().toArray())) + ((Polygon) t.getSource()).getLayoutY();
-//
-//								if( ( coorX - pointCentreX ) * cosRotation - ( coorY - pointCentreY ) * sinRotation + pointCentreX < 0 ||
-//										( coorX - pointCentreX ) * cosRotation - ( coorY - pointCentreY ) * sinRotation + pointCentreX > GLOBAL_LAYOUT_Xmax_WHITEBOARD - GLOBAL_LAYOUT_Xmin_WHITEBOARD ||
-//										( coorX - pointCentreX ) * sinRotation + ( coorY - pointCentreY ) * cosRotation + pointCentreY < 0 ||
-//										( coorX - pointCentreX ) * sinRotation + ( coorY - pointCentreY ) * cosRotation + pointCentreY > GLOBAL_LAYOUT_Ymax_WHITEBOARD - GLOBAL_LAYOUT_Ymin_WHITEBOARD) {
-//									GraphicalObjects.errorMessage("Erreur, rotation dépassant la taille du whiteboard!");
-//								}
-//								else{
-//									((Polygon) t.getSource()).getTransforms().add(new Rotate(rotation, 
-//											pointCentreX - ( ((Polygon) t.getSource()).getLayoutX() - GLOBAL_LAYOUT_Xmin_WHITEBOARD), 
-//											pointCentreY - ( ((Polygon) t.getSource()).getLayoutY() - GLOBAL_LAYOUT_Ymin_WHITEBOARD)));
-//
-//									checkPosition(((Polygon) t.getSource()), t);
-//									ok.getParent().getScene().getWindow().hide();
-//								}
-//							}
-//							checkPosition(((Shape) t.getSource()), t);
-//							ok.getParent().getScene().getWindow().hide();
-//						}
-//					});
-//
-//					/**/
-//
-//
-//					/**/
-//
-//					HBox hbHauteurLargeur = new HBox();
-//					hbHauteurLargeur.setLayoutX(2);
-//					hbHauteurLargeur.setLayoutY(42);
-//					hbHauteurLargeur.getChildren().add(points);
-//					hbHauteurLargeur.getChildren().add(textFieldPoints);
-//					hbHauteurLargeur.getChildren().add(rayon);
-//					hbHauteurLargeur.getChildren().add(textFieldRayon);
-//
-//					/**/
-//
-//					HBox hbCentreRotation = new HBox();
-//					hbCentreRotation.setLayoutX(2);
-//					hbCentreRotation.setLayoutY(82);
-//					hbCentreRotation.getChildren().add(centre);
-//					hbCentreRotation.getChildren().add(textFieldCentreX);
-//					hbCentreRotation.getChildren().add(textFieldCentreY);
-//
-//					/**/
-//
-//					HBox hbRotation = new HBox();
-//					hbRotation.setLayoutX(2);
-//					hbRotation.setLayoutY(122);
-//					hbRotation.getChildren().add(rotation);
-//					hbRotation.getChildren().add(textFieldRotation);
-//					hbRotation.getChildren().add(ok);
-//
-//					root.getChildren().add(hbHauteurLargeur);
-//					root.getChildren().add(hbCentreRotation);
-//					root.getChildren().add(hbRotation);
-//
-//				}
-//
-//
-//
-//				root.getChildren().add(red);
-//				root.getChildren().add(blue);
-//				root.getChildren().add(green);
-//				root.getChildren().add(aqua);
-//				root.getChildren().add(beige);
-//				root.getChildren().add(black);
-//				root.getChildren().add(brown);
-//				root.getChildren().add(cyan);
-//				root.getChildren().add(grey);
-//				root.getChildren().add(pink);
-//				root.getChildren().add(orange);
-//				root.getChildren().add(lGreen);
-//				root.getChildren().add(purple);
-//				root.getChildren().add(turquoise);
-//				root.getChildren().add(white);
-//
-//
-//				stagePopUp.setScene(theScene);
-//				stagePopUp.show();
-//			}
-//		}
-//	};
-//
+	//	/***********************************************************************************/
+	//
+	//	static EventHandler<MouseEvent> OnMousePressedWhiteboard =
+	//			new EventHandler<MouseEvent>() {
+	//
+	//		@Override
+	//		public void handle(final MouseEvent t) {
+	//			if (t.getButton() == MouseButton.PRIMARY){
+	//				orgSceneX = t.getSceneX();
+	//				orgSceneY = t.getSceneY();				
+	//				if(t.getSource() instanceof Shape){
+	//					((Shape) t.getSource()).toFront();
+	//				}
+	//			}
+	//			if(t.getButton() == MouseButton.SECONDARY){
+	//				Stage stagePopUp = new Stage();
+	//				stagePopUp.initModality(Modality.APPLICATION_MODAL);
+	//				stagePopUp.initOwner(View.stage);
+	//				Group root = new Group();
+	//				Scene theScene = new Scene(root, 300, 160);
+	//
+	//				//Buttons
+	//				Button red = GraphicalObjects.createButton(2, 5, Color.RED, ((Shape)(t.getSource())));
+	//
+	//				Button blue = GraphicalObjects.createButton(22, 5, Color.BLUE, ((Shape)(t.getSource())));
+	//
+	//				Button green = GraphicalObjects.createButton(42, 5, Color.GREEN, ((Shape)(t.getSource())));
+	//
+	//				Button aqua = GraphicalObjects.createButton(62, 5, Color.AQUA, ((Shape)(t.getSource())));
+	//
+	//				Button beige = GraphicalObjects.createButton(82, 5, Color.BEIGE, ((Shape)(t.getSource())));
+	//
+	//				Button turquoise = GraphicalObjects.createButton(102, 5, Color.TURQUOISE, ((Shape)(t.getSource())));
+	//
+	//				Button brown = GraphicalObjects.createButton(122, 5, Color.BROWN, ((Shape)(t.getSource())));
+	//
+	//				Button cyan = GraphicalObjects.createButton(142, 5, Color.CYAN, ((Shape)(t.getSource())));
+	//
+	//				Button grey = GraphicalObjects.createButton(162, 5, Color.GRAY, ((Shape)(t.getSource())));
+	//
+	//				Button pink = GraphicalObjects.createButton(182, 5, Color.PINK, ((Shape)(t.getSource())));
+	//
+	//				Button orange = GraphicalObjects.createButton(202, 5, Color.ORANGE, ((Shape)(t.getSource())));
+	//
+	//				Button lGreen = GraphicalObjects.createButton(222, 5, Color.LIGHTGREEN, ((Shape)(t.getSource())));
+	//
+	//				Button purple = GraphicalObjects.createButton(242, 5, Color.PURPLE, ((Shape)(t.getSource())));
+	//
+	//				Button black = GraphicalObjects.createButton(262, 5, Color.BLACK, ((Shape)(t.getSource())));
+	//
+	//				Button white = GraphicalObjects.createButton(282, 5, Color.WHITE, ((Shape)(t.getSource())));
+	//
+	//				if (t.getSource() instanceof Rectangle){
+	//
+	//					/**/
+	//
+	//					Label hauteur = new Label("Hauteur :");
+	//					final TextField textFieldHauteur = new TextField ();
+	//					textFieldHauteur.setMaxWidth(60);
+	//					textFieldHauteur.setText("");
+	//					Label largeur = new Label("Largeur :");new Model();
+	//					final TextField textFieldLargeur = new TextField ();
+	//					textFieldLargeur.setMaxWidth(60);
+	//					textFieldLargeur.setText("");
+	//
+	//					/**/
+	//
+	//					Label centre = new Label("Centre de rotation:");
+	//					final TextField textFieldCentreX = new TextField();
+	//					textFieldCentreX.setMaxWidth(60);
+	//					textFieldCentreX.setText("");
+	//					textFieldCentreX.setPromptText( String.valueOf( ((Rectangle) t.getSource()).getLayoutX() + ((Rectangle) t.getSource()).getWidth()/2 - GLOBAL_LAYOUT_Xmin_WHITEBOARD));
+	//					final TextField textFieldCentreY = new TextField();
+	//					textFieldCentreY.setMaxWidth(60);
+	//					textFieldCentreY.setText("");
+	//					textFieldCentreY.setPromptText(String.valueOf( ((Rectangle) t.getSource()).getLayoutY() + ((Rectangle) t.getSource()).getHeight()/2 - GLOBAL_LAYOUT_Ymin_WHITEBOARD));
+	//
+	//					Label rotation = new Label("Rotation :");
+	//					final TextField textFieldRotation = new TextField ();
+	//					textFieldRotation.setMaxWidth(60);
+	//					textFieldRotation.setText("");
+	//					textFieldRotation.setPromptText("degrès");
+	//					final Button ok = GraphicalObjects.createButton(0,0,null, null);
+	//					ok.setText("Ok!");
+	//					ok.setOnAction(new EventHandler<ActionEvent>() {
+	//
+	//						@Override
+	//						public void handle(ActionEvent e) {
+	//							if ( textFieldHauteur.getText().trim().isEmpty() == false){
+	//								double res = Double.parseDouble(textFieldHauteur.getText());
+	//								((Rectangle) t.getSource()).setHeight(res);
+	//
+	//							}
+	//
+	//							if ( textFieldLargeur.getText().trim().isEmpty() == false){
+	//								double res = Double.parseDouble(textFieldLargeur.getText());
+	//								((Rectangle) t.getSource()).setWidth(res);
+	//							}
+	//
+	//
+	//							if ( textFieldRotation.getText().trim().isEmpty() == false && 
+	//									textFieldCentreX.getText().trim().isEmpty() == false &&
+	//									textFieldCentreY.getText().trim().isEmpty() == false){
+	//
+	//								double rotation = Double.parseDouble(textFieldRotation.getText());
+	//								double pointCentreX = Double.parseDouble(textFieldCentreX.getText()) ;
+	//								double pointCentreY = Double.parseDouble(textFieldCentreY.getText());
+	//
+	//								double rotaRadian = rotation * (Math.PI / 180);
+	//								double cosRotation = Math.cos(rotaRadian);
+	//								double sinRotation = Math.sin(rotaRadian);
+	//								double coorX = ((Rectangle) t.getSource()).getLayoutX() + ((Rectangle) t.getSource()).getWidth()/2 - GLOBAL_LAYOUT_Xmin_WHITEBOARD;
+	//								double coorY = ((Rectangle) t.getSource()).getLayoutY() + ((Rectangle) t.getSource()).getHeight()/2 -  GLOBAL_LAYOUT_Ymin_WHITEBOARD;
+	//
+	//								if( ( coorX - pointCentreX ) * cosRotation - ( coorY - pointCentreY ) * sinRotation + pointCentreX < 0 ||
+	//										( coorX - pointCentreX ) * cosRotation - ( coorY - pointCentreY ) * sinRotation + pointCentreX > GLOBAL_LAYOUT_Xmax_WHITEBOARD - GLOBAL_LAYOUT_Xmin_WHITEBOARD ||
+	//										( coorX - pointCentreX ) * sinRotation + ( coorY - pointCentreY ) * cosRotation + pointCentreY < 0 ||
+	//										( coorX - pointCentreX ) * sinRotation + ( coorY - pointCentreY ) * cosRotation + pointCentreY > GLOBAL_LAYOUT_Ymax_WHITEBOARD - GLOBAL_LAYOUT_Ymin_WHITEBOARD) {
+	//									GraphicalObjects.errorMessage("Erreur, rotation dépassant la taille du whiteboard!");
+	//								}
+	//								else{
+	//									((Rectangle) t.getSource()).getTransforms().add(new Rotate(rotation, 
+	//											pointCentreX - ( ((Rectangle) t.getSource()).getLayoutX() - GLOBAL_LAYOUT_Xmin_WHITEBOARD), 
+	//											pointCentreY - ( ((Rectangle) t.getSource()).getLayoutY() - GLOBAL_LAYOUT_Ymin_WHITEBOARD)));
+	//
+	//									checkPosition(((Rectangle) t.getSource()), t);
+	//									ok.getParent().getScene().getWindow().hide();
+	//								}
+	//							}
+	//							checkPosition(((Rectangle) t.getSource()), t);
+	//							ok.getParent().getScene().getWindow().hide();
+	//						}
+	//					});
+	//
+	//					/**/
+	//
+	//					HBox hbHauteurLargeur = new HBox();
+	//					hbHauteurLargeur.setLayoutX(2);
+	//					hbHauteurLargeur.setLayoutY(42);
+	//					hbHauteurLargeur.getChildren().add(hauteur);
+	//					hbHauteurLargeur.getChildren().add(textFieldHauteur);
+	//					hbHauteurLargeur.getChildren().add(largeur);
+	//					hbHauteurLargeur.getChildren().add(textFieldLargeur);
+	//
+	//					/**/
+	//
+	//					HBox hbCentreRotation = new HBox();
+	//					hbCentreRotation.setLayoutX(2);
+	//					hbCentreRotation.setLayoutY(82);
+	//					hbCentreRotation.getChildren().add(centre);
+	//					hbCentreRotation.getChildren().add(textFieldCentreX);
+	//					hbCentreRotation.getChildren().add(textFieldCentreY);
+	//
+	//					/**/
+	//
+	//					HBox hbRotation = new HBox();
+	//					hbRotation.setLayoutX(2);
+	//					hbRotation.setLayoutY(122);
+	//					hbRotation.getChildren().add(rotation);
+	//					hbRotation.getChildren().add(textFieldRotation);
+	//					hbRotation.getChildren().add(ok);
+	//					root.getChildren().add(hbHauteurLargeur);
+	//					root.getChildren().add(hbCentreRotation);
+	//					root.getChildren().add(hbRotation);					
+	//
+	//				}
+	//				////////////POLYGON//////////////
+	//				if (t.getSource() instanceof Polygon){
+	//
+	//					/**/
+	//
+	//					Label points = new Label("Nombre de points :");
+	//					final TextField textFieldPoints = new TextField ();
+	//					textFieldPoints.setMaxWidth(60);
+	//					textFieldPoints.setText("");
+	//					Label rayon = new Label("Rayon :");
+	//					final TextField textFieldRayon = new TextField ();
+	//					textFieldRayon.setMaxWidth(60);
+	//					textFieldRayon.setText("");
+	//
+	//					/**/
+	//
+	//					Label centre = new Label("Centre de rotation:");
+	//					final TextField textFieldCentreX = new TextField();
+	//					textFieldCentreX.setMaxWidth(60);
+	//					textFieldCentreX.setText("");
+	//					textFieldCentreX.setPromptText(String.valueOf(((Polygon) t.getSource()).getLayoutX()));
+	//					final TextField textFieldCentreY = new TextField();
+	//					textFieldCentreY.setMaxWidth(60);
+	//					textFieldCentreY.setText("");
+	//					textFieldCentreY.setPromptText(String.valueOf(((Polygon) t.getSource()).getLayoutY()));
+	//
+	//					/**/
+	//
+	//					Label rotation = new Label("Rotation :");
+	//					final TextField textFieldRotation = new TextField ();
+	//					textFieldRotation.setMaxWidth(60);
+	//					textFieldRotation.setText("");
+	//					textFieldRotation.setPromptText("degrès");
+	//					final Button ok = GraphicalObjects.createButton(0,0,null, null);
+	//					ok.setText("Ok!");
+	//					ok.setOnAction(new EventHandler<ActionEvent>() {
+	//						/**
+	//						 * TODO ROTATION
+	//						 */
+	//						@Override
+	//						public void handle(ActionEvent e) {
+	//
+	//
+	//
+	//							if ( !textFieldPoints.getText().trim().isEmpty() &&
+	//									!textFieldRayon.getText().trim().isEmpty()){
+	//
+	//								int res1 = Integer.parseInt(textFieldPoints.getText());
+	//								double res2 = Double.parseDouble(textFieldRayon.getText());
+	//
+	//								Double [] tab = transTab(res1, res2);
+	//								((Polygon)t.getSource()).getPoints().clear();
+	//								((Polygon)t.getSource()).getPoints().addAll(tab);
+	//							}
+	//							/**
+	//							 * Trouver un moyen pour choper le rayon / centre du cercle
+	//							 */
+	//							else if ( !textFieldPoints.getText().trim().isEmpty()){
+	//
+	//								int res1 = Integer.parseInt(textFieldPoints.getText());
+	//								Object[] listObject = ((Polygon)t.getSource()).getPoints().toArray();
+	//								Double [] tab1 = toTab(listObject);
+	//								double intX = barycentreX(tab1);
+	//								double intY = barycentreY(tab1);
+	//								double px = tab1[0];
+	//								double py = tab1[1];
+	//								double dist = Math.sqrt( (intX - px) * (intX - px) + (intY - py) * (intY - py) );
+	//								Double [] tab2 = transTab(res1, dist);
+	//
+	//								((Polygon)t.getSource()).getPoints().clear();
+	//								((Polygon)t.getSource()).getPoints().addAll(tab2);
+	//							}
+	//
+	//							else if (!textFieldRayon.getText().trim().isEmpty()){
+	//
+	//								double res2 = Double.parseDouble(textFieldRayon.getText());
+	//								int tailleTab = ((Polygon) t.getSource()).getPoints().size() /2;
+	//								Double [] tab = transTab(tailleTab, res2);
+	//								((Polygon) t.getSource()).getPoints().clear();
+	//								((Polygon) t.getSource()).getPoints().addAll(tab);
+	//
+	//							}
+	//
+	//							if ( textFieldRotation.getText().trim().isEmpty() == false && 
+	//									textFieldCentreX.getText().trim().isEmpty() == false &&
+	//									textFieldCentreY.getText().trim().isEmpty() == false){
+	//
+	//								double rotation = Double.parseDouble(textFieldRotation.getText());
+	//								double pointCentreX = Double.parseDouble(textFieldCentreX.getText()) ;
+	//								double pointCentreY = Double.parseDouble(textFieldCentreY.getText());
+	//
+	//
+	//								double rotaRadian = rotation * (Math.PI / 180);
+	//								double cosRotation = Math.cos(rotaRadian);
+	//								double sinRotation = Math.sin(rotaRadian);
+	//								double coorX = barycentreX(toTab(((Polygon) t.getSource()).getPoints().toArray())) + ((Polygon) t.getSource()).getLayoutX();
+	//								double coorY = barycentreX(toTab(((Polygon) t.getSource()).getPoints().toArray())) + ((Polygon) t.getSource()).getLayoutY();
+	//
+	//								if( ( coorX - pointCentreX ) * cosRotation - ( coorY - pointCentreY ) * sinRotation + pointCentreX < 0 ||
+	//										( coorX - pointCentreX ) * cosRotation - ( coorY - pointCentreY ) * sinRotation + pointCentreX > GLOBAL_LAYOUT_Xmax_WHITEBOARD - GLOBAL_LAYOUT_Xmin_WHITEBOARD ||
+	//										( coorX - pointCentreX ) * sinRotation + ( coorY - pointCentreY ) * cosRotation + pointCentreY < 0 ||
+	//										( coorX - pointCentreX ) * sinRotation + ( coorY - pointCentreY ) * cosRotation + pointCentreY > GLOBAL_LAYOUT_Ymax_WHITEBOARD - GLOBAL_LAYOUT_Ymin_WHITEBOARD) {
+	//									GraphicalObjects.errorMessage("Erreur, rotation dépassant la taille du whiteboard!");
+	//								}
+	//								else{
+	//									((Polygon) t.getSource()).getTransforms().add(new Rotate(rotation, 
+	//											pointCentreX - ( ((Polygon) t.getSource()).getLayoutX() - GLOBAL_LAYOUT_Xmin_WHITEBOARD), 
+	//											pointCentreY - ( ((Polygon) t.getSource()).getLayoutY() - GLOBAL_LAYOUT_Ymin_WHITEBOARD)));
+	//
+	//									checkPosition(((Polygon) t.getSource()), t);
+	//									ok.getParent().getScene().getWindow().hide();
+	//								}
+	//							}
+	//							checkPosition(((Shape) t.getSource()), t);
+	//							ok.getParent().getScene().getWindow().hide();
+	//						}
+	//					});
+	//
+	//					/**/
+	//
+	//
+	//					/**/
+	//
+	//					HBox hbHauteurLargeur = new HBox();
+	//					hbHauteurLargeur.setLayoutX(2);
+	//					hbHauteurLargeur.setLayoutY(42);
+	//					hbHauteurLargeur.getChildren().add(points);
+	//					hbHauteurLargeur.getChildren().add(textFieldPoints);
+	//					hbHauteurLargeur.getChildren().add(rayon);
+	//					hbHauteurLargeur.getChildren().add(textFieldRayon);
+	//
+	//					/**/
+	//
+	//					HBox hbCentreRotation = new HBox();
+	//					hbCentreRotation.setLayoutX(2);
+	//					hbCentreRotation.setLayoutY(82);
+	//					hbCentreRotation.getChildren().add(centre);
+	//					hbCentreRotation.getChildren().add(textFieldCentreX);
+	//					hbCentreRotation.getChildren().add(textFieldCentreY);
+	//
+	//					/**/
+	//
+	//					HBox hbRotation = new HBox();
+	//					hbRotation.setLayoutX(2);
+	//					hbRotation.setLayoutY(122);
+	//					hbRotation.getChildren().add(rotation);
+	//					hbRotation.getChildren().add(textFieldRotation);
+	//					hbRotation.getChildren().add(ok);
+	//
+	//					root.getChildren().add(hbHauteurLargeur);
+	//					root.getChildren().add(hbCentreRotation);
+	//					root.getChildren().add(hbRotation);
+	//
+	//				}
+	//
+	//
+	//
+	//				root.getChildren().add(red);
+	//				root.getChildren().add(blue);
+	//				root.getChildren().add(green);
+	//				root.getChildren().add(aqua);
+	//				root.getChildren().add(beige);
+	//				root.getChildren().add(black);
+	//				root.getChildren().add(brown);
+	//				root.getChildren().add(cyan);
+	//				root.getChildren().add(grey);
+	//				root.getChildren().add(pink);
+	//				root.getChildren().add(orange);
+	//				root.getChildren().add(lGreen);
+	//				root.getChildren().add(purple);
+	//				root.getChildren().add(turquoise);
+	//				root.getChildren().add(white);
+	//
+	//
+	//				stagePopUp.setScene(theScene);
+	//				stagePopUp.show();
+	//			}
+	//		}
+	//	};
+	//
 	public static void majOrgScene(MouseEvent event){
 		orgSceneX = event.getSceneX();
 		orgSceneY = event.getSceneY();
 	}
-	
+
 	public static EventHandler<MouseEvent> OnMousePressedClone =
 			new EventHandler<MouseEvent>(){
 		public void handle(MouseEvent event) {
@@ -628,8 +628,6 @@ public class MouseEvents {
 				ShapeRegularPolygon shapePoly;
 				try {
 					shapePoly = (ShapeRegularPolygon) Main.m.returnToolbar().getShape(1).clone();
-					System.out.println(shapePoly.getPosition());
-					System.out.println(shapePoly.getTab().toString());
 					if(Main.m.returnToolbar().isShapeIn(shapePoly)){
 						//Initialise les positions pour le drag
 						majOrgScene(event);
@@ -648,9 +646,9 @@ public class MouseEvents {
 					e.printStackTrace();
 				}
 			}
-			
-			
-			
+
+
+
 		}
 	};
 
@@ -664,7 +662,7 @@ public class MouseEvents {
 				majOrgScene(event);
 			}
 			if( event.getButton() == MouseButton.SECONDARY){
-				
+
 			}
 		}
 	};
@@ -675,6 +673,7 @@ public class MouseEvents {
 			Main.m.notifyUndo();
 		}
 	};
+
 	
 	public static EventHandler<MouseEvent> OnMousePressedRedo =
 			new EventHandler<MouseEvent>() {
@@ -702,10 +701,10 @@ public class MouseEvents {
 			}
 		}
 	};
-	
+
 	public static EventHandler<MouseEvent> OnMouseReleasedTranslationEventHandler =
 			new EventHandler<MouseEvent>(){
-		
+
 		@Override
 		public void handle(MouseEvent event){
 			if(event.getSource() instanceof Rectangle){
@@ -715,24 +714,31 @@ public class MouseEvents {
 				if(Main.m.returnWhiteboard().isShapeIn(shapeRect) && !Main.m.returnWhiteboard().containsShape(shapeRect)){
 					Main.m.returnWhiteboard().add(shapeRect);
 					Main.m.notifyChangeListShapes(Main.m.returnWhiteboard().getListShapes());
-				}//Dépassement de la shape du whiteboard
+				}
+
 				shapeRect.setPosition(shapeRect.getPosition().getX() + shapeRect.getTranslationX(), 
 						shapeRect.getPosition().getY() + shapeRect.getTranslationY());
 				shapeRect.setTranslation(0, 0);
 				//Suppression d'une shape dans la wb
+
+
 				if(Main.m.returnToolbar().isInTrashcan(shapeRect)){
 					Main.m.returnWhiteboard().remove(shapeRect);
 					Main.m.notifyChangeListShapes(Main.m.returnWhiteboard().getListShapes());
-				}//Dépassement de la shape du whiteboard
+				}
 				else{
+
+
+
+
 					shapeRect.setPosition(shapeRect.getPosition().getX() + shapeRect.getTranslationX(), 
-					shapeRect.getPosition().getY() + shapeRect.getTranslationY());
+							shapeRect.getPosition().getY() + shapeRect.getTranslationY());
 					shapeRect.setTranslation(0, 0);
-					//Dépassement de la shape du whiteboard
 					if(!Main.m.returnWhiteboard().isShapeIn(shapeRect)){
 						Main.m.returnWhiteboard().getShapeBackInTheWhiteboard(shapeRect);
-					}
 
+
+					}
 				}
 				Main.m.notifyChangeShape(shapeRect, true);
 			}
@@ -752,20 +758,25 @@ public class MouseEvents {
 				}//Dépassement de la shape du whiteboard
 				else{
 					shapePoly.setPosition(shapePoly.getPosition().getX() + shapePoly.getTranslationX(), 
-					shapePoly.getPosition().getY() + shapePoly.getTranslationY());
+							shapePoly.getPosition().getY() + shapePoly.getTranslationY());
 					shapePoly.setTranslation(0, 0);
 					//Dépassement de la shape du whiteboard
-					
-					if(!Main.m.returnWhiteboard().isShapeIn(shapePoly)){
+					if(Main.m.returnToolbar().isInTrashcan(shapePoly)){
+						System.out.println("Test");
+						Main.m.returnWhiteboard().remove(shapePoly);
+						Main.m.notifyChangeListShapes(Main.m.returnWhiteboard().getListShapes());
+					}
+
+					else if(!Main.m.returnWhiteboard().isShapeIn(shapePoly)){
 						Main.m.returnWhiteboard().getShapeBackInTheWhiteboard(shapePoly);
 					}
-					
+
 				}
 				Main.m.notifyChangeShape(shapePoly, true);
 			}
 		}
 	};
-	
+
 	public static EventHandler<ActionEvent> buttonSerialize =
 			new EventHandler<ActionEvent>(){
 		@Override
@@ -804,12 +815,12 @@ public class MouseEvents {
 					for(IShape i : list){
 						Main.m.returnWhiteboard().add(i);
 					}
-					
+
 					Main.m.notifyChangeListShapes((List<IShape>) Main.m.returnWhiteboard().getListShapes());
 					for(IShape i : Main.m.returnWhiteboard().getListShapes()){
-						
+
 					}
-					
+
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
