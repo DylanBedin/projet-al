@@ -607,7 +607,6 @@ public class MouseEvents {
 					if(Main.m.returnToolbar().isShapeIn(shapeRect)){
 						//Initialise les positions pour le drag
 						majOrgScene(event);
-
 						Point2D.Double position = new Point2D.Double(event.getSceneX(), event.getSceneY());
 						Main.m.notifyChangeShape(shapeRect, true);
 					}
@@ -710,7 +709,6 @@ public class MouseEvents {
 						Main.m.returnWhiteboard().getShapeBackInTheWhiteboard(shapeRect);
 					}
 
-					Main.m.notifyChangeShape(shapeRect, true);
 				}
 				//Dépassement de la shape du whiteboard
 //				if(!Main.m.returnWhiteboard().isShapeIn(shapeRect) && Main.m.returnWhiteboard().containsShape(shapeRect)){

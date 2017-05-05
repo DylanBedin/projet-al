@@ -141,7 +141,19 @@ public class Whiteboard extends ShapeRectangle implements Serializable{
 		return min;
 	}
 
-
+	public void setListShapes(ArrayList<IShape> listShapes){
+		this.listShapes = listShapes;
+	}
+	
+	public Whiteboard clone() throws CloneNotSupportedException{
+		Whiteboard wb = new Whiteboard();
+		ArrayList<IShape> listShapes = new ArrayList<IShape>();
+		for(IShape ishape:this.getListShapes()){
+			listShapes.add((IShape) ishape.clone());
+		}
+		wb.setListShapes(listShapes);
+		return wb;
+	}
 
 }	
 

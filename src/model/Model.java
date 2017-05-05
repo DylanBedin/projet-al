@@ -41,11 +41,19 @@ public class Model extends Observable implements Serializable{
 		return this.undoStack.pop();
 	}
 	
+	public void saveMemento(){
+		MementoOriginator mementoOrig = new MementoOriginator();
+		mementoOrig.setState(this);
+		this.undoStack.add(mementoOrig.saveStateToMemento());
+	}
+	
 	public void notifyObservers(Object arg, boolean memento){
 		if(memento){
+			saveMemento();
 		}
 		super.notifyObservers(arg);
 	}
+	
 	
 	public Toolbar returnToolbar(){
 		return this.toolbar;
@@ -63,9 +71,7 @@ public class Model extends Observable implements Serializable{
 	public void getWhiteboard(){
 		setChanged();
 		this.notifyObservers(this.whiteboard, false);
-		MementoOriginator mementoOrig = new MementoOriginator();
-		mementoOrig.setState(this);
-		this.undoStack.add(mementoOrig.saveStateToMemento());
+
 	}
 	
 	public void notifyChangeShape(IShape s, boolean undoable){
@@ -75,7 +81,7 @@ public class Model extends Observable implements Serializable{
 	
 	public void notifyChangeListShapes(List<IShape> listShapes){
 		setChanged();
-		this.notifyObservers(listShapes, true);
+		this.notifyObservers(listShapes, false);
 	}
 	
 	public void notifyUndo(){

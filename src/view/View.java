@@ -149,41 +149,7 @@ public class View extends Application implements Observer{
         this.m.getWhiteboard();
 
         /***********************************************************************************************/
-        
-        /*
-         * Les formes d'origines
-         */
-        
-        
-//        originRect = GraphicalObjects.createRectangle(
-//        		rect2.getX() + 10, rect2.getY() + 10, 
-//        		50, 40, 
-//        		0, 0,
-//        		Color.BLUE, Color.BLACK, 
-//        		EventMouse.OnMousePressedToolbar, 
-//        		EventMouse.OnMouseDraggedEventHandler, 
-//        		false);
-
-        
-//        originRect.setOnMouseReleased(EventMouse.mouseReleasedOnWhiteboardEventHandler);
-        
-
-        
-        
-
-//        Button TrashCan = GraphicalObjects.createButton(20,490, null, null);
-//        Image buttonImg3 = new Image(getClass().getResourceAsStream("./../img/TrashCan.png"));
-//		ImageView iV3 = new ImageView(buttonImg3);
-//		iV3.setFitHeight(20);
-//		iV3.setFitWidth(20);
-//		TrashCan.setGraphic(iV3);
-
-
-		
-		//Sélection de formes
-//		whiteboard.addEventHandler(MouseEvent.MOUSE_PRESSED, EventMouse.buttonPressedOnWhiteboardForSelection);
-//		whiteboard.addEventHandler(MouseEvent.MOUSE_RELEASED, EventMouse.buttonReleasedOnWhiteboardForSelection);
-//		
+ 	
 		root.getChildren().add(gr2);
 
         primaryStage.setScene(scene);
@@ -264,10 +230,12 @@ public class View extends Application implements Observer{
 	}
 
 	public void setWhiteboard(Whiteboard whiteboard){
-		for(int i = 0; i < this.listShapes.size(); i++){
-			this.listShapes.get(i).setVisible(false);
-			this.listShapes.remove(i);
+		System.out.println(this.listShapes);
+		System.out.println("size=" + this.listShapes.size());
+		for(Shape s:this.listShapes){
+			s.setVisible(false);
 		}
+		this.listShapes.clear();
 		ArrayList<IShape> listIShape = ((ArrayList<IShape>) whiteboard.getListShapes());
 		System.out.println("empty:" + listIShape.isEmpty());
 		for(IShape shape:listIShape){

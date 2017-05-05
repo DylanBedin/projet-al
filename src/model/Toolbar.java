@@ -80,4 +80,18 @@ public class Toolbar extends ShapeRectangle implements Serializable{
 		return x >= this.getTrashcanX()  && x <= this.getTrashcanX() + this.getTrashcanWidth()  &&
 				y >= this.getTrashcanY()  && y <= this.getTrashcanY() + this.getTrashcanHeight() ;
 	}
+	
+	public void setListShapes(ArrayList<IShape> listShapes){
+		this.listShapes = listShapes;
+	}
+	
+	public Toolbar clone() throws CloneNotSupportedException{
+		Toolbar toolbar = new Toolbar();
+		ArrayList<IShape> listShapes = new ArrayList<IShape>();
+		for(IShape ishape:this.listShapes){
+			listShapes.add((IShape) ishape.clone());
+		}
+		this.setListShapes(listShapes);
+		return toolbar;
+	}
 }
