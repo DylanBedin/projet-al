@@ -5,6 +5,7 @@ import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+@SuppressWarnings("serial")
 public abstract class AbstractShape implements IShape,Serializable{
 	protected double translateX, translateY;
 	protected Color fill, stroke;

@@ -1,18 +1,13 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Observable;
 
-import javafx.collections.ObservableList;
-import javafx.scene.shape.Polygon;
 
 import java.awt.Color;
-import java.awt.geom.Point2D;
-import java.io.Serializable;
 
-public class Whiteboard extends ShapeRectangle implements Serializable{
+@SuppressWarnings("serial")
+public class Whiteboard extends ShapeRectangle{
 	private ArrayList<IShape> listShapes;
 
 
@@ -125,27 +120,6 @@ public class Whiteboard extends ShapeRectangle implements Serializable{
 		}
 	}
 
-	static private double getMaxX(Double[] tab ) {
-
-		double max = 0;
-		for(int i = 0; i < tab.length; i++){
-			if ( tab[i] > max ){
-				max = tab[i];
-			}
-		}
-		return max;
-	}
-
-	static private double getMaxY(Double[] tab ) {
-		double min = 1000;
-		for(int i = 0; i < tab.length; i++){
-			if ( tab[i] < min ){
-				min = tab[i];
-			}
-			
-		}	
-		return min;
-	}
 
 	public void setListShapes(ArrayList<IShape> listShapes){
 		this.listShapes = listShapes;
@@ -162,39 +136,3 @@ public class Whiteboard extends ShapeRectangle implements Serializable{
 	}
 
 }	
-
-//	
-//	public void translateShape(IShape shape, double x, double y){
-//		int index = -1;
-//		for(int i = 0; i < this.listPositionShapes.size(); i++){
-//			if(this.listShapes.get(index) == shape){
-//				shape.setTranslation(x, y);
-//				this.listPositionShapes.get(i).setLocation(new Point2D.Double(
-//						this.listPositionShapes.get(i).getX()+x,
-//						this.listPositionShapes.get(i).getY()+y));
-//			}
-//		}
-//		setChanged();
-//		notifyObservers(shape);
-//	}
-//	
-
-//	
-//	public void removeShape(IShape shape, Point2D position){
-//		for(int i = 0; i < this.listPositionShapes.size(); i++){
-//			if(this.listShapes.get(i) == shape && this.listPositionShapes.get(i) == position){
-//				this.listShapes.remove(i);
-//				this.listPositionShapes.remove(i);
-//			}
-//		}
-//	}
-//	
-//	public ArrayList<Point2D.Double> getListPositionShapes(){
-//		return this.listPositionShapes;
-//	}
-//	
-//	public ArrayList<IShape> getListShapes(){
-//		return this.listShapes;
-//	}
-	
-

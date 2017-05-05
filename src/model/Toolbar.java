@@ -1,14 +1,14 @@
 package model;
 
 import java.awt.Color;
-import java.io.Serializable;
 import java.util.ArrayList;
-public class Toolbar extends ShapeRectangle implements Serializable{
+
+@SuppressWarnings("serial")
+public class Toolbar extends ShapeRectangle{
 	public ArrayList<IShape> listShapes;
 	private double WIDTH = 70, HEIGHT = 215;
 	private double WIDTH_ORIGIN = 50, HEIGHT_ORIGIN = 40, RAY_ORIGIN = 30;
 	private int EDGES_ORIGIN = 6;
-	private double POS_X_POLY = 60, POS_Y_POLY = 10;
 	
 	/**TRASHCAN**/
 	private int TRASHCAN_X = 20, TRASHCAN_Y = 490;
@@ -37,7 +37,7 @@ public class Toolbar extends ShapeRectangle implements Serializable{
 		polyOrg.setOriginalShape(true);
 		
 		this.listShapes.add(polyOrg);			
-	}//		this.listShapes.add(new ShapeRegularPolygon(edgeLength, nbEdges, rotat, rotatCenterX, rotatCenterY, translateX, translateY, color, size, position))
+	}
 	
 	public IShape getShape(int index){
 		if(index < this.listShapes.size()){

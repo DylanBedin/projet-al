@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Stack;
 
+@SuppressWarnings("serial")
 public class Model extends Observable implements Serializable{
 	private Toolbar toolbar;
 	private Whiteboard whiteboard;
@@ -123,12 +124,12 @@ public class Model extends Observable implements Serializable{
 		return this.LAYOUT_Y_GROUP2;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Model clone(){
 		try {
 			return new Model((Toolbar) this.toolbar.clone(), (Whiteboard) this.whiteboard.clone(), 
 					(Stack<Memento>) this.undoStack.clone());
 		} catch (CloneNotSupportedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.tools.Tool;
 
 import controller.MouseEvents;
 
@@ -17,7 +16,6 @@ import model.Model;
 import model.ShapeRectangle;
 import model.ShapeRegularPolygon;
 import model.Toolbar;
-import model.UndoClass;
 import model.Whiteboard;
 
 
@@ -32,7 +30,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class View extends Application implements Observer{
@@ -42,13 +39,6 @@ public class View extends Application implements Observer{
 
 
 	static Stage stage;
-	//	public static ArrayList<Shape> listSelectionShapes;
-
-
-	//	public static void main(String[] args) {
-	//		Application.launch(View.class, args);
-	//	}
-
 
 	public void launchApp(){
 		Application.launch(View.class);
@@ -57,11 +47,7 @@ public class View extends Application implements Observer{
 
 
 	/***************************************************************************************************************************/
-	/**
-	 * TODO : Faire une liste répertoriant toutes les formes présentes DANS LE WHITEBOARD 
-	 * 		  (ignorer ceux qui sont passé en invisible)
-	 * 
-	 */
+
 
 
 	/********************************************************************************************/
@@ -89,24 +75,20 @@ public class View extends Application implements Observer{
 		 * PREMIER GROUPE : Barre du haut contenant les boutons permettant la gestion
 		 * de données.
 		 */
+		
 
 		Group gr1 = GraphicalObjects.createGroup(5,5);
 
 		Rectangle rect1 = GraphicalObjects.createRectangle(5,5,480,50,30,30,Color.WHITE,Color.BLACK,null,null,true);
 
-		/**
-		 *  TODO img SaveAs
-		 */
+		
 		Button btnSave = new Button();
 		btnSave.setLayoutX(15);
 		btnSave.setLayoutY(15);
 		btnSave.setText("Save As");
 		btnSave.setOnAction(this.mouseEvents.buttonSerialize);
 
-		/**	static Rectangle whiteboard;
-
-		 * TODO img Load
-		 */
+		
 		Button btnLoad = new Button();
 		btnLoad.setLayoutX(85);
 		btnLoad.setLayoutY(15);
@@ -141,7 +123,7 @@ public class View extends Application implements Observer{
 
         
         /***********************************************************************************************/
-        /*
+        /**
          * DEUXIEME GROUPE: Toolbar
          */
         
@@ -233,14 +215,11 @@ public class View extends Application implements Observer{
 	}
 
 	public void setWhiteboard(Whiteboard whiteboard){
-		System.out.println(this.listShapes);
-		System.out.println("size=" + this.listShapes.size());
 		for(Shape s:this.listShapes){
 			s.setVisible(false);
 		}
 		this.listShapes.clear();
 		ArrayList<IShape> listIShape = ((ArrayList<IShape>) whiteboard.getListShapes());
-		System.out.println("empty:" + listIShape.isEmpty());
 		for(IShape shape:listIShape){
 			this.createNewShape(shape);
 		}
@@ -248,6 +227,7 @@ public class View extends Application implements Observer{
 
 	private ArrayList<Shape> listShapes;
 
+	@SuppressWarnings("static-access")
 	public void createNewShape(IShape shape){
 		Color stroke = new Color(shape.getStroke().getRed()/255, shape.getStroke().getGreen()/255, 
 				shape.getStroke().getBlue()/255, 1);
@@ -259,7 +239,7 @@ public class View extends Application implements Observer{
 					((ShapeRectangle) shape).getHeight(),
 					((ShapeRectangle) shape).getArcWidth(),
 					((ShapeRectangle) shape).getArcHeight(),
-					Color.PINK,
+					fill,
 					stroke,
 					null, null,
 					false);
@@ -278,7 +258,7 @@ public class View extends Application implements Observer{
 				Shape s = GraphicalObjects.createPolygon(((ShapeRegularPolygon) shape).getTab(),
 						srp.getPosition().getX(),
 						srp.getPosition().getY(),
-						Color.PINK,
+						fill,
 						stroke,
 						null, null,
 						false);
@@ -315,6 +295,7 @@ public class View extends Application implements Observer{
 	}
 
 	public void majList(IShape ishape){
+		@SuppressWarnings("unchecked")
 		List<Shape> copyList = (List<Shape>) this.listShapes.clone();
 		for(Shape s:copyList){
 			if(s.getUserData() instanceof IShape){
@@ -340,6 +321,7 @@ public class View extends Application implements Observer{
 		setWhiteboard(model.returnWhiteboard());
 	}
 
+	@SuppressWarnings({ "static-access", "unchecked" })
 	@Override 
 	public void update(Observable arg0, Object arg1) {
 		if(arg1 instanceof Toolbar){

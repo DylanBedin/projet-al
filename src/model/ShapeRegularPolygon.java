@@ -2,6 +2,7 @@ package model;
 
 import java.awt.geom.Point2D;
 
+@SuppressWarnings("serial")
 public class ShapeRegularPolygon extends AbstractShape {
 	
 	private double ray;
@@ -53,7 +54,6 @@ public class ShapeRegularPolygon extends AbstractShape {
 	
 	
 	
-	@SuppressWarnings("unused")
 	static double barycentreX(Double[] tab){
 		double res = 0;
 		for(int i =0; i<tab.length; i= i+2){
@@ -62,7 +62,6 @@ public class ShapeRegularPolygon extends AbstractShape {
 		return res / (tab.length /2) ;
 	}
 	
-	@SuppressWarnings("unused")
 	static double barycentreY(Double[] tab){
 		double res = 0;
 		for(int i =1; i<tab.length; i= i+2){
@@ -90,7 +89,7 @@ public class ShapeRegularPolygon extends AbstractShape {
 	
 	public void setRay(int ray){
 		this.ray = ray;
-		//this.tabVertices = createTab(this.ray, this.nbVertices, this.center);
+		this.tabVertices = createTab(this.ray, this.nbVertices);
 	}
 	
 	public int getNbEdges(){
@@ -99,7 +98,7 @@ public class ShapeRegularPolygon extends AbstractShape {
 	
 	public void setNbEdges(int nbEdges){
 		this.nbVertices = nbEdges;
-		//this.tabVertices = createTab(this.ray, this.nbVertices, this.center);
+		this.tabVertices = createTab(this.ray, this.nbVertices);
 
 	}
 	
@@ -117,11 +116,9 @@ public class ShapeRegularPolygon extends AbstractShape {
 	
 	public void setPosition(Point2D p){
 		this.center = p;
-		//this.tabVertices = createTab(this.ray, this.nbVertices, p);
 	}
 	
 	public void setPosition(double x, double y){
 		this.center = new Point2D.Double(x, y);
-		//this.tabVertices = createTab(this.ray, this.nbVertices, this.center);
 	}
 }

@@ -3,10 +3,6 @@ package main;
 
 import controller.Controller;
 import model.Model;
-import model.ShapeRegularPolygon;
-import model.Whiteboard;
-import view.View;
-import javafx.application.Application;
 
 public class Main {
 

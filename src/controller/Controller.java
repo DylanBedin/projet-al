@@ -1,13 +1,10 @@
 package controller;
 
-import java.util.ArrayList;
 
-import javafx.application.Application;
-import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
 import main.Main;
 import model.*;
 import view.*;
+
 
 public class Controller {
 	private View v;
