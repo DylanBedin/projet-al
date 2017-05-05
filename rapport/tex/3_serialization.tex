@@ -22,26 +22,4 @@ ensuite ajouter une par une les formes contenues dans la liste extraite du
 fichier. Une fois cette opération terminée, nous prévenons le model du
 changement apporté à la liste des shapes, qui va immédiatement remplacé les
 shapesFX présentes par les shapesFX de notre nouvelle liste.\newline
-\subsection{La sérialisation}
 
-Deux des fonctionnalités demandées lors de ce projet furent la capacité à
-sauvegarder les formes dans un fichier, puis pour plus tard les charger
-depuis ce fichier.\newline
-La sérialisation des formes contenues dans la whiteboard se déclenche lorsque
-le bouton Save as est enclenché, en
-commencant d'abord par créer/choisir un fichier grâce à la classe JFileChooser,
-pour ensuite l'ouvrir et écrire dessus la liste des formes contenue dans la
-whiteboard. Nous obtenons donc un fichier de format binaire contenant chaques
-formes présentes (leurs positions y compris donc) lors de l'appel à la
-sérialisation. Le controlleur gère à lui tout seul ces actions, le modèle est
-appelé seulement pour récupérer la liste des formes.\newline
-Le chargement d'une liste de formes consiste donc à faire la procédure
-précédente, mais à l'envers: Lorsque le bouton Load est enclenché, le
-controlleur va encore appelé un JFileChooser qui va nous permettre de choisir
-le fichier binaire désiré. On va ensuite ouvrir ce fichier à la lecture et
-caster son contenu en une ArrayList<Ishape>. Il suffit maintenant d'écraser la
-liste des formes actuelles contenues dans le model via un clear(), pour
-ensuite ajouter une par une les formes contenues dans la liste extraite du
-fichier. Une fois cette opération terminée, nous prévenons le model du
-changement apporté à la liste des shapes, qui va immédiatement remplacé les
-shapesFX présentes par les shapesFX de notre nouvelle liste.\newline
