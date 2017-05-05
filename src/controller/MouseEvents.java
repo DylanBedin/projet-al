@@ -23,6 +23,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+
 import main.Main;
 import model.IShape;
 import model.Model;
@@ -602,11 +603,13 @@ public class MouseEvents {
 			if (event.getSource() instanceof Rectangle) {
 				ShapeRectangle shapeRect;
 				try {
-					shapeRect = (ShapeRectangle) Toolbar.getInstance().getShape(0).clone();
-					if(Toolbar.getInstance().isShapeIn(shapeRect)){
+					shapeRect = (ShapeRectangle) Main.m.returnToolbar().getShape(0).clone();
+					if(Main.m.returnToolbar().isShapeIn(shapeRect)){
 						//Initialise les positions pour le drag
 						majOrgScene(event);
-						Model.getInstance().notifyChangeShape(shapeRect);
+
+						Point2D.Double position = new Point2D.Double(event.getSceneX(), event.getSceneY());
+						Main.m.notifyChangeShape(shapeRect, true);
 					}
 				}
 				catch (CloneNotSupportedException e) {
@@ -617,11 +620,11 @@ public class MouseEvents {
 			if (event.getSource() instanceof Polygon) {
 				ShapeRegularPolygon shapePoly;
 				try {
-					shapePoly = (ShapeRegularPolygon) Toolbar.getInstance().getShape(1).clone();
-					if(Toolbar.getInstance().isShapeIn(shapePoly)){
+					shapePoly = (ShapeRegularPolygon) Main.m.returnToolbar().getShape(1).clone();
+					if(Main.m.returnToolbar().isShapeIn(shapePoly)){
 						//Initialise les positions pour le drag
 						majOrgScene(event);
-						Model.getInstance().notifyChangeShape(shapePoly);
+						Main.m.notifyChangeShape(shapePoly, true);
 					}
 				}
 				catch (CloneNotSupportedException e) {
@@ -650,6 +653,13 @@ public class MouseEvents {
 		}
 	};
 
+	public static EventHandler<MouseEvent> OnMousePressedUndo = 
+			new EventHandler<MouseEvent>(){
+		public void handle(MouseEvent event){
+			Main.m.notifyUndo();
+		}
+	};
+	
 //				orgSceneX = t.getSceneX();
 //				orgSceneY = t.getSceneY();
 					//				((Rectangle)(t.getSource())).setOnMousePressed(OnMousePressedWhiteboard);
@@ -695,14 +705,16 @@ public class MouseEvents {
 
 		@Override
 		public void handle(MouseEvent event) {
-			double offsetX = event.getSceneX() - orgSceneX;
-			double offsetY = event.getSceneY() - orgSceneY;
-			newTranslateX = offsetX;
-			newTranslateY = offsetY;
-			IShape is = (IShape) ((Shape) event.getSource()).getUserData();
-			is.setTranslation(newTranslateX, newTranslateY);
-			Model.getInstance().notifyChangeShape(is);
 
+			if(event.getSource() instanceof Rectangle){
+				ShapeRectangle shapeRect = (ShapeRectangle) ((Rectangle) event.getSource()).getUserData();
+				double offsetX = event.getSceneX() - orgSceneX;
+				double offsetY = event.getSceneY() - orgSceneY;
+				newTranslateX = offsetX;
+				newTranslateY = offsetY;
+				shapeRect.setTranslation(newTranslateX, newTranslateY);
+				Main.m.notifyChangeShape(shapeRect, false);
+			}
 		}
 	};
 	
@@ -715,42 +727,48 @@ public class MouseEvents {
 				Rectangle rect = (Rectangle) event.getSource();
 				ShapeRectangle shapeRect = (ShapeRectangle) rect.getUserData();
 				//ajout d'une shape dans la wb
-				if(Whiteboard.getInstance().isShapeIn(shapeRect) && !Whiteboard.getInstance().containsShape(shapeRect)){
-					Whiteboard.getInstance().add(shapeRect);
-					Model.getInstance().notifyChangeListShapes(Whiteboard.getInstance().getListShapes());
+				if(Main.m.returnWhiteboard().isShapeIn(shapeRect) && !Main.m.returnWhiteboard().containsShape(shapeRect)){
+					Main.m.returnWhiteboard().add(shapeRect);
+					Main.m.notifyChangeListShapes(Main.m.returnWhiteboard().getListShapes());
 				}//Dépassement de la shape du whiteboard
 				shapeRect.setPosition(shapeRect.getPosition().getX() + shapeRect.getTranslationX(), 
 						shapeRect.getPosition().getY() + shapeRect.getTranslationY());
 				shapeRect.setTranslation(0, 0);
 				//Suppression d'une shape dans la wb
-				if(Toolbar.getInstance().isInTrashcan(shapeRect)){
-					Whiteboard.getInstance().remove(shapeRect);
-					Model.getInstance().notifyChangeListShapes(Whiteboard.getInstance().getListShapes());
+				if(Main.m.returnToolbar().isInTrashcan(shapeRect)){
+					Main.m.returnWhiteboard().remove(shapeRect);
+					Main.m.notifyChangeListShapes(Main.m.returnWhiteboard().getListShapes());
 				}//Dépassement de la shape du whiteboard
 				else{
 					shapeRect.setPosition(shapeRect.getPosition().getX() + shapeRect.getTranslationX(), 
 					shapeRect.getPosition().getY() + shapeRect.getTranslationY());
 					shapeRect.setTranslation(0, 0);
 					//Dépassement de la shape du whiteboard
-					if(!Whiteboard.getInstance().isShapeIn(shapeRect)){
-						Whiteboard.getInstance().getShapeBackInTheWhiteboard(shapeRect);
+					if(!Main.m.returnWhiteboard().isShapeIn(shapeRect)){
+						Main.m.returnWhiteboard().getShapeBackInTheWhiteboard(shapeRect);
 					}
+
+					Main.m.notifyChangeShape(shapeRect, true);
 				}
-				Model.getInstance().notifyChangeShape(shapeRect);
+				//Dépassement de la shape du whiteboard
+//				if(!Main.m.returnWhiteboard().isShapeIn(shapeRect) && Main.m.returnWhiteboard().containsShape(shapeRect)){
+//					Main.m.returnWhiteboard().getShapeBackInTheWhiteboard(shapeRect);
+//				}
+				Main.m.notifyChangeShape(shapeRect, true);
 			}
 			if(event.getSource() instanceof Polygon){
 				Shape s = (Shape) event.getSource();
 				ShapeRegularPolygon shapePoly = (ShapeRegularPolygon) s.getUserData();
-				if(Whiteboard.getInstance().isShapeIn(shapePoly) && !Whiteboard.getInstance().containsShape(shapePoly)){
-					Whiteboard.getInstance().add(shapePoly);
-					Model.getInstance().notifyChangeListShapes(Whiteboard.getInstance().getListShapes());
+				if(Main.m.returnWhiteboard().isShapeIn(shapePoly) && !Main.m.returnWhiteboard().containsShape(shapePoly)){
+					Main.m.returnWhiteboard().add(shapePoly);
+					Main.m.notifyChangeListShapes(Main.m.returnWhiteboard().getListShapes());
 				}
 				shapePoly.setPosition(shapePoly.getPosition().getX() + shapePoly.getTranslationX(), 
 						shapePoly.getPosition().getY() + shapePoly.getTranslationY());
 				shapePoly.setTranslation(0, 0);
-				if(Toolbar.getInstance().isInTrashcan(shapePoly)){
-					Whiteboard.getInstance().remove(shapePoly);
-					Model.getInstance().notifyChangeListShapes(Whiteboard.getInstance().getListShapes());
+				if(Main.m.returnToolbar().isInTrashcan(shapePoly)){
+					Main.m.returnWhiteboard().remove(shapePoly);
+					Main.m.notifyChangeListShapes(Main.m.returnWhiteboard().getListShapes());
 				}//Dépassement de la shape du whiteboard
 				else{
 					shapePoly.setPosition(shapePoly.getPosition().getX() + shapePoly.getTranslationX(), 
@@ -758,12 +776,12 @@ public class MouseEvents {
 					shapePoly.setTranslation(0, 0);
 					//Dépassement de la shape du whiteboard
 					/*
-					if(!Whiteboard.getInstance().isShapeIn(shapePoly)){
-						Whiteboard.getInstance().getShapeBackInTheWhiteboard(shapePoly);
+					if(!Main.m.returnWhiteboard().isShapeIn(shapePoly)){
+						Main.m.returnWhiteboard().getShapeBackInTheWhiteboard(shapePoly);
 					}
 					*/
 				}
-				Model.getInstance().notifyChangeShape(shapePoly);
+				Main.m.notifyChangeShape(shapePoly, true);
 			}
 		}
 	};
@@ -772,7 +790,7 @@ public class MouseEvents {
 			new EventHandler<ActionEvent>(){
 		@Override
 		public void handle(ActionEvent event){
-			Model m = Model.getInstance();
+			Model m = Main.m;
 			JFileChooser fileChooser = new JFileChooser();
 			if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 				File file = fileChooser.getSelectedFile();

@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Observable;
 
 import javafx.collections.ObservableList;
-import javafx.scene.Node;
-import javafx.scene.shape.Polygon;
+
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
@@ -15,34 +14,18 @@ import java.io.Serializable;
 
 public class Whiteboard extends ShapeRectangle implements Serializable{
 	private ArrayList<IShape> listShapes;
-	
+
 	private double height, width;
 	private Point2D upLeftCorner;
-	
+
 	private final double WIDTH = 400, HEIGHT = 510;
 	private final double LAYOUT_XMIN_WHITEBOARD = 85;
 	private final double LAYOUT_YMIN_WHITEBOARD = 20;
 	private final double LAYOUT_XMAX_WHITEBOARD = LAYOUT_XMIN_WHITEBOARD + WIDTH;
 	private final double LAYOUT_YMAX_WHITEBOARD = LAYOUT_YMIN_WHITEBOARD + HEIGHT;
 
-	
-	private static volatile Whiteboard instance = null;	
 
-//	public Whiteboard(Point2D p, double height, double width){
-//		if(instance == null){
-//			synchronized (Toolbar.class) {
-//				if(instance == null){
-//					this.listPositionShapes = new ArrayList<Point2D.Double>();
-//					this.listShapes = new ArrayList<IShape>();
-//					this.height = height;
-//					this.width = width;
-//					this.upLeftCorner = p;
-//				}
-//			}
-//		}
-//	}
-	
-	private Whiteboard(){
+	public Whiteboard(){
 		this.listShapes = new ArrayList<IShape>();
 		this.setPosition(LAYOUT_XMIN_WHITEBOARD, LAYOUT_YMIN_WHITEBOARD);
 		this.setWidth(WIDTH);
@@ -52,36 +35,26 @@ public class Whiteboard extends ShapeRectangle implements Serializable{
 		this.setArcHeight(0);
 		this.setArcWidth(0);
 	}
-	
-	public static Whiteboard getInstance(){
-		if(instance == null){
-			synchronized (Toolbar.class) {
-				if(instance == null){
-					instance = new Whiteboard();
-				}
-			}
-		}
-		return instance;
-	}
-	
+
+
 	public void add(IShape shape){
 		this.listShapes.add(shape);
 	}
-	
+
 	public void remove(IShape shape){
 		if(this.listShapes.contains(shape)){
 			this.listShapes.remove(shape);
 		}
 	}
-	
+
 	public List<IShape> getListShapes(){
 		return this.listShapes;
 	}
-	
+
 	public boolean containsShape(IShape s){
 		return this.listShapes.contains(s);
 	}
-	
+
 	public boolean isShapeIn(IShape s){
 		if(s instanceof ShapeRectangle){
 			double x = s.getPosition().getX();
@@ -97,7 +70,7 @@ public class Whiteboard extends ShapeRectangle implements Serializable{
 		}
 		return false;
 	}
-	
+
 	public void getShapeBackInTheWhiteboard(IShape s){
 		double x = s.getPosition().getX();
 		double y = s.getPosition().getY();
@@ -120,7 +93,7 @@ public class Whiteboard extends ShapeRectangle implements Serializable{
 				s.setPosition(x, y);
 			}
 		}
-		
+
 		if (s instanceof ShapeRegularPolygon){
 			ShapeRegularPolygon shapePoly = (ShapeRegularPolygon) s;
 			Double [] tab = shapePoly.getTab();
@@ -146,41 +119,8 @@ public class Whiteboard extends ShapeRectangle implements Serializable{
 
 		}
 	}
-	static private boolean checkPositionPoints(double limite, String xy, ShapeRegularPolygon s, String maxmin){
-		Double[] tab = s.getTab();
-		for(int i = 0; i< tab.length; i++){
-			System.out.println(tab[i]);
-			System.out.println("----------");
-		}
-		int i;
-		double layoutPos = 0;
-		if(xy.compareTo("x") == 0){
-			i=0;
-			layoutPos =  s.getPosition().getX();
-		}
-		else{
-			i=1;
-			layoutPos = s.getPosition().getY();
-		}
-		while(i < tab.length){
-
-			if(maxmin.compareTo("max") == 0){
-				if(tab[i] + layoutPos> limite){
-					return true;
-				}
-			}
-			else{
-				if(tab[i] + layoutPos < limite){
-					return true;
-				}
-			}
-			i = i + 2;
-		}
-		return false;
-	}	
-
 	static private double getMaxX(Double[] tab ) {
-		
+
 		double max = 0;
 		for(int i = 0; i < tab.length; i++){
 			if ( tab[i] > max ){
@@ -196,17 +136,14 @@ public class Whiteboard extends ShapeRectangle implements Serializable{
 			if ( tab[i] < min ){
 				min = tab[i];
 			}
-		}
+			
+		}	
 		return min;
 	}
 
 
 
-
-
-
-
-}
+}	
 
 //	
 //	public void translateShape(IShape shape, double x, double y){
