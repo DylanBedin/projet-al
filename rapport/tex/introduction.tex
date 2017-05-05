@@ -1,20 +1,2 @@
 \chapter{Introduction}
 
-L'asservissement par PID (Proportionnel, Intégral, Dérivée) est une méthode de contrôle très utilisée dans le domaine industriel.
-Ce projet d'asservissement par PID sur un robot à quatre roues motrices a pour but de mieux comprendre cette méthode de régulation
-et de se renseigner sur les possibilités qu'offre cette dernière. % L'objectif final est d'arriver à
-%contrôler la puissance des moteurs du robot afin qu'il se stabilise automatiquement s'il détecte un changement d'inclinaison du support
-%sur lequel il se trouve.
-Cette méthode, souvent appliquée en robotique, est couramment utilisée pour le contrôle des drones par exemple,
-ou encore pour les régulateurs de vitesse, mais connait des limites. En effet l'approche par PID doit être calibrée de facon individuelle car elle dépend fortement des caractéristiques du système dans lequel elle évolue. De plus, même en étant correctement calibré, elle  reste extrêmement sensible aux variations imprévues du système. 
-\\
-Il s'agira donc d'abord, de développer une simulation d'un robot à quatre roues, et possédant des encodeurs sur chacune d'elles.
-Celui-ci devra, dans le cadre de la simulation, être positionné sur une planche que l'on inclinera.
-Cela entrainera la mise en mouvement du robot. En fonction de l'angle, ce dernier avancera ou reculera et devra donc réagir en conséquence en se dirigeant vers sa position initiale. Cela se traduit par un jeu de forces: lorsque les moteurs ne sont pas actifs, le robot subit des forces \textbf{Fext} qui entraineront sa descente sur la pente. Pour contrer cela, les moteurs s'activeront et engendreront une force opposée au mouvement, et supérieure à \textbf{Fext} grâce à l'asservissement par PID.
-L'objectif final est, au minimum, que le robot se stabilise sur la planche, et qu'il arrive à se repositionner
-à sa position initiale, dans le meilleur des cas. Enfin, il est question de fournir une interface permettant de manipuler notre
-simulation et de pouvoir paramètrer les différentes caractéristiques du robot et du PID. 
-
-Nous avons décidé de coder l'ensemble du projet en JAVA car l'organisation qu'entraîne la programmation objet nous semble s'adapter logiquement au sujet du projet. Pour nous faciliter le déroulement du projet, nous avons utilisé l'IDE Eclipse
-qui est dôté d'une agréable interface utilisateur et d'outils intéressants pour le développement logiciel. Plus précisément nous avons utilisé un plug-in nommé \textit{ObjectAid UML Diagram}
-qui automatise la création de diagrammes UML. L'intégration des tests Junit est aussi un atout d'Eclipse.
