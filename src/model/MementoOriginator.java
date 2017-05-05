@@ -2,19 +2,7 @@ package model;
 
 public class MementoOriginator {
 	private Model state;
-	private static volatile MementoOriginator instance = null;	
 
-	public static MementoOriginator getInstance(){
-		if(instance == null){
-			synchronized (Toolbar.class) {
-				if(instance == null){
-					instance = new MementoOriginator();
-				}
-			}
-		}
-		return instance;
-	}
-	
 	public void setState(Model m){
 		this.state = m;
 	}

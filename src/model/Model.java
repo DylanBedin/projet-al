@@ -11,7 +11,6 @@ import com.sun.org.apache.xpath.internal.operations.String;
 public class Model extends Observable implements Serializable{
 	private Toolbar toolbar;
 	private Whiteboard whiteboard;
-	private static Model instance = null;
 	private final double LAYOUT_X_GROUP2 = 5;
 	private final double LAYOUT_Y_GROUP2 = 50;
 	
@@ -23,13 +22,15 @@ public class Model extends Observable implements Serializable{
 		this.undoStack = new Stack<Memento>();
 	}
 	
+	private Model(Toolbar toolbar, Whiteboard wb, Stack<Memento> undoStack){
+		this.toolbar = toolbar;
+		this.whiteboard = wb;
+		this.undoStack = undoStack;
+	}
+	
 	public void changeState(Model state){
 		this.toolbar = state.returnToolbar();
 		this.whiteboard = state.returnWhiteboard();
-	}
-	
-	public Stack<Memento> getMementoStack(){
-		return this.undoStack;
 	}
 	
 	public void addMemento(Memento state){
@@ -62,9 +63,9 @@ public class Model extends Observable implements Serializable{
 	public void getWhiteboard(){
 		setChanged();
 		this.notifyObservers(this.whiteboard, false);
-
-		MementoOriginator.getInstance().setState(this);
-		this.undoStack.add(MementoOriginator.getInstance().saveStateToMemento());
+		MementoOriginator mementoOrig = new MementoOriginator();
+		mementoOrig.setState(this);
+		this.undoStack.add(mementoOrig.saveStateToMemento());
 	}
 	
 	public void notifyChangeShape(IShape s, boolean undoable){
@@ -78,9 +79,9 @@ public class Model extends Observable implements Serializable{
 	}
 	
 	public void notifyUndo(){
-		this.changeState(this.getMemento().getState());
+		Memento m = this.getMemento();
 		setChanged();
-		this.notifyObservers(new UndoClass(), false);
+		this.notifyObservers(m, false);
 	}
 	
 	public double getLayoutGroup2X(){
@@ -89,6 +90,17 @@ public class Model extends Observable implements Serializable{
 	
 	public double getLayoutGroup2Y(){
 		return this.LAYOUT_Y_GROUP2;
+	}
+	
+	public Model clone(){
+		try {
+			return new Model((Toolbar) this.toolbar.clone(), (Whiteboard) this.whiteboard.clone(), 
+					(Stack<Memento>) this.undoStack.clone());
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 }
