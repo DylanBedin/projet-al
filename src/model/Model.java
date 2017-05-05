@@ -12,9 +12,7 @@ public class Model extends Observable implements Serializable{
 	private Whiteboard whiteboard;
 	private final double LAYOUT_X_GROUP2 = 5;
 	private final double LAYOUT_Y_GROUP2 = 50;
-	
-	private final int GET_MAX_STACK = 3;
-	
+		
 	private transient Stack<Memento> undoStack, redoStack;
 	
 	public Model(){
@@ -33,10 +31,6 @@ public class Model extends Observable implements Serializable{
 	public void changeState(Model state){
 		this.toolbar = state.returnToolbar();
 		this.whiteboard = state.returnWhiteboard();
-	}
-	
-	public boolean isFull(Stack<Memento> stack){
-		return stack.size() == this.GET_MAX_STACK;
 	}
 	
 	public void addMemento(Memento state){
